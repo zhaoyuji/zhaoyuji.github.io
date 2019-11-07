@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="">
+    <meta name="keywords"  content="">
+    <meta name="theme-color" content="#000000">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Big Data Algorithm Lesson 1: About Kernel - ZHAO Yuji's Homepage">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="为什么使用kernel -&gt; 为什么映射到高维空间可以解决线性不可分的情况
+
+">
+    
+    <meta property="article:published_time" content="2018-09-30T00:00:00Z">
+    
+    
+    <meta property="article:author" content="Z">
+    
+    
+    <meta property="article:tag" content="Algirithms">
+    
+    <meta property="article:tag" content="Lecture Notes">
+    
+    
+    <meta property="og:image" content="http://localhost:4000/img/zyjphoto.jpg">
+    <meta property="og:url" content="http://localhost:4000/2018/09/30/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson1/">
+    <meta property="og:site_name" content="ZHAO Yuji's Homepage">
+    
+    <title>Big Data Algorithm Lesson 1: About Kernel - ZHAO Yuji's Homepage</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2018/09/30/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson1/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top invert">
+
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Z's Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    
+                    
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="/archive/">Archive</a>
+                    </li>
+                    
+                    
+                    
+                    
+                    
+                    <li>
+                        <a href="/"></a>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/home-bg.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+
+
+
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/home-bg.jpg');
+        background: ;
+    }
+
+    
+</style>
+
+<header class="intro-header style-text" >
+
+    <div class="header-mask"></div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/archive/?tag=Algirithms" title="Algirithms">Algirithms</a>
+                        
+                        <a class="tag" href="/archive/?tag=Lecture+Notes" title="Lecture Notes">Lecture Notes</a>
+                        
+                    </div>
+                    <h1>Big Data Algorithm Lesson 1: About Kernel</h1>
+                    
+                    <h2 class="subheading">Why do we use kernel?</h2>
+                    <span class="meta">Posted by Z on September 30, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+
+
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+<!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+                       jax: ["input/TeX", "output/HTML-CSS"],
+                       tex2jax: {
+                       inlineMath: [ ['$', '$'] ],
+                       displayMath: [ ['$$', '$$']],
+                       processEscapes: true,
+                       skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] },
+                       messageStyle: "none",
+                       "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+                       });
+    </script>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <!-- Multi-Lingual -->
+                
+
+				<h2 id="为什么使用kernel---为什么映射到高维空间可以解决线性不可分的情况">为什么使用kernel -&gt; 为什么映射到高维空间可以解决线性不可分的情况</h2>
+
+<p>如下图，这一组点在二维平面线性不可分，但是若将其映射到三维空间，就可以找到一个平面将其划分开来。 <br />
+通俗来说，核函数的就是将这些点从低维空间映射到了高维空间，以达到线性可分的效果，但是其理论基础是什么呢？</p>
+
+<p>$\bf{Definition \ 1: }$
+If ${ x_0,…,x_N }, x_i \in R^{N+1}$ is affinity independent, they can be linearly seprable in n-dim space.</p>
+
+<ul>
+  <li>what is affinity independent: <br />
+ If ${ (x_1-x_0),…,(x_N-x_0) }$ is linearly independent, then ${ x_0,…,x_N }$ is affinity independent.</li>
+  <li>what is linearly (strongly) seprable: <br />
+For two sets $C_1,C_2 \in R^N$,$\exists w \in R^N$, $s.t.inf_{x\in C_1}(w,x) &gt; sup_{x\in C_2} (w,x)$</li>
+</ul>
+
+<p>这个理论提供了核函数存在的意义，因为映射到高维空间在理论上来说是一个可行的、能够有效帮助解决线性不可分情况的操作。如果要通俗的来理解这个理论，比如对于一个dataset，有500个数据样本，那你必然能够找一个499维的空间，将这500个数据点分开来，而这个499维的空间的坐标轴，实际上就是我们通常所说的抽出来的特征。</p>
+
+<p>为了证明这个理论，我们需要了解以下几个知识点：</p>
+
+<ul>
+  <li><strong>convex set: (凸集)</strong>
+For a set $C$, if $\lambda x+(1-\lambda)y \in C, \ for \ \forall x,y\in C, \lambda \in (0,1) $</li>
+  <li><strong>convex combination: (凸组合)</strong>
+$\lambda_1x_1+\cdots+\lambda_nx_n$ is called a convex combination if $\lambda_i \ge 0$ and $\sum \lambda_i = 1$</li>
+  <li><strong>convex hull: (凸包)</strong><br />
+conv(C): the convex hull of a set C is the intersection of all convex sets containing C.<br />
+一个集合的凸包指的就是找到的那个最小的集合使得它成为凸集，或者说是包含这个集合的最小的凸集。<br />
+conv(C) = {$x$|$x$ can be represented as the convex combination of points in $C$}<br />
+即，假设$C={x_0,…,x_m}$, 则其凸包$conv(C)={x|x=\sum \lambda_ix_i$, $\sum \lambda_i = 1$, $\lambda_i \ge 0} $<br />
+注：有限的点组成的convex hull一定是个多面体，不会有弧形的部分（因为要保证最小），这个多面体也能被称之为一个simplex-单纯形。</li>
+  <li><strong>Seperation Theorem: (凸集分离定理)</strong><br />
+<strong>可以说是线性规划最经典的理论了</strong> <br />
+假设有两个convex set $C_1,C_2$,$C_1\ne \emptyset $,$C_2\ne \emptyset$, 且两者闭包（closure）的交集等于空，表示为$cl \ C_1 \cap cl \ C_2 = \emptyset$,若$C_1$$C_2$中任意一个集合有界(bounded)，则$\exists w\in R^N, \ s.t. \ inf_{x\in C_1}\langle w , x \rangle \ &gt; \ sup_{x\in C_2}\langle w , x \rangle$</li>
+</ul>
+
+<p>了解了这些之后，我们就能开始着手证明Definition1。</p>
+
+<p><strong>Proof Of Definition 1：</strong><br />
+假设有两个集合$S_1$和$S_2$，$S_1 \cup S_2\in {x_0,\cdots x_N}$, $S_1 \cap S_2 = \emptyset$，基本思路是证明这两个集合的凸包满足凸集分离定理的使用条件，然后就可以使用凸集分离定理。<br />
+取$C_1\doteq conv(S_1)$, $C_2\doteq conv(S_2)$</p>
+
+<ol>
+  <li>证明$C_1$, $C_2$是convex set<br />
+凸包一定都是凸集，所以这个本质上等同于证明凸包为什么是凸集，凸包是指多个多个凸集的交集，那么这个证明就转化为了证明多个凸集的交集还是凸集。<br />
+<strong>Proof:</strong><br />
+假设有n个凸集${C_1,\cdots,C_n}$，对于任意两个点$x_1$, $x_2$，若它们在这n个凸集的交集中，则对于任意一个凸集$C_i$,都满足$x_1,x_2\in C_i$，则对于某点$x_3$，$x_3=\lambda_ix_1+(1-\lambda_i)x_2\in C_i, \forall \ \lambda_i\in(0,1), \forall i$，对任意的$i$和$x_1$, $x_2$都满足$x_3\in C_i$，那么$x_3$自然在
+${C_1,\cdots,C_n}$的交集中，那么能证明${C_1,\cdots,C_n}$的交集是凸集。</li>
+  <li>证明$cl \ C_1 \cap cl \ C_2 = \emptyset$ <br />
+其思路就是证明$C_1 \cap C_2 = \emptyset$且 $cl \ C_1=C_1$<br />
+<strong>Proof:</strong>
+    <ul>
+      <li>$cl \ C_1=C_1$  ？</li>
+      <li>假设$\exists y \in C_1 \cap C_2$, 则可得出<br />
+$y=\sum_{i\in S_1}\alpha_ix_i=\sum_{j\in S_2}\beta_jx_j$, 且$\sum_i\alpha_i=1, \sum_j\beta_j=1$,联立方程得：<br />
+<script type="math/tex">% <![CDATA[
+\left\{
+\begin{aligned}
+\sum_{i\in S_1}\alpha_ix_i - \sum_{j\in S_2}\beta_jx_j & =  0 \\
+\sum_i\alpha_i - \sum_j\beta_j & =  0 \\
+\end{aligned}
+\right. %]]></script>
+此方程可简化写为：
+<script type="math/tex">% <![CDATA[
+\left\{
+\begin{aligned}
+\sum_{i\in S_1\cup S_2}a_ix_i & =  0 \\
+\sum_{i\in S_1\cup S_2}a_i & =  0 \\
+\end{aligned}
+\right. %]]></script>
+因此，对任意一组${a_i}$,都要能有一组${x_i}$解，使得以上等式成立，接下来我们将以上等式改写以下形式：
+<script type="math/tex">% <![CDATA[
+\begin{bmatrix} x_0 & \cdots & x_N \\ 1 & \cdots & 1 \end{bmatrix} \cdot \begin{bmatrix} a_0\\ a_1 \\ \cdots \\ a_N\end{bmatrix}=0 %]]></script><br />
+可以发现，$\begin{vmatrix} x_0 &amp; \cdots &amp; x_N \ 1 &amp; \cdots &amp; 1 \end{vmatrix}=\begin{vmatrix} x_0 &amp; x_1-x_0 &amp; \cdots &amp; x_N-x_0 \ 1 &amp; 0 &amp; \cdots &amp; 0 \end{vmatrix}$，而存在条件${ x_0,…,x_N }, x_i \in R^{N+1}$近似独立，因此$\begin{bmatrix} x_1-x_0 &amp; \cdots &amp; x_N-x_0 \end{bmatrix}$的行列式不为零，可逆。<br />
+因此当且仅当$\begin{bmatrix} a_0 &amp; a_1 &amp; \cdots &amp; a_N\end{bmatrix}=0$时原式满足，所以不存在这样的点$y$，与最初假设矛盾。<br />
+则$C_1 \cap C_2=\emptyset$证毕</li>
+      <li>综上两点，可证明$cl \ C_1 \cap cl \ C_2 = \emptyset$</li>
+    </ul>
+  </li>
+  <li>因此对于任意的两个set $S_1$和$S_2$，$S_1 \cup S_2\in {x_0,\cdots x_N}$, $S_1 \cap S_2 = \emptyset$，$C_1 = conv(S_1)$和$C_2 = conv(S_2)$都满足使用凸集分离定理的条件，因此对任意$S_1,S_2$都有：$\exists w, \ s.t. \ inf_{x\in C_1}\langle w , x \rangle \ &gt; \ sup_{x\in C_2}\langle w , x \rangle$，因此${ x_0,…,x_N }$在n维空间线性可分。<br />
+（同理，我们也可以证明出：n+2个点在n维中线性不可分）</li>
+</ol>
+
+<p>我理解来说，这个理论就是使用kernel这种方法的理论支撑。</p>
+
+<h2 id="kernel--feature-map">Kernel &amp; Feature Map</h2>
+
+<p>这个地方仅提供我自己的理解，例如对于高斯核，$G(x_i, x_j)=\exp(-||x_i-x_j||^2)$，我们平时会直接使用这样的变换，但却不知道这样变换的原因所在，而其实从$(x_i,x_j)$到$G(x_i, x_j)$之间还有这样一个流程：
+<script type="math/tex">(x_i,x_j) \rightarrow K(x_i,x_j) = \langle \phi(x_i), \phi(x_j) \rangle_H\rightarrow G(x_i, x_j)\\</script></p>
+
+<p>因为$(x_i,x_j)$可以被一个映射函数$\phi(\cdot)$映射到一个高维空间，在这个希尔伯特空间有一种内积的操作，内积可以表示$\phi(x_i),\phi(x_j)$两者的相似性，且这个值刚好等于低维空间下$G(x_i, x_j)$的值，因此，这样去做一个kernel操作是合理的。其中，这一整套过程被称为kernel method，而映射的这个过程被称作Feature Map。（因为我之前一直有一个误区，以为kernel指的就是从低维空间映射到高维空间的这么一个操作，其实不然，这个过程只是kernel method的一部分而已）</p>
+
+<p>$\bf{Mercer’s \ theorem :}$
+Mercer’s theorem is a representation of a symmetric positive-definite function on a square as a sum of a convergent sequence of product functions.<br />
+<strong>对比老师在上课时给出的定义为：</strong><br />
+If $G = G^T$ and $G \geq 0$, $\exists \phi(\cdot), \ s.t. \ G_{ij} = K(x_i,x_j) = \langle \phi(x_i) , \phi(x_j) \rangle_H$</p>
+
+<p>其实老师上课讲到的这个定义就是mercer定理了，即只要G满足这两个条件，那么它就能找到这样的映射函数以及一种内积方式，那么就是合理的核了。</p>
+
+<p>参考：<br />
+https://www.zhihu.com/question/24627666
+https://mp.weixin.qq.com/s?__biz=MzIxNDIwMTk2OQ==&amp;mid=2649077019&amp;idx=1&amp;sn=e0c4a6c502e3668e1dc410f21e531cfd&amp;scene=0#wechat_redirect
+https://blog.csdn.net/wsj998689aa/article/details/47027365
+https://blog.csdn.net/wsj998689aa/article/details/40398777
+https://www.cnblogs.com/xingshansi/p/6767980.html
+https://blog.csdn.net/zhazhiqiang/article/details/19496633
+https://blog.csdn.net/cqy_chen/article/details/77932270</p>
+
+
+
+                <hr style="visibility: hidden;">
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/10/13/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson2/" data-toggle="tooltip" data-placement="top" title="Big Data Algorithm Lesson 2: Kernel K-means">
+                        Next<br>
+                        <span>Big Data Algorithm Lesson 2: Kernel K-means</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <hr style="visibility: hidden;">
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+
+
+<section>
+    
+        <hr class="hidden-sm hidden-xs">
+    
+    <h5><a href="/archive/">FEATURED TAGS</a></h5>
+    <div class="tags">
+        
+        
+        
+        </a>
+        
+        
+                <a data-sort="0002" 
+                    href="/archive/?tag=Algirithms"
+                    title="Algirithms"
+                    rel="7">Algirithms</a>
+        
+                <a data-sort="0002" 
+                    href="/archive/?tag=Lecture+Notes"
+                    title="Lecture Notes"
+                    rel="7">Lecture Notes
+    </div>
+</section>
+
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<!-- add support for mathjax by voleking-->
+
+
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- SNS Link -->
+                
+
+
+<ul class="list-inline text-center">
+
+
+  
+  
+  
+  <li>
+    <a target="_blank" href="https://www.zhihu.com/people/zhao-yu-ji-23">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa  fa-stack-1x fa-inverse">知</i>
+      </span>
+    </a>
+  </li>
+  
+  
+  
+  <li>
+    <a target="_blank" href="https://www.facebook.com/yuji.zhao.5">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li>
+    <a target="_blank" href="https://github.com/zhaoyuji">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+    </a>
+  </li>
+  
+  
+</ul>
+
+                <p class="copyright text-muted">
+                    Copyright &copy; Z's Blog 2019
+                    <br>
+                    Powered by <a href="http://huangxuan.me">Hux Blog</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huxpro&repo=huxpro.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<!-- Currently, only navbar scroll-down effect at desktop still depends on this -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script src="/js/snackbar.js "></script>
+<script src="/js/sw-registration.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+
+
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+
+        // interop with multilangual 
+        if ('' == 'true') {
+            _containerSelector = 'div.post-container.active'
+        } else {
+            _containerSelector = 'div.post-container'
+        }
+
+        // init
+        var P = $(_containerSelector),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        // clean
+        $(selector).html('')
+
+        // appending
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+<!-- Multi-Lingual -->
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

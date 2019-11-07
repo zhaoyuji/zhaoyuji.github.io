@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="">
+    <meta name="keywords"  content="">
+    <meta name="theme-color" content="#000000">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Big Data Algorithm Lesson 6: Support Vector Machine (3) - ZHAO Yuji's Homepage">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="Dualilty Theorem of SVM
+
+">
+    
+    <meta property="article:published_time" content="2018-12-15T00:00:00Z">
+    
+    
+    <meta property="article:author" content="Z">
+    
+    
+    <meta property="article:tag" content="Algirithms">
+    
+    <meta property="article:tag" content="Lecture Notes">
+    
+    
+    <meta property="og:image" content="http://localhost:4000/img/zyjphoto.jpg">
+    <meta property="og:url" content="http://localhost:4000/2018/12/15/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson9/">
+    <meta property="og:site_name" content="ZHAO Yuji's Homepage">
+    
+    <title>Big Data Algorithm Lesson 6: Support Vector Machine (3) - ZHAO Yuji's Homepage</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2018/12/15/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson9/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top invert">
+
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Z's Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    
+                    
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="/archive/">Archive</a>
+                    </li>
+                    
+                    
+                    
+                    
+                    
+                    <li>
+                        <a href="/"></a>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/home-bg.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+
+
+
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/home-bg.jpg');
+        background: ;
+    }
+
+    
+</style>
+
+<header class="intro-header style-text" >
+
+    <div class="header-mask"></div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/archive/?tag=Algirithms" title="Algirithms">Algirithms</a>
+                        
+                        <a class="tag" href="/archive/?tag=Lecture+Notes" title="Lecture Notes">Lecture Notes</a>
+                        
+                    </div>
+                    <h1>Big Data Algorithm Lesson 6: Support Vector Machine (3)</h1>
+                    
+                    <h2 class="subheading">Detailed Dualilty Theorem of SVM</h2>
+                    <span class="meta">Posted by Z on December 15, 2018</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+
+
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+<!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+                       jax: ["input/TeX", "output/HTML-CSS"],
+                       tex2jax: {
+                       inlineMath: [ ['$', '$'] ],
+                       displayMath: [ ['$$', '$$']],
+                       processEscapes: true,
+                       skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] },
+                       messageStyle: "none",
+                       "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+                       });
+    </script>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <!-- Multi-Lingual -->
+                
+
+				<h3 id="dualilty-theorem-of-svm">Dualilty Theorem of SVM</h3>
+
+<p>上节课中，老师对于原SVM问题(P)
+<script type="math/tex">(P): \min \limits_{w,b} \frac{1}{2}||w||^2\\
+s.t. \ t_i\cdot(\langle w,x_i \rangle + b ) \geq 1</script>
+写出了KKT条件，
+<script type="math/tex">\nabla_w L(w,b;\mu)=w-\sum_i\mu_it_ix_i=0 \\\nabla_b L(w,b;\mu)=-\sum_i\mu_it_i=0 \\
+\forall i,\mu_i[t_i(\langle w,x_i\rangle+b)-1]=0</script>
+将原问题转化为了对偶问题(D)：
+<script type="math/tex">(D): \max -\frac{1}{2}||A\mu||^2+\mu^T1 \\
+s.t. \mu\geq0 \\
+\mu^Tt=0 \\
+ A = [t_1x_1,\cdots,t_nx_n]</script>
+但可以发现，这个对偶问题，好像并没有办法转化为原问题，对偶问题貌似只能加上一个拉格朗日乘子，但如果我们稍作变化：
+<script type="math/tex">(D): \max -\frac{1}{2}||s||^2+\mu^T1 \\
+s.t. s=A\mu \leftarrow w\\  
+\mu^Tt=0  \leftarrow b\\
+\mu\geq0</script>
+这样就能成功通过对偶问题转化回原问题。而对偶问题的对偶问题是否一定是原问题呢？答案是不一定。凸问题的对偶问题的对偶是凸问题，因此大部分情况下是原问题；但非凸问题的对偶问题就会变为凸问题，凸问题的对偶还是凸，显然它就不是原本那个非凸问题了。（这里我有些疑惑，所有问题的对偶问题都是凸的吗？）</p>
+
+<p><strong>Theorem 1:</strong><br />
+Suppose that $(x^<em>;\lambda^</em>,\mu^<em>)$ is the solution of KKT, then $x^</em>$ is the optimal solution of primal problem (P) while $\lambda^<em>,\mu^</em>$ is the optimal solution of dual problem (D).<br />
+<strong>Proof:</strong><br />
+考虑对于一个凸问题：
+<script type="math/tex">\min f(x) \\
+s.t. h(x)=0 \leftarrow \lambda\\  
+g(x) \leq 0 \leftarrow \mu</script>
+其中，</p>
+<ol>
+  <li>$f:\mathbb{R}^n \rightarrow \mathbb{R}$ is smooth and convex function</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>$h:\mathbb{R}^n \rightarrow \mathbb{R}^p$, the set $F_1={x</td>
+          <td>h(x)=0}$ is convex</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>$g:\mathbb{R}^n \rightarrow \mathbb{R}^s$, $g_i$ is smooth and convex function<br />
+我们对于以上问题稍加改动
+<script type="math/tex">% <![CDATA[
+\min f(x)+\delta(\alpha|\alpha \geq 0) \\
+s.t. h(x)=0 \\  
+g(x) + \alpha = 0 \\
+\delta(\alpha|\alpha \geq 0) = \left\{
+\begin{aligned}
+& 0,\ if \ \alpha\leq 0 \\
+& +\infty,\ otherwise
+\end{aligned}
+\right. %]]></script>
+重新写出拉格朗日函数，其中$\lambda,\mu$都没有限制
+<script type="math/tex">\widetilde{L}(x,\alpha;\lambda,\mu)=f(x)+\delta(\alpha|\alpha \geq 0)+\langle \lambda,h(x) \rangle + \langle \mu,g(x)+\alpha \rangle</script>
+<script type="math/tex">\inf_{x,\alpha}\widetilde{L}(x,\alpha;\lambda,\mu)= \inf_x \inf_{\alpha}\widetilde{L}(x,\alpha;\lambda,\mu) \\
+= \inf_{x}\{f(x) + \langle \lambda,h(x) \rangle + \langle \mu,g(x)\rangle\} + \inf_\alpha\{\delta(\alpha|\alpha \geq 0)+\langle \mu,\alpha \rangle\} \\
+= \inf_{x}L(x,\alpha;\lambda,\mu) + \inf_\alpha \langle \mu,\alpha \rangle</script>
+<script type="math/tex">% <![CDATA[
+\inf_\alpha \langle \mu,\alpha \rangle  = \left\{
+\begin{aligned}
+& 0,\ if \ \mu\geq 0 \\
+& -\infty,\ otherwise
+\end{aligned}
+\right. %]]></script>
+若$\inf_\alpha\langle \mu,\alpha \rangle = -\infty$，其实对于之后的sup毫无意义，因此在这里取到最优的时候，$\mu\geq 0,\alpha\geq 0$，因此
+<script type="math/tex">\widetilde{L}(x,\alpha;\lambda,\mu)=L(x;\lambda,\mu)=f(x)+\langle \lambda,h(x) \rangle + \langle \mu,g(x)\rangle,\alpha\geq 0</script></li>
+</ol>
+
+<ul>
+  <li>首先证明充分性，即证明当$(x^<em>;\lambda^</em>,\mu^<em>)$是KKT的解时，它们分别是原问题和对偶问题的最优解。<br />
+若$(x^</em>;\lambda^<em>,\mu^</em>)$是KKT的解，则它们满足：
+<script type="math/tex">\nabla_x L(x^*;\lambda^*,\mu^*)=0 \\
+h(x^*)=0 \\
+0\leq \mu^* \perp -g(x^*) \geq 0 \\
+\mu_i^*g_i(x^*) = 0,\forall i</script>
+因此$x^<em>$是原问题的可行解，$\lambda^</em>,\mu^<em>$是对偶问题的可行解，另外由于$L(x;\lambda^</em>,\mu^<em>)$分别关于$x$是凸的，因此
+<script type="math/tex">\min f(x)=\inf_{x}L(x;\lambda^*,\mu^*)=L(x^*;\lambda^*,\mu^*)=f(x^*) \\
+q(\lambda^*,\mu^*) = f(x^*)+0+0=f(x^*)</script>
+因此可得$x^</em>$是原问题最优解且$q(\lambda^<em>,\mu^</em>)=f(x^<em>)=\min f(x)$，而通过对偶定理我们可以知道$q(\lambda,\mu)\leq \min f(x)=\max q(\lambda,\mu)\leq f(x)$，因此可以证明$\lambda^</em>,\mu^*$是对偶问题的最优解。</li>
+  <li>其次证明必要性，即证明当$(x^<em>;\lambda^</em>,\mu^<em>)$分别是原问题和对偶问题的最优解且duality gap=0时，它们可以解出KKT。
+首先因为$(x^</em>;\lambda^<em>,\mu^</em>)$分别是原问题和对偶问题的最优解，因此它们一定满足两个问题的可行性条件，即
+<script type="math/tex">h(x^*)=0 \\
+g(x^*) \leq 0 \\</script>
+又因为$x^<em>$是$\inf_x L(x;\lambda^</em>,\mu^<em>)$的最优解，则一定满足$\nabla_x L(x^</em>;\lambda^<em>,\mu^</em>)=0$。此外可得，
+<script type="math/tex">f(x^*)=q(\lambda^*,\mu^*)\\
+=\inf_x f(x)+\langle \lambda^*,h(x)\rangle + \langle \mu^*,g(x)\rangle \\
+\leq f(x) + \langle \lambda^*,h(x)\rangle + \langle \mu^*,g(x)\rangle \\
+\leq f(x^*) + \langle \lambda^*,h(x^*)\rangle + \langle \mu^*,g(x^*)\rangle \\
+\leq f(x^*)+\langle \mu^*,g(x^*)\rangle</script>
+由于$\langle \mu^<em>,g(x^</em>)\rangle\leq 0$，因此$\leq f(x^<em>)+\langle \mu^</em>,g(x^<em>)\rangle\leq f(x^</em>)$，则综上
+<script type="math/tex">f(x^*)
+\leq f(x^*)+\langle \mu^*,g(x^*)\rangle \leq f(x^*)</script>
+因此$\langle \mu^<em>,g(x^</em>)\rangle=0$，至此可证明当$(x^<em>;\lambda^</em>,\mu^*)$分别是原问题和对偶问题的最优解且duality gap=0时，它们也是KKT的解。</li>
+</ul>
+
+<p>Theorem 1证毕。</p>
+
+<p>因此，对于SVM的原问题与对偶问题，我们考虑假设已知$\mu^<em>$，那么如何解$w,b$?
+<script type="math/tex">w^*=\sum_it_i\mu_i^*x_i=\sum_{i\in S}t_i\mu_i^*x_i\\
+S=\{i|\mu_i^*\geq 0\} \\
+t_i(\langle w,x_i\rangle+b)-1=0,\forall i\in S\\
+t_i=\pm1 \rightarrow \langle w,x_i\rangle+b=t_i \\
+b^* = t_i-\langle w^*,x_i\rangle,\forall i \in S</script>
+为了平衡扰动，一般取$b^</em>=\frac{1}{|S|}\sum_{i\in S}(t_i-\langle w^*,x_i\rangle)$。<br />
+从这里可以看出，所有计算其实只与那些$g(x)=0$的部分有关，在SVM中，这些部分其实就是support vector，即那些刚好处于分界线上的点。<br />
+而怎么来解对偶问题呢？通常用到的方法则是ADMM</p>
+
+<p>####Alternating Direction Method of Multipliers (ADMM)
+我们首先考虑ADMM最“喜欢”的通用形式：
+<script type="math/tex">\min f(x)+g(y)\\
+s.t. \ Ax+By=C</script>
+考虑它的拉格朗日函数
+<script type="math/tex">L(x,y;z)=f(x)+g(y)+\langle z,Ax+By-C\rangle</script>
+写出KKT条件（此时考虑函数f,g为凸但是非smooth的情况，无法求梯度，而使用此梯度代替）
+<script type="math/tex">0\in \partial_xL(x,y;z)\\
+0\in \partial_yL(x,y;z) \\
+Ax+By-C=0</script>
+给定$\sigma&gt;0$
+<script type="math/tex">L_\sigma(x,y;z)=L(x,y;z)+\frac{\sigma}{2}||Ax+By-C||^2</script>
+回忆一下我们在lesson6/7里讲到的penalty factor的方法
+<script type="math/tex">\min \ F^k=f(x)+\frac{k}{2}||h(x)||^2</script>
+其中的k必须要求极其大，因此计算时存在numerical difficulty。但研究发现，$L_\sigma(x,y;z)$中的$\sigma$是没有限制的，可以为随意的值。</p>
+
+<p><strong>ADMM算法</strong></p>
+<ol>
+  <li>Input $x^0,y^0,z^0,\sigma&gt;0,k=0,1,2,\cdots$</li>
+  <li>Iteratively calculate 
+<script type="math/tex">x^{k+1}\in argmin L_\sigma(x,y^k;z^k) \\
+y^{k+1}\in argmin L_\sigma(x^{k+1},y;z^k) \\
+z^{k+1}=z^k+\gamma\sigma(Ax^{k+1}+By^{k+1}-C)</script>
+其中，A是列满秩的，$\gamma\in (0,\frac{1+\sqrt(5)}{2})$会影响算法收敛性，一般为了方便推导分析取1。而 $\gamma=\frac{1+\sqrt(5)}{2}$时效果一般比1快40%~80%。（黄金比例很玄学了）</li>
+</ol>
+
+<p>我们将ADMM试用在SVM上。首先将SVM的对偶问题转化为这种形式：
+<script type="math/tex">\min \frac{1}{2}||A\mu||^2-\langle\mu,1\rangle+\delta(s|s\geq0)=f(\mu)+g(s)\\
+s.t. [t^T;I]\mu-[0;I]s=[0;0]\rightarrow G\mu+Hs=0</script>
+计算出每一步迭代需要的求解的问题：
+<script type="math/tex">\mu^{k+1}=argmin L(\mu,s^k;z^k)\{\frac{1}{2}||A\mu||^2-\langle \mu,1\rangle+\langle G\mu+Hs^k,z^k\rangle+\frac{\sigma}{2}||Gv+Hs^k||^2\} \\
+\nabla_{\mu}L(\mu,s^k;z^k)=A^TA\mu-1+G^Tz^k+\sigma G^T(G\mu+Hs^k) \\
+\rightarrow (A^TA+\sigma G^TG)\mu=Rs^k</script>
+其中，为了简化，$R$都表示一个非特定的已知的linear operator
+<script type="math/tex">s^{k+1}=argmin_{s\geq0} \{ \langle G,\mu^{k+1}+Hs,z^k \rangle+\frac{\sigma}{2}||G\mu^{k+1}+Hs||^2 \}</script>
+由于$H^TH=I$，经过简化，上式可以转化为一个关于$s$的完全平方形式
+<script type="math/tex">s^{k+1}=argmin_{s\geq0}\{\frac{\sigma}{2}||s-R^k||_F^2+constant\}</script>
+虽然存在约束$s\geq0$会使这个问题变得棘手，但经过化简之后，可以发现这个约束就变得并没有那么难解了，这个子问题的最优解就是$R^k$在0上的投影。比如若$R^k=[-1,1;1,-1],s^*=[0,1;1,0]$。<br />
+在实现这个算法的时候，$\sigma$可以试试取1，10，100等。</p>
+
+<p>###Augmented Lagrangian Method (ALM)</p>
+<ol>
+  <li>Input $x^0,y^0,z^0,\sigma&gt;0,k=0,1,2,\cdots$</li>
+  <li>Iteratively calculate 
+<script type="math/tex">(x^{k+1},y^{k+1})\in argmin L_\sigma(x,y;z^k) \\
+z^{k+1}=z^k+\rho\sigma(Ax^{k+1}+By^{k+1}-C),\rho\in(0,2)</script>
+ALM在解最优的$(x^{k+1},y^{k+1})$时比较复杂，原因在于$||Ax+By-C||^2$中存在xy的交叉项。而ADMM则没有这种困扰。</li>
+</ol>
+
+<ul>
+  <li>ADMM的特点：一阶算法，解子问题很快，但收敛速度慢，$O(1/k)$</li>
+  <li>ALM的特点：二阶算法(牛顿法)，解子问题很慢，且不一定能解出来（比如这里的SVM），会存在numericaldifficulty，但收敛速度快，$O(1/\sigma)$</li>
+</ul>
+
+
+                <hr style="visibility: hidden;">
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/12/11/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson8/" data-toggle="tooltip" data-placement="top" title="Big Data Algorithm Lesson 5: Support Vector Machine (2)">
+                        Previous<br>
+                        <span>Big Data Algorithm Lesson 5: Support Vector Machine (2)</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/03/12/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson10/" data-toggle="tooltip" data-placement="top" title="Big Data Algorithm Lesson 7: Support Vector Machine (4)">
+                        Next<br>
+                        <span>Big Data Algorithm Lesson 7: Support Vector Machine (4)</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <hr style="visibility: hidden;">
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+
+
+<section>
+    
+        <hr class="hidden-sm hidden-xs">
+    
+    <h5><a href="/archive/">FEATURED TAGS</a></h5>
+    <div class="tags">
+        
+        
+        
+        </a>
+        
+        
+                <a data-sort="0002" 
+                    href="/archive/?tag=Algirithms"
+                    title="Algirithms"
+                    rel="7">Algirithms</a>
+        
+                <a data-sort="0002" 
+                    href="/archive/?tag=Lecture+Notes"
+                    title="Lecture Notes"
+                    rel="7">Lecture Notes
+    </div>
+</section>
+
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<!-- add support for mathjax by voleking-->
+
+
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- SNS Link -->
+                
+
+
+<ul class="list-inline text-center">
+
+
+  
+  
+  
+  <li>
+    <a target="_blank" href="https://www.zhihu.com/people/zhao-yu-ji-23">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa  fa-stack-1x fa-inverse">知</i>
+      </span>
+    </a>
+  </li>
+  
+  
+  
+  <li>
+    <a target="_blank" href="https://www.facebook.com/yuji.zhao.5">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li>
+    <a target="_blank" href="https://github.com/zhaoyuji">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+    </a>
+  </li>
+  
+  
+</ul>
+
+                <p class="copyright text-muted">
+                    Copyright &copy; Z's Blog 2019
+                    <br>
+                    Powered by <a href="http://huangxuan.me">Hux Blog</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huxpro&repo=huxpro.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<!-- Currently, only navbar scroll-down effect at desktop still depends on this -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script src="/js/snackbar.js "></script>
+<script src="/js/sw-registration.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+
+
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+
+        // interop with multilangual 
+        if ('' == 'true') {
+            _containerSelector = 'div.post-container.active'
+        } else {
+            _containerSelector = 'div.post-container'
+        }
+
+        // init
+        var P = $(_containerSelector),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        // clean
+        $(selector).html('')
+
+        // appending
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+<!-- Multi-Lingual -->
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
