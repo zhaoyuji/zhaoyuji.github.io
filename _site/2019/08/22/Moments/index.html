@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="">
+    <meta name="keywords"  content="">
+    <meta name="theme-color" content="#000000">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Striking Moments - ZHAO Yuji's Homepage">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="
+
+
+">
+    
+    <meta property="article:published_time" content="2019-08-22T00:00:00Z">
+    
+    
+    <meta property="article:author" content="Z">
+    
+    
+    <meta property="article:tag" content="Get A Life">
+    
+    
+    <meta property="og:image" content="http://localhost:4000/img/zyjphoto.jpg">
+    <meta property="og:url" content="http://localhost:4000/2019/08/22/Moments/">
+    <meta property="og:site_name" content="ZHAO Yuji's Homepage">
+    
+    <title>Striking Moments - ZHAO Yuji's Homepage</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2019/08/22/Moments/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Z's Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    
+                    
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="/archive/">Archive</a>
+                    </li>
+                    
+                    
+                    
+                    
+                    
+                    <li>
+                        <a href="/"></a>
+                    </li>
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/in-post/2019-08-22-bg.png" width="0" height="0"> -->
+
+<!-- Post Header -->
+
+
+
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/in-post/2019-08-22-bg.png');
+        background: ;
+    }
+
+    
+</style>
+
+<header class="intro-header" >
+
+    <div class="header-mask"></div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/archive/?tag=Get+A+Life" title="Get A Life">Get A Life</a>
+                        
+                    </div>
+                    <h1>Striking Moments</h1>
+                    
+                    <h2 class="subheading">”到时间中避难“</h2>
+                    <span class="meta">Posted by Z on August 22, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+
+
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <!-- Multi-Lingual -->
+                
+
+				<hr />
+<hr />
+
+<ul>
+  <li>用以记下现在慢悠悠<strong>「生活」</strong>中零零碎碎的片刻感受，<strong>跳跃</strong>式流水账而已</li>
+  <li>最开始取名叫做「My Moments」，觉得有些矫情，又改回了「<strong>Moments</strong>」</li>
+  <li>忽然<strong>striking</strong>这个词就蹦出我的脑海，觉得十分契合，并且不由让我回想起打垒球的那几年，听到strike后心态逐渐变得不同却又在最后一场比赛被三振出局后崩坏的场景，也好像很适合现在的我。Calm Down My Teammate!</li>
+</ul>
+
+<hr />
+<hr />
+
+<h3 id="10new-angle">「10」New Angle</h3>
+
+<p><strong>2019-10-27</strong></p>
+
+<p>在结束整整两天的business challenge的时候即使最后的solution没有那么满意但还是有一种如释重负xue微自豪的感觉，大约就是妈妈看傻儿子怎么看都开心的意思哈哈哈哈。。从最开始的抵触这种头脑风暴式的竞赛到中间因为组里贼强迫症且偏执的小哥头疼甚至想过中途开溜到最后跌跌撞撞完成，结果如何好像也没有那么重要了，重要的是在途中想到了hin多相关或无关事情：</p>
+
+<ol>
+  <li>
+    <p>99%的这样的点子都不是那么有趣，但一定能有那么一两个让自己眼前一亮的idea或者是pitch。tell a story and sell your idea 而不是do presentations，能够在台上把pitch做的那么有趣的人实在太棒了！！为什么自己做不到啊555[泪]</p>
+  </li>
+  <li>
+    <p>以前一直因为抵触工作而去想读博士，我在在欧洲的这两个月里终于能够把这种逃避的思想锤进土里了。一个极为优秀的狭义上的entrepreneur（创业者）和一个好的研究者除去技术上的硬实力其实并无二致，他们都能被称为entrepreneur：发现问题，思考问题，提出解决方案，讲一个完整的故事最终呈现它。不得不承认那时候因为工作能力不够且厌恶工作的我幸亏没去读博士，不然也会因为没有发现这种能力重要性的自己感到深深的挫败感吧。。本质上我对自己的现状的改变的期望不应该是读博士或者工作，而是这种逻辑思考和表达能力的提高。。我这个一心偏执不愿意思考的蠢人啊[顶]以及这也是当年为什么自己研究做的不好的原因，因为关注点总不是reasonable 而是一些无意义的指标，忽然挺感谢崔老师的contribution连问的哈哈哈哈</p>
+  </li>
+  <li>
+    <p>很希望自己能够act as an entrepreneur，并且能有且贡献优质的高密度的讨论思考，但介于自己在vision上的巨大缺失以及格局之小总是无法实现[失望]希望大伙一起来鞭策我多读书别玩手机了[失望]垃圾ZYJ</p>
+  </li>
+  <li>
+    <p>以及好几个友人提醒过我的，又一次发现自己是一个“功利”的人，读书希望能记住很多东西，所以记不下来就不想看了；小组讨论希望能很有贡献且被采纳，虚荣心作祟的责任感（？奇怪的表述），无法实现的时候就变得消极；总是追求结果至上；在不该当“废物”的时候不当，该当“废物”的时候瞎当（短时间内可能无法获取东西觉得浪费时间但是在长时间内是有巨大收获的），总是浮躁又急功近利[感冒]</p>
+  </li>
+  <li>
+    <p>因为害怕做不到完美就干脆不做是因噎废食的表现，在开口说英语，pitch，做business idea等多个方面，总是在做心理建设但总是无法迈出很多第一步。到底要怎么convince myself呢[生病]和大脑皮层斗争克服自己的条件反射行为实在是太难了，快要两年了还是在一个圈子里，找到正反馈太难了[失望]可能我天生就是废柴吧555555</p>
+  </li>
+  <li>
+    <p>最后一个忽然想到的不重要的点，从圣马丁和帕森斯的设计风格也能以小见大看出来欧洲和美国的区别，就像是欧美研究氛围的很大不同，天马行空颠覆创新和商业实用结构技能。所以大多数圣马丁的毕业生都穷困潦倒，能出一个McQueen已经是很不容易惹。</p>
+  </li>
+</ol>
+
+<p><strong>2019-10-7</strong></p>
+
+<ol>
+  <li>
+    <p>Scientific Writing课上又陷入写research proposal的困境，学到一句新的话（或许对大家来说不算哈哈哈哈）这里只是单纯觉得new angle这个词很适合哈哈哈</p>
+
+    <blockquote>
+      <p>We solve the problem from a new angle by hypothesizing that…..</p>
+    </blockquote>
+  </li>
+  <li>10月的第一周赶了几个due</li>
+  <li>很久没写日记，就有一种自己什么也没获得到的感觉（实际上好像也是）</li>
+  <li>啊！对了！最近最开心的是看了电影《燕尾蝶》！太好看了吧！女主有些像李兰迪！很黑色幽默的一部电影，充斥着暴力美学，但电影的主题上本质还是及其小清新的（毕竟导演可是岩井俊二啊哈哈）隐藏在脏、乱、差的反乌托邦的外表下的内核依旧是乌托邦式的理想主义。对梦想和爱情执着追求生命的最后一夜依旧整晚唱着MAY WAY的肖飞鸿；深情温柔善良甚至可以说有点单纯的固力果；果敢义气、超然世外的职业杀手朗；以及一直仿佛置身事外局外人般的凤蝶，无时无刻不在散发着温情与爱，但所有情感的流动都含蓄且隐秘。</li>
+  <li>以及今天因为之后有机会interview一个大人物而开心！！！！！！赞！！！</li>
+</ol>
+
+<hr />
+<hr />
+
+<h3 id="9back-to-school">「9」Back to School</h3>
+
+<p><strong>2019-9-2</strong></p>
+
+<ol>
+  <li>也是一个没能起床晨跑的早上，不过修好了家里的窗户，终于可以透气了！像一条被海浪冲到了沙滩上的鱼又回到海洋里，疯狂的吸取冷空气。</li>
+</ol>
+
+<p><strong>2019-9-3</strong></p>
+
+<ol>
+  <li>再融入</li>
+</ol>
+
+<p><strong>2019-9-4</strong></p>
+
+<ol>
+  <li>人就是这样啊，说着只做两件事但是不由的又想要给自己安排上满满的计划，然后又陷入一件事情都做不好的境地。在无所事事的闲散和忙碌焦虑之间不停游走，无法找到平衡。</li>
+</ol>
+
+<p><strong>2019-9-5</strong></p>
+
+<ol>
+  <li>To my friend：如果能找到真正喜欢的事情那就放开手去做吧！毕竟这个前提都已经是大多数人不具备的了！</li>
+  <li>Be positive!</li>
+</ol>
+
+<p><strong>2019-9-6</strong></p>
+
+<ol>
+  <li>
+    <p>今日份晨跑 + 拍小视频任务</p>
+
+    <p>斯京的太阳一如既往的美！好好积蓄能量度过冬天吧！</p>
+
+    <p><img src="/img/in-post/2019-09-06-p1.jpeg" alt="img" />
+ <img src="/img/in-post/2019-09-06-p2.jpeg" alt="img" /></p>
+
+    <p>（超级喜欢视频的这张截图嘻嘻</p>
+
+    <p><img src="/img/in-post/2019-09-06-p3.jpeg" alt="img" /></p>
+  </li>
+</ol>
+
+<p><strong>2019-9-8</strong></p>
+
+<ol>
+  <li>6号-7号和小伙伴们坐船去芬兰，看海看日落日出。原来iPhone自带的emoji的🌄🌅是真实的场景啊！深蓝色的天空逐渐被金色淹没，波光粼粼的海面。</li>
+</ol>
+
+<center>
+<video id="video" controls="" preload="none">
+<source id="mp4" src="/img/in-post/2019-09-08-video.mp4" type="video/mp4" />
+</video>
+</center>
+
+<p><strong>2019-9-11</strong></p>
+
+<ol>
+  <li>又开始陷入起不来的循环了！明明很早就睡但是还是会睡很久！😢（啪啪啪打脸</li>
+  <li>
+    <p>今天上商业课听到一个很有趣的案例，某个网上眼镜店的glasses的销量远小于lenses，他们花了很久找了很多原因，包括眼镜样式、不能试戴、商品排列、价格等等，并且一一解决，但是结果还是不尽人意。直到最后他们一群人在实体眼镜店蹲守了三天之后才发现一个很小的区别：</p>
+
+    <p><strong>Buying glasses is a “group decision”</strong></p>
+
+    <p>于是他们在网站中设置了一个很小的功能，就是在模拟试戴之后可以一键转发到社交平台，果不其然，镜框的销量得到了增加。</p>
+
+    <p>这让我想到许多非社交型功能APP都会慢慢的增加设置一个社交圈的功能，包括购物网站、照片/视频编辑器、音乐播放软件、甚至连一些支付(bao)软件曾经也一度想充分利用开发其社交功能，因为人大多数时候做的决策就是”group decision”，社交圈就是互联网公司的一大盈利模式。</p>
+
+    <p>然后不经感慨一下微信的成功，从简单的聊天软件，到提出虚拟红包慢慢渗透支付功能，甚至赶超支付宝；然后到极简小程序的推出，以社交圈为载体融合所有功能型软件。这种跳出习惯性思维圈直击要害的产品发展路线，让微信真的做到了：<strong>不只是一个聊天工具，更是一种生活方式</strong>。一向感觉流日记写手我只能暗自说一句“张小龙牛逼”。</p>
+  </li>
+</ol>
+
+<p><strong>2019-9-13 -&gt; 2019-9-16</strong> 🇮🇸</p>
+
+<ol>
+  <li>
+    <p>两天四季</p>
+
+    <p>来冰岛前发现连续两天都是100%大雨天，于是做好了心理准备迎接一个暴风雨的冰岛，但是周六居然一路走一路放晴，一天看到了三四个大小不一的彩虹🌈，真的太幸运了，虽然周日如约下了雨。我们戏称真的是在两天经历了冰岛的四季。</p>
+  </li>
+  <li>
+    <p>黑沙地和苔藓</p>
+
+    <p>沿着南边海岸线的公路一路向东是大片的黑沙地，多火山的特性以及冷却的岩浆石和火山灰让这边土地很难长出绿色的植被来。每年似乎只能长3cm的苔藓成了这片土地唯一的拓荒者，在每一次火山爆发之后又重新开始生长，周而复始。</p>
+
+    <p><img src="/img/in-post/2019-09-17-blacksand.jpeg" alt="img" /></p>
+
+    <p><img src="/img/in-post/2019-09-17-moss.jpeg" alt="img" /></p>
+  </li>
+  <li>
+    <p>Human habitat</p>
+
+    <p>车上中途醒来后，Lin说到，这是她第一次从市民口中听到“Human habitat”这样的字眼，向导把她们居住在冰岛这片土地称之为“Human habitat”。生存在这片拥有火山、瀑布、远古冰川等诸多原始地貌的土地上，她们依旧对自然充满敬畏，比起dominate这片土地，只是或许也只能是habitate。</p>
+  </li>
+  <li>
+    <p>有趣</p>
+
+    <p>不知道这是不是冰岛人独有的特点：每个地方的指示标志都各不相同，并且画的十分有趣哈哈哈。好像设计不同的标志符号就是他们在漫长冬日里的消遣之一。让我忽然联想到高晓松在晓说里似乎提到的一个观点，大概是那些经历过比较多磨难地区的人民多半更有趣一些（当时举的例子是东北地区）。感觉有些应景哈哈</p>
+
+    <p><img src="/img/in-post/2019-09-17-signal.jpeg" alt="img" /></p>
+  </li>
+  <li>
+    <p>想到再继续写吧！highly recommend！hahahahah</p>
+  </li>
+</ol>
+
+<p><strong>2019-9-17</strong></p>
+
+<ol>
+  <li>
+    <p>因为《GEB》到了我完全读不下去的环节（对位藏头诗与一致性、完全性与几何学），于是打开了一本新书《乌合之众：大众心理研究》，刚看的时候联想到脱欧公投和一系列社交媒体上的反智行为原本以为这是一本比较新的书，结果发现竟然是出版于1895年！不得不感慨于一百多年前就有人能够完美预测概括群体心理的特征，虽然到目前为止他还不够完全充分的向我justify一个群体的情绪化、无异议、低智商等特征的合理性，且感觉怎么明明简简单单的话却被翻来覆去的绕着说，阅读体验不是hin好，但是且看吧哈哈</p>
+  </li>
+  <li>
+    <p>好多天没有晨跑锻炼了！！！别忘了Flag！！！</p>
+  </li>
+</ol>
+
+<p><strong>2019-9-18</strong></p>
+
+<ol>
+  <li>最近看the story of us有感：比起一个国家，感觉美国更像是一个公司，一个典型的entreprenureship的成功案例。最早“头脑风暴”的“创始人”之一John Rolfe就是一个不折不扣的entrepreneur，发现烟草生意在美洲这块新大陆上的可实施性，随后进行扩张、逐渐发展。</li>
+  <li>但是，一个拿“all men are created <strong>equal</strong>, that they are endowed by their Creator with certain unalienable Rights, that among these are <strong>Life</strong>, Liberty, and the pursuit of Happiness”作为宣言的国家却起家于叛逃自己的国家占领掠夺别人的土地甚至屠杀那块土地上的人民，这种极致的双标还能把人洗脑认为自己是fight for freedom真的是疑惑操作（观念不断更新中或许明天就打脸。。。求生欲很强）</li>
+</ol>
+
+<p><strong>2019-9-21</strong></p>
+
+<ol>
+  <li>嗯！</li>
+</ol>
+
+<p><strong>2019-9-24</strong></p>
+
+<ol>
+  <li>感觉自己连莽夫这个称呼都不配了</li>
+</ol>
+
+<p><strong>2019-9-25</strong></p>
+
+<ol>
+  <li>
+    <p>来欧洲之后我一直很疑惑的点在于是什么能够支撑一个如此高福利却”低”效率的国家一直稳速发展，或许很多人会提到说因为欧洲的发展模式是可持续的诸如此类的话，那中国如今这种被许多人诟病“不持续”的发展模式是必然的吗，是现有约束条件中的最优解吗？</p>
+  </li>
+  <li>
+    <p>又一次让我想到这个问题的起源是今天商业课上展示的workshop，任务是去周围的商场逛一圈然后提出一个商业idea 啊。。好久没写我忘惹！！</p>
+  </li>
+</ol>
+
+<hr />
+<hr />
+
+<h3 id="8hello-sweden">「8」Hello, Sweden</h3>
+
+<p><strong>2019-8-22</strong></p>
+
+<ol>
+  <li>
+    <p>昨天和前天看了今敏的《东京教父》和《红辣椒》，感慨于大师对于镜头的运用（或许对于漫画不应该这么说？外行外行）</p>
+
+    <p>最喜欢的镜头之一或许就是《东京教父》里哈娜和小青妖这个背影的重叠了吧！</p>
+
+    <p><img src="/img/in-post/2019-08-22-p1.png" alt="img" /></p>
+
+    <p>最喜欢的片段应该是《红辣椒》里的游行了吧，尤其有背景音乐的加持每一次看都会起鸡皮疙瘩！</p>
+
+    <p>可能要感谢他，让近一年持续焦虑到最近甚至连一集综艺都难以认真看下去的我安安心心在家看完了两部电影，很多细小的片段都能让我联想到很多后来的电影，感觉每一个小点就能被拎出来拍成一部好电影，让我联想到了高晓松评论刘慈欣的《三体》，把一切好东西都统统摆出来给你看。或许就是这样高密度的脑洞输出才会让人看的畅快淋漓吧！（我可真是个感受派流水账记录者哈哈哈哈</p>
+  </li>
+  <li>
+    <p>以及最近在慢慢看《GEB》，我可太喜欢中间的怪圈理论了！以及其中提到的大多数矛盾的来源是“自指性”</p>
+    <blockquote>
+      <ul>
+        <li>所谓“怪圈”现象，就是当我们向上（或向下）穿过某种层次系统中一些层次时，会意外的发现我们正好回到了我们开始的地方。</li>
+      </ul>
+    </blockquote>
+
+    <blockquote>
+      <ul>
+        <li>任何一个形式系统，只要包括了简单的初等数论描述，而且是自洽的，它必定包含某些系统内所允许的方法既不能证明真也不能证伪的命题。</li>
+      </ul>
+    </blockquote>
+
+    <p>想到高中物理老师每每讲到激情昂扬处都会提到爱因斯坦晚年想验证广义与狭义相对论是能够融合的，形成一套闭合完备的理论，所以说Ph.D = Doctor of Philosophy 不是没有原因的啊！</p>
+  </li>
+</ol>
+
+<p><strong>2019-8-24</strong></p>
+
+<ol>
+  <li>“没能继续的诗篇 ，不欢而散的告别”</li>
+</ol>
+
+<p><strong>2019-8-25</strong></p>
+
+<ol>
+  <li>今天终于把《千年女优》也看啦！
+    <ul>
+      <li>让我想到了《暗恋桃花源》的剧情（虽然我还没有看过暗恋只看过向往的生活里那一小段嘻嘻）</li>
+      <li>再一次感慨一下今敏的剪辑和镜头，在现实和虚幻中随意穿梭；以及能把微小的情感拍出宏大的宇宙感</li>
+      <li>最喜欢的《而我知道》的MV中的结尾“现在我知道，我爱上的是17岁的，我自己”</li>
+    </ul>
+  </li>
+  <li>
+    <p>晚上去Stockholm City Hall参加开学典礼，就抽下午出门去了modern museum，想去看马蒂斯！毕竟他的《The Joy of Life》占据了我多年朋友圈的背景，还想过要纹舞蹈！可惜不出意外的没有看到</p>
+
+    <p><img src="/img/in-post/2019-08-25-p1.png" alt="img" /></p>
+
+    <p>不过意外拍到了很爱的虚实相生的风景！👇 那我就取名《开着的窗户》吧 credit to Matisse</p>
+
+    <p>毕竟当代艺术不就是追求“人人都是艺术家”吗！哈哈哈哈哈哈</p>
+
+    <p><img src="/img/in-post/2019-08-25-p2.png" alt="img" /></p>
+
+    <p>从开学典礼回来的路上整个城市都被粉紫色的云朵笼罩，太美了（手机只能表达出来十分之一的美！华为勉强十分之二！！</p>
+
+    <p>我和Lin一路奔跑，去追赶lidl关门前的，和她的”family”来见她路上的20分钟，我调侃，“咱们这是斯德哥尔摩跑啊”，于是越跑越起劲，两个人傻乎乎的在街上大笑</p>
+
+    <p>一路跑过，却又一路念念不舍的拍照，Lin说，一定要把它留下呀</p>
+
+    <p><img src="/img/in-post/2019-08-25-p3.png" alt="img" /></p>
+
+    <p>抵抗焦虑的良方，或许就是充实安心的过好每一天「生活」吧！Get a Life! （扣题满分</p>
+
+    <p>腿真酸呀！晚安！</p>
+  </li>
+</ol>
+
+<p><strong>2019-8-26</strong></p>
+
+<ol>
+  <li>第一天上课啦，商科课程的老师是个有趣的先生，连连赞叹他的pitch技巧</li>
+</ol>
+
+<p><strong>2019-8-27</strong></p>
+
+<ol>
+  <li>
+    <p>赖了半小时床之后起床晨跑(走)</p>
+
+    <p>听说沿着学校背后的小森林一路穿过去会遇到一片湖，很好奇，于是慢慢悠悠连跑带走，穿过了斯大的校园，结果走到了lappis。</p>
+
+    <p>途中偶遇了秋千，想到上次11点多在滨江公园还玩不到的秋千，二话不说就冲了上去。我真的有看到金色的阳光哦</p>
+
+    <p><img src="/img/in-post/2019-08-27-p2.png" alt="img" /></p>
+
+    <p>终于到达了所谓的某个湖边，随手拍的两张照片在相册里乍一看像是一张长图，what a coincidence!</p>
+
+    <p><img src="/img/in-post/2019-08-27-p1.png" alt="img" /></p>
+  </li>
+  <li>
+    <p>甩锅这件事，在不知不觉中我也能完成✅的非常之好。</p>
+  </li>
+  <li>“幸福当然是很美好的，但是瞬间怎么被放大和延伸，我没有学过，我怕我做不到。”</li>
+  <li></li>
+</ol>
+
+<p><strong>2019-8-28</strong></p>
+
+<p>上课时忽然想到的今日主题词：<strong>应运而生</strong></p>
+<blockquote>
+  <p>一个人的命运啊，当然要靠自我奋斗。但也要考虑历史的进程</p>
+</blockquote>
+
+<ol>
+  <li>
+    <p>最近看的书里提到，</p>
+
+    <blockquote>
+      <p>Lean Startup is a new way of looking at the development of innovative new products that emphasizes <strong>fast iteration</strong> and <strong>customer insight</strong>, a huge vision, and great ambition, all at the same time.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>上午看的论文是有关user-generated content对于Product Design的影响，在论文里也不谋而合的提到了一种two-stages手段：design-then-price。即先design product，然后根据user-generated content（例如评论反馈等）定价</p>
+  </li>
+  <li>
+    <p>下午的课上，Henrik反复提到，一是History的重要性，History is the best training set in order to predict future；二是logic，需要对事物追根溯源寻找其内在逻辑和发展规律（莫名正经）。他举到了marketing和advertising产生的原因，供需角色的倾斜导致由calling to buy到marketing的变化，也是push -pull的转换（大一学的MIS忽然蹦出脑海）。科技的迅速发展，互联网信息爆炸，产品更新换代速度的指数激增，导致传统的部分product design模式无法适用。Fast iteration is required.</p>
+  </li>
+  <li>想到了早上看的Bayesian learning
+    <blockquote>
+      <p>In other words, if we have enough data, we see that the data overwhelms the prior.</p>
+    </blockquote>
+
+    <p>比起完美的刻画出先验知识，在data足够多的情况下（当下），不断的收集用户信息等进行迭代更加重要</p>
+  </li>
+  <li>
+    <p>毕加索的立体主义乃至当代艺术诞生于影像技术逐渐成熟的技术大进步时期，机械复制时代的到来弱化了艺术对于写实的需求，而表达与思考成了主要目的。</p>
+
+    <p>在柏拉图的《理想国》一书中有一个非常经典的比喻——“床喻”，即关于三张床的比喻。他认为第一张床是一个由上帝创造的理念(idea/concept)，第二张床是工匠为了仿照上帝的概念而制造出的实物，第三张床是则艺术家为了摹仿工匠所制造的而创作的作品。
+柏氏的床喻表明，自然之床即神造之床，是原型观念，代表看不见摸不着的理念本体，属于理智世界的可知对象，是世界所有床的本源；木匠所造之床，是生活器具，属于现象世界的可视对象 ，是摹仿原型理念的产物，代表实用技艺；画家所画之床是木匠所造之床的摹本，相对于神所造之床而言，就成了摹本之摹本，属于虚化影像，是影子之影子，与床的物理实体相隔一层，没有实用价值；与床的本体相隔两层，没有认识价值，只能代表摹仿艺术。</p>
+
+    <p>有趣的是，1965年约瑟夫·科苏斯的作品《one and three chairs》也很好的再现了柏拉图的这个理念。照片里的椅子，是实物的影像，真实的这把椅子出自工匠之手，是模仿理念本体的产物，而那些对椅子的解释不正好就是椅子的原型观念吗</p>
+
+    <p><img src="/img/in-post/2019-08-28-p1.png" alt="img" /></p>
+
+    <p>当代艺术的发展很大一部分是由于科学技术发展的推动，机械复制时代让艺术的大量复制成为可能，艺术相对于人们来说不再是神秘的崇拜对象，而变为触手可及的审美对象，技巧性的描绘美的事物仅仅只能带给观众美的观感。</p>
+  </li>
+  <li>
+    <p>Coco Chanel（最喜欢的品牌之一啊啊啊）打破了“帽子上有一个花园”的传统，以简洁的无装饰草帽出名；摒弃了束腰拖地长裙，以男装为灵感采用直线剪裁，及膝直筒裙甚至长裤；讨厌女人们穿的“五彩缤纷”，于是设计了小黑裙（超自我呀！！），但这一切似乎也是因为她敏锐的抓住了（我们无从得知是她选择了还是被选择了）女性意识的觉醒这一时代特征。</p>
+  </li>
+  <li>综上所述，要多看书多看报勤学习勤思考少吃零食多睡觉 :)</li>
+</ol>
+
+<p><strong>2019-8-29</strong></p>
+
+<ol>
+  <li>
+    <p>《非暴力沟通》：</p>
+
+    <blockquote>
+      <p>使用暴力的人的其实是因为他们内心的宁静遭到了破坏，所以他们才会有暴力的方式维护或寻求心灵的和平。这或许是暴力的蝴蝶效应吧。</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>观察（客观，非评价），感受（非看法），需求（明确细节，正面），请求（具体）</p>
+  </li>
+</ol>
+
+<p><strong>2019-8-30</strong></p>
+
+<ol>
+  <li>
+    <p>预测 vs 推断</p>
+
+    <p>“同样是寻找y=f(X)中的f(·)，如果仅仅为了<strong>预测</strong>Y，f(·)可以是一个黑箱子；但如果是为了<strong>推断</strong>X, y之间的关系，f(·)就需要知道具体形式。根据分析的目标是预测、推断，还是两者兼具，估计f(·)所采用的方法可能是不同的。”</p>
+
+    <p>所以传统的研究方法得以继续，且深度学习的可解释性一直被研究的原因就是在某些情况下，仅仅做到100%准确的预测是无法改变当下的，只有研究其中的logic才能够修正它、把控它。</p>
+  </li>
+  <li>
+    <p>或许比起 <strong>__</strong>_，我更希望 <strong>__</strong>__</p>
+  </li>
+</ol>
+
+<p><strong>2019-8-31</strong></p>
+
+<ol>
+  <li>
+    <p>太喜欢这部电影的表现手法了！！！（看来我目前还在那种觉得世界哪儿哪儿都好的阶段哈哈哈），超现实主义的表现手法很完美的配合了frida的画！（但是对于frida来说她并不愿意认为自己的画是超现实主义的，她是在真实的描述自己）异域风情的BGM也非常抓我，狂放且热烈，尤其是每次frida醉酒之后的狂欢。</p>
+
+    <p><img src="/img/in-post/2019-08-31-p1.png" alt="img" /></p>
+
+    <p>以及觉得《燕尾蝶》这首歌很配她！</p>
+  </li>
+  <li>
+    <p><strong>支点</strong>：因为忽然想到《燕尾蝶》这首歌是阿信因为看了某一部叫《燕尾蝶》的电影之后就很想看这部电影，然后想到以前疯狂喜欢五月天的时候，会以他们为支点，利用仅有的一部智能手机却能够向外不断延伸，去看那些影响了阿信写词的小说、电影，去听他们喜欢的摇滚乐团，去敞开自己心扉在网路上主动认识新朋友甚至聊人生聊未来（虽然那个时候的人生经验比较浅薄哈哈哈哈），为了见他们去追寻一些不敢想的梦想虽然最后没能实现但也pay off，这是一个多么充满正能量的反馈啊！反而网速越快渠道资源越丰富我却成长的越慢了啊真是羞愧。内心世界一片贫瘠的人果然活的像是行尸走肉毫无对生活的respect和热情啊，所以说五月天当年是信仰真的不假呀！（说来有点矫情且害怕似乎会被大家认为是“低级”的信仰）还想到了老师提到过那个为了热爱的专业咬牙退学了又申请出国读了自己喜欢专业的女孩子，<strong>“人生终归还是要 one must be motivated by what she does”</strong></p>
+  </li>
+</ol>
+
+
+
+                <hr style="visibility: hidden;">
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/08/18/MLAPP-2Probability/" data-toggle="tooltip" data-placement="top" title="[MLAPP] Chapter 2: Probability">
+                        Previous<br>
+                        <span>[MLAPP] Chapter 2: Probability</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/08/26/MLAPP-3Generativemodels/" data-toggle="tooltip" data-placement="top" title="[MLAPP] Chapter 3: Generative Models for Discrete Data">
+                        Next<br>
+                        <span>[MLAPP] Chapter 3: Generative Models for Discrete Data</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <hr style="visibility: hidden;">
+                
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+                
+                
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+
+
+<section>
+    
+        <hr class="hidden-sm hidden-xs">
+    
+    <h5><a href="/archive/">FEATURED TAGS</a></h5>
+    <div class="tags">
+        
+        
+        
+        </a>
+        
+        
+                <a data-sort="0002" 
+                    href="/archive/?tag=Machine+Learning"
+                    title="Machine Learning"
+                    rel="2">Machine Learning</a>
+        
+                <a data-sort="0002" 
+                    href="/archive/?tag=Learning+Notes"
+                    title="Learning Notes"
+                    rel="2">Learning Notes
+    </div>
+</section>
+
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<!-- add support for mathjax by voleking-->
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "yujizhao";
+    var disqus_identifier = "/2019/08/22/Moments";
+    var disqus_url = "http://localhost:4000/2019/08/22/Moments/";
+    (function() {
+     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+    </script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- SNS Link -->
+                
+
+
+<ul class="list-inline text-center">
+
+
+  
+  
+  
+  <li>
+    <a target="_blank" href="https://www.zhihu.com/people/zhao-yu-ji-23">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa  fa-stack-1x fa-inverse">知</i>
+      </span>
+    </a>
+  </li>
+  
+  
+  
+  <li>
+    <a target="_blank" href="https://www.facebook.com/yuji.zhao.5">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+      </span>
+    </a>
+  </li>
+  
+  
+  <li>
+    <a target="_blank" href="https://github.com/zhaoyuji">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+    </a>
+  </li>
+  
+  
+</ul>
+
+                <p class="copyright text-muted">
+                    Copyright &copy; Z's Blog 2019
+                    <br>
+                    Powered by <a href="http://huangxuan.me">Hux Blog</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huxpro&repo=huxpro.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<!-- Currently, only navbar scroll-down effect at desktop still depends on this -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script src="/js/snackbar.js "></script>
+<script src="/js/sw-registration.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+
+
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+
+        // interop with multilangual 
+        if ('' == 'true') {
+            _containerSelector = 'div.post-container.active'
+        } else {
+            _containerSelector = 'div.post-container'
+        }
+
+        // init
+        var P = $(_containerSelector),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        // clean
+        $(selector).html('')
+
+        // appending
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+<!-- Multi-Lingual -->
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

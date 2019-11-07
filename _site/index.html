@@ -55,6 +55,9 @@
 </head>
 
 
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
 
 <!-- hack iOS CSS :active style -->
 <body ontouchstart="">
@@ -191,23 +194,6 @@
 
 
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
-
-<!-- mathjax config similar to math.stackexchange -->
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-                       jax: ["input/TeX", "output/HTML-CSS"],
-                       tex2jax: {
-                       inlineMath: [ ['$', '$'] ],
-                       displayMath: [ ['$$', '$$']],
-                       processEscapes: true,
-                       skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] },
-                       messageStyle: "none",
-                       "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
-                       });
-    </script>
 
 <!-- Main Content -->
 <div class="container">
@@ -225,223 +211,97 @@
             ">
     			
 <div class="post-preview">
-    <a href="/2019/08/18/MLAPP-2Probability/">
+    <a href="/2019/08/26/MLAPP-3Generativemodels/">
         <h2 class="post-title">
-            MLAPP | Chapter 2: Probability
+            [MLAPP] Chapter 3: Generative Models for Discrete Data
         </h2>
         
         <h3 class="post-subtitle">
-            Learning Notes on the book Machine Learning: A Probabilistic Perspective for chapter 2: some basic knowledge on probability
+            Learning Notes on the book Machine Learning: A Probabilistic Perspective
         </h3>
         
         <div class="post-content-preview">
             
-                2.1 Introduction
+                
+    
+    
 
 
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Z on August 18, 2019
-    </p>
-</div>
-<hr>
+3.1 Introduction
 
-<div class="post-preview">
-    <a href="/2019/08/11/New-at-KTH/">
-        <h2 class="post-title">
-            New at KTH
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Begin to study in KTH and live in Stockholm!
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                前言
 
-距离抵达斯德哥尔摩才仅仅过去十天，但感觉就像是经过了一个很漫长的热闹夏季，应接不暇的各类迎新活动都在如火如荼的进行着，不过伴随着热闹而来的还有一堆需要处理的事情，为了帮助大家更好的handle各项生活琐事，本文提供了一些小tips供各位取阅！希望能够有所帮助～
+  Generative Models aim to model $P(X,y)$
+  While discriminative Models aim to directly model $P(y|X)$
 
-关于超市
 
-瑞典有各式各样的的生活超市品牌，销售食品、饮品和日用品，可以参考此篇针对瑞典生活超市的详细解读，十分详细：
-
+Applying Bayes rule to a generative classifier of the form:
 ...
             
         </div>
     </a>
     <p class="post-meta">
-        Posted by Z on August 11, 2019
+        Posted by Z on August 26, 2019
     </p>
 </div>
 <hr>
 
 <div class="post-preview">
-    <a href="/2019/03/12/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson10/">
+    <a href="/2019/08/22/Moments/">
         <h2 class="post-title">
-            Big Data Algorithm Lesson 7: Support Vector Machine (4)
+            Striking Moments
         </h2>
         
         <h3 class="post-subtitle">
-            ADMM/ALM and Proximal Gradient Method
+            ”到时间中避难“
         </h3>
         
         <div class="post-content-preview">
             
-                Review: ADMM/ALM
-针对一个有约束问题：
-
-假设g,f是凸函数，A列满秩（保证朗格朗日函数的梯度函数是strongly convex的），其增广拉格朗日函数如下
+                
 
 
 
-  penalty method
-忽略掉其中包含拉格朗日乘子的那一项，就变为了我们之前讲的仅考虑将约束作为惩罚项进行求解的方法
-
-这种想法合理，但是想要求得最优解需要令$\sigma_K\rightarrow\i...
+  用以记下现在慢悠悠「生活」中零零碎碎的片刻感受，跳跃式流水账而已
+  最开始取名叫做「My Moments」，觉得有些矫情，又改回了「Moments」
+  忽然striking这个词就蹦出我的脑海，觉得十分契合，并且不由让我回想起打垒球的那几年，听到strike后心态逐渐变得不同却又在最后一场比赛被三振出局后崩坏的场景，也好像很适合现在的我。Calm Down My Teamma...
             
         </div>
     </a>
     <p class="post-meta">
-        Posted by Z on March 12, 2019
+        Posted by Z on August 22, 2019
     </p>
 </div>
 <hr>
 
 <div class="post-preview">
-    <a href="/2018/12/15/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson9/">
+    <a href="/2019/08/18/MLAPP-2Probability/">
         <h2 class="post-title">
-            Big Data Algorithm Lesson 6: Support Vector Machine (3)
+            [MLAPP] Chapter 2: Probability
         </h2>
         
         <h3 class="post-subtitle">
-            Detailed Dualilty Theorem of SVM
+            Learning Notes on the book Machine Learning: A Probabilistic Perspective
         </h3>
         
         <div class="post-content-preview">
             
-                Dualilty Theorem of SVM
+                
+    
+    
 
-上节课中，老师对于原SVM问题(P)
 
-写出了KKT条件，
+2.1 Introduction
 
-将原问题转化为了对偶问题(D)：
+What is probability?
 
-但可以发现，这个对偶问题，好像并没有办法转化为原问题，对偶问题貌似只能加上一个拉格朗日乘子，但如果我们稍作变化：
 
-这样就能成功通过对偶问题转化回原问题。而对偶问题的对偶问题是否一定是原问题呢？答案是不一定。凸问题的对偶问题的对偶是凸问题，因此大...
+  The first interpretation is called the frequentist interpretation. In this view, probabilities represent long run frequencies of events.
+  Th...
             
         </div>
     </a>
     <p class="post-meta">
-        Posted by Z on December 15, 2018
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2018/12/11/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson8/">
-        <h2 class="post-title">
-            Big Data Algorithm Lesson 5: Support Vector Machine (2)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            KKT condition and Duality
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                Algorithm
-
-上节课老师讲了等式约束的优化问题的一阶最优性条件，但可以发现，我们的原问题SVM的问题如下：
-
-实际上是一个不等式约束，此时我们再来看看对于不等式约束的优化问题如何求解呢？
-先看一个简单的只有不等式约束的问题：
-
-若$x^*$是local min，考虑两种情况下的最优解的必要条件：
-
-
-  假设$g(x^)&lt;0$,constraint not active，其实相...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Z on December 11, 2018
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2018/12/10/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson6-7/">
-        <h2 class="post-title">
-            Big Data Algorithm Lesson 4: Support Vector Machine
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Lagrangian multiplier theorem
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                之前讲的Kmeans、PCA等都是典型的无监督学习算法，今天将转为学习有监督学习。假设我们给出一个数据集$D={(x_i,y_i)}$，$\ x_i\in \mathbb{R}^d, \ y_i\in {1,-1}$
-目标是找一个超平面（hyperplane）$H={x| \langle w, x \rangle + b=0 }, w \in \mathbb{R}^n,\ b\in \mat...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Z on December 10, 2018
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2018/11/02/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson3/">
-        <h2 class="post-title">
-            Big Data Algorithm Lesson 3: Kernel K-means (2)
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Optimization Algorithms behind Kernel K-means
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                假设顶点集合$V={x_1,\cdots,x_n}$，$w_{ij}=exp(-||x_i-x_j||)$用以衡量点i与点j之间的相似度，距离越远，越不相似，$w_{ij}=0$则代表i与j之间无连线。定义$d_l=\sum_{m=1}^n w_{lm}$
-于是任意一张图可以表示为：$G=(V,E,W),W\in R^{n\times n}$（无向图$W=W^T$），聚类的目的是达到：
-1....
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Z on November 2, 2018
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2018/10/13/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson2/">
-        <h2 class="post-title">
-            Big Data Algorithm Lesson 2: Kernel K-means
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Optimization Algorithms behind Kernel K-means
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                Kernel K-means
-目标函数：$min \ f(x) = \sum_{i=1}^K\sum_{l \in S_i}||\Phi(x_l) - \mu_i||^2$，其中$\mu_i = \frac{\sum_{l\in S_i}\phi(x_l)}{|S_i|}$
-目标函数non-convex时如何处理呢？
-举一个例子，$n=5$, $S_1 = {1,2,4},S_2 = {3}...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Z on October 13, 2018
+        Posted by Z on August 18, 2019
     </p>
 </div>
 <hr>
@@ -458,13 +318,17 @@
         
         <div class="post-content-preview">
             
-                为什么使用kernel -&gt; 为什么映射到高维空间可以解决线性不可分的情况
+                
+    
+    
 
-如下图，这一组点在二维平面线性不可分，但是若将其映射到三维空间，就可以找到一个平面将其划分开来。 
-通俗来说，核函数的就是将这些点从低维空间映射到了高维空间，以达到线性可分的效果，但是其理论基础是什么呢？
 
-$\bf{Definition \ 1: }$
-If ${ x_0,…,x_N }, x_i \in ...
+最近在旁听复旦大学一门大数据算法课，老师比较侧重于底层优化算法，讲的很细致很有意思，于是在知乎上整理了笔记，由于公式太难重新打了，那么就把链接放在下面吧：
+
+
+  【大数据算法课程笔记】Lesson 1 - Why Kernel
+  【大数据算法课程笔记】Lesson 2 - Kernel K-means
+  【大数据算法课程笔记】Lesson 3 - Kernel...
             
         </div>
     </a>
@@ -502,14 +366,14 @@ If ${ x_0,…,x_N }, x_i \in ...
         
         
                 <a data-sort="0002" 
-                    href="/archive/?tag=Algirithms"
-                    title="Algirithms"
-                    rel="7">Algirithms</a>
+                    href="/archive/?tag=Machine+Learning"
+                    title="Machine Learning"
+                    rel="2">Machine Learning</a>
         
                 <a data-sort="0002" 
-                    href="/archive/?tag=Lecture+Notes"
-                    title="Lecture Notes"
-                    rel="7">Lecture Notes
+                    href="/archive/?tag=Learning+Notes"
+                    title="Learning Notes"
+                    rel="2">Learning Notes
     </div>
 </section>
 

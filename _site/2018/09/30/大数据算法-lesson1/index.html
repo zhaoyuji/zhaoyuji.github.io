@@ -14,7 +14,10 @@
     <meta property="og:title" content="Big Data Algorithm Lesson 1: About Kernel - ZHAO Yuji's Homepage">
     
     <meta property="og:type" content="article">
-    <meta property="og:description" content="为什么使用kernel -&gt; 为什么映射到高维空间可以解决线性不可分的情况
+    <meta property="og:description" content="
+    
+    
+
 
 ">
     
@@ -68,6 +71,9 @@
 </head>
 
 
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
 
 <!-- hack iOS CSS :active style -->
 <body ontouchstart="">
@@ -228,24 +234,6 @@
 
 
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
-
-<!-- mathjax config similar to math.stackexchange -->
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-                       jax: ["input/TeX", "output/HTML-CSS"],
-                       tex2jax: {
-                       inlineMath: [ ['$', '$'] ],
-                       displayMath: [ ['$$', '$$']],
-                       processEscapes: true,
-                       skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] },
-                       messageStyle: "none",
-                       "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
-                       });
-    </script>
-
 <!-- Post Content -->
 <article>
     <div class="container">
@@ -260,7 +248,34 @@
                 <!-- Multi-Lingual -->
                 
 
-				<h2 id="为什么使用kernel---为什么映射到高维空间可以解决线性不可分的情况">为什么使用kernel -&gt; 为什么映射到高维空间可以解决线性不可分的情况</h2>
+				<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            displayMath: [ ['$$', '$$']],
+            inlineMath: [['$','$']],
+            processEscapes: true
+            }
+        });
+    </script>
+</head>
+
+<p>最近在旁听复旦大学一门大数据算法课，老师比较侧重于底层优化算法，讲的很细致很有意思，于是在知乎上整理了笔记，由于公式太难重新打了，那么就把链接放在下面吧：</p>
+
+<ol>
+  <li><a href="https://zhuanlan.zhihu.com/p/45650399">【大数据算法课程笔记】Lesson 1 - Why Kernel</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/45848975">【大数据算法课程笔记】Lesson 2 - Kernel K-means</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/48353576">【大数据算法课程笔记】Lesson 3 - Kernel K-means extension</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/50768642">【大数据算法课程笔记】Lesson 6/7-SupportVectorMachine Theorem</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/51326678">【大数据算法课程笔记】Lesson 8 - Optimal Condition &amp; Dual SVM</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/52032287">【大数据算法课程笔记】Lesson 9 - SVM &amp; Algorithm (ADMM/ALM)</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/53177142">【大数据算法课程笔记】Lesson 10- SVM：Proximal Gradient Method</a></li>
+</ol>
+
+<h2 id="why-kernel">Why Kernel</h2>
+<p><strong>为什么映射到高维空间可以解决线性不可分的情况</strong></p>
 
 <p>如下图，这一组点在二维平面线性不可分，但是若将其映射到三维空间，就可以找到一个平面将其划分开来。 <br />
 通俗来说，核函数的就是将这些点从低维空间映射到了高维空间，以达到线性可分的效果，但是其理论基础是什么呢？</p>
@@ -280,92 +295,140 @@ For two sets $C_1,C_2 \in R^N$,$\exists w \in R^N$, $s.t.inf_{x\in C_1}(w,x) &gt
 <p>为了证明这个理论，我们需要了解以下几个知识点：</p>
 
 <ul>
-  <li><strong>convex set: (凸集)</strong>
-For a set $C$, if $\lambda x+(1-\lambda)y \in C, \ for \ \forall x,y\in C, \lambda \in (0,1) $</li>
-  <li><strong>convex combination: (凸组合)</strong>
-$\lambda_1x_1+\cdots+\lambda_nx_n$ is called a convex combination if $\lambda_i \ge 0$ and $\sum \lambda_i = 1$</li>
-  <li><strong>convex hull: (凸包)</strong><br />
-conv(C): the convex hull of a set C is the intersection of all convex sets containing C.<br />
-一个集合的凸包指的就是找到的那个最小的集合使得它成为凸集，或者说是包含这个集合的最小的凸集。<br />
-conv(C) = {$x$|$x$ can be represented as the convex combination of points in $C$}<br />
-即，假设$C={x_0,…,x_m}$, 则其凸包$conv(C)={x|x=\sum \lambda_ix_i$, $\sum \lambda_i = 1$, $\lambda_i \ge 0} $<br />
-注：有限的点组成的convex hull一定是个多面体，不会有弧形的部分（因为要保证最小），这个多面体也能被称之为一个simplex-单纯形。</li>
-  <li><strong>Seperation Theorem: (凸集分离定理)</strong><br />
-<strong>可以说是线性规划最经典的理论了</strong> <br />
-假设有两个convex set $C_1,C_2$,$C_1\ne \emptyset $,$C_2\ne \emptyset$, 且两者闭包（closure）的交集等于空，表示为$cl \ C_1 \cap cl \ C_2 = \emptyset$,若$C_1$$C_2$中任意一个集合有界(bounded)，则$\exists w\in R^N, \ s.t. \ inf_{x\in C_1}\langle w , x \rangle \ &gt; \ sup_{x\in C_2}\langle w , x \rangle$</li>
+  <li><strong>convex set: (凸集)</strong></li>
 </ul>
+
+<p>For a set $C$, if $\lambda x+(1-\lambda)y \in C, \ for \ \forall x,y\in C, \lambda \in (0,1) $</p>
+
+<ul>
+  <li><strong>convex combination: (凸组合)</strong></li>
+</ul>
+
+<p>$\lambda_1x_1+\cdots+\lambda_nx_n$ is called a convex combination if $\lambda_i \ge 0$ and $\sum \lambda_i = 1$</p>
+
+<ul>
+  <li><strong>convex hull: (凸包)</strong></li>
+</ul>
+
+<p>conv(C): the convex hull of a set C is the intersection of all convex sets containing C.</p>
+
+<p>一个集合的凸包指的就是找到的那个最小的集合使得它成为凸集，或者说是包含这个集合的最小的凸集。<br />
+conv(C) = {$x$|$x$ can be represented as the convex combination of points in $C$}</p>
+
+<p>即，假设$C={x_0,…,x_m}$, 则其凸包$conv(C)={x|x=\sum \lambda_ix_i$, $\sum \lambda_i = 1$, $\lambda_i \ge 0} $</p>
+
+<p>注：有限的点组成的convex hull一定是个多面体，不会有弧形的部分（因为要保证最小），这个多面体也能被称之为一个simplex-单纯形。</p>
+
+<ul>
+  <li><strong>Seperation Theorem: (凸集分离定理)</strong></li>
+</ul>
+
+<p><strong>可以说是线性规划最经典的理论了</strong></p>
+
+<p>假设有两个convex set $C_1,C_2$,$C_1\ne \emptyset $,$C_2\ne \emptyset$, 且两者闭包（closure）的交集等于空，表示为$cl \ C_1 \cap cl \ C_2 = \emptyset$,若$C_1$$C_2$中任意一个集合有界(bounded)，则$\exists w\in R^N, \ s.t. \ inf_{x\in C_1}\langle w , x \rangle \ &gt; \ sup_{x\in C_2}\langle w , x \rangle$</p>
 
 <p>了解了这些之后，我们就能开始着手证明Definition1。</p>
 
-<p><strong>Proof Of Definition 1：</strong><br />
-假设有两个集合$S_1$和$S_2$，$S_1 \cup S_2\in {x_0,\cdots x_N}$, $S_1 \cap S_2 = \emptyset$，基本思路是证明这两个集合的凸包满足凸集分离定理的使用条件，然后就可以使用凸集分离定理。<br />
-取$C_1\doteq conv(S_1)$, $C_2\doteq conv(S_2)$</p>
+<p><strong>Proof Of Definition 1：</strong></p>
+
+<p>假设有两个集合$S_1$和$S_2$，$S_1 \cup S_2\in {x_0,\cdots x_N}$, $S_1 \cap S_2 = \emptyset$，基本思路是证明这两个集合的凸包满足凸集分离定理的使用条件，然后就可以使用凸集分离定理。</p>
+
+<p>取$C_1\doteq conv(S_1)$, $C_2\doteq conv(S_2)$</p>
 
 <ol>
-  <li>证明$C_1$, $C_2$是convex set<br />
-凸包一定都是凸集，所以这个本质上等同于证明凸包为什么是凸集，凸包是指多个多个凸集的交集，那么这个证明就转化为了证明多个凸集的交集还是凸集。<br />
-<strong>Proof:</strong><br />
+  <li>证明$C_1$, $C_2$是convex set</li>
+</ol>
+
+<p>凸包一定都是凸集，所以这个本质上等同于证明凸包为什么是凸集，凸包是指多个多个凸集的交集，那么这个证明就转化为了证明多个凸集的交集还是凸集。</p>
+
+<p><strong>Proof:</strong><br />
 假设有n个凸集${C_1,\cdots,C_n}$，对于任意两个点$x_1$, $x_2$，若它们在这n个凸集的交集中，则对于任意一个凸集$C_i$,都满足$x_1,x_2\in C_i$，则对于某点$x_3$，$x_3=\lambda_ix_1+(1-\lambda_i)x_2\in C_i, \forall \ \lambda_i\in(0,1), \forall i$，对任意的$i$和$x_1$, $x_2$都满足$x_3\in C_i$，那么$x_3$自然在
-${C_1,\cdots,C_n}$的交集中，那么能证明${C_1,\cdots,C_n}$的交集是凸集。</li>
-  <li>证明$cl \ C_1 \cap cl \ C_2 = \emptyset$ <br />
-其思路就是证明$C_1 \cap C_2 = \emptyset$且 $cl \ C_1=C_1$<br />
-<strong>Proof:</strong>
-    <ul>
-      <li>$cl \ C_1=C_1$  ？</li>
-      <li>假设$\exists y \in C_1 \cap C_2$, 则可得出<br />
-$y=\sum_{i\in S_1}\alpha_ix_i=\sum_{j\in S_2}\beta_jx_j$, 且$\sum_i\alpha_i=1, \sum_j\beta_j=1$,联立方程得：<br />
-<script type="math/tex">% <![CDATA[
+${C_1,\cdots,C_n}$的交集中，那么能证明${C_1,\cdots,C_n}$的交集是凸集。</p>
+
+<ol>
+  <li>证明$cl \ C_1 \cap cl \ C_2 = \emptyset$</li>
+</ol>
+
+<p>其思路就是证明$C_1 \cap C_2 = \emptyset$且 $cl \ C_1=C_1$</p>
+
+<p><strong>Proof:</strong></p>
+
+<ul>
+  <li>$cl \ C_1=C_1$  ？</li>
+  <li>假设$\exists y \in C_1 \cap C_2$, 则可得出</li>
+</ul>
+
+<p>$y=\sum_{i\in S_1}\alpha_ix_i=\sum_{j\in S_2}\beta_jx_j$, 且$\sum_i\alpha_i=1, \sum_j\beta_j=1$,联立方程得：</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
 \left\{
 \begin{aligned}
 \sum_{i\in S_1}\alpha_ix_i - \sum_{j\in S_2}\beta_jx_j & =  0 \\
 \sum_i\alpha_i - \sum_j\beta_j & =  0 \\
 \end{aligned}
 \right. %]]></script>
-此方程可简化写为：
-<script type="math/tex">% <![CDATA[
+
+<p>此方程可简化写为：</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
 \left\{
 \begin{aligned}
 \sum_{i\in S_1\cup S_2}a_ix_i & =  0 \\
 \sum_{i\in S_1\cup S_2}a_i & =  0 \\
 \end{aligned}
 \right. %]]></script>
-因此，对任意一组${a_i}$,都要能有一组${x_i}$解，使得以上等式成立，接下来我们将以上等式改写以下形式：
-<script type="math/tex">% <![CDATA[
-\begin{bmatrix} x_0 & \cdots & x_N \\ 1 & \cdots & 1 \end{bmatrix} \cdot \begin{bmatrix} a_0\\ a_1 \\ \cdots \\ a_N\end{bmatrix}=0 %]]></script><br />
-可以发现，$\begin{vmatrix} x_0 &amp; \cdots &amp; x_N \ 1 &amp; \cdots &amp; 1 \end{vmatrix}=\begin{vmatrix} x_0 &amp; x_1-x_0 &amp; \cdots &amp; x_N-x_0 \ 1 &amp; 0 &amp; \cdots &amp; 0 \end{vmatrix}$，而存在条件${ x_0,…,x_N }, x_i \in R^{N+1}$近似独立，因此$\begin{bmatrix} x_1-x_0 &amp; \cdots &amp; x_N-x_0 \end{bmatrix}$的行列式不为零，可逆。<br />
-因此当且仅当$\begin{bmatrix} a_0 &amp; a_1 &amp; \cdots &amp; a_N\end{bmatrix}=0$时原式满足，所以不存在这样的点$y$，与最初假设矛盾。<br />
-则$C_1 \cap C_2=\emptyset$证毕</li>
-      <li>综上两点，可证明$cl \ C_1 \cap cl \ C_2 = \emptyset$</li>
-    </ul>
-  </li>
-  <li>因此对于任意的两个set $S_1$和$S_2$，$S_1 \cup S_2\in {x_0,\cdots x_N}$, $S_1 \cap S_2 = \emptyset$，$C_1 = conv(S_1)$和$C_2 = conv(S_2)$都满足使用凸集分离定理的条件，因此对任意$S_1,S_2$都有：$\exists w, \ s.t. \ inf_{x\in C_1}\langle w , x \rangle \ &gt; \ sup_{x\in C_2}\langle w , x \rangle$，因此${ x_0,…,x_N }$在n维空间线性可分。<br />
-（同理，我们也可以证明出：n+2个点在n维中线性不可分）</li>
+
+<p>因此，对任意一组${a_i}$,都要能有一组${x_i}$解，使得以上等式成立，接下来我们将以上等式改写以下形式：</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{bmatrix} x_0 & \cdots & x_N \\ 1 & \cdots & 1 \end{bmatrix} \cdot \begin{bmatrix} a_0\\ a_1 \\ \cdots \\ a_N\end{bmatrix}=0 %]]></script>
+
+<p>可以发现，$\begin{vmatrix} x_0 &amp; \cdots &amp; x_N \ 1 &amp; \cdots &amp; 1 \end{vmatrix}=\begin{vmatrix} x_0 &amp; x_1-x_0 &amp; \cdots &amp; x_N-x_0 \ 1 &amp; 0 &amp; \cdots &amp; 0 \end{vmatrix}$，而存在条件${ x_0,…,x_N }, x_i \in R^{N+1}$近似独立，因此$\begin{bmatrix} x_1-x_0 &amp; \cdots &amp; x_N-x_0 \end{bmatrix}$的行列式不为零，可逆。</p>
+
+<p>因此当且仅当$\begin{bmatrix} a_0 &amp; a_1 &amp; \cdots &amp; a_N\end{bmatrix}=0$时原式满足，所以不存在这样的点$y$，与最初假设矛盾。</p>
+
+<p>则$C_1 \cap C_2=\emptyset$证毕</p>
+
+<ul>
+  <li>综上两点，可证明$cl \ C_1 \cap cl \ C_2 = \emptyset$</li>
+</ul>
+
+<ol>
+  <li>因此对于任意的两个set $S_1$和$S_2$，$S_1 \cup S_2\in {x_0,\cdots x_N}$, $S_1 \cap S_2 = \emptyset$，$C_1 = conv(S_1)$和$C_2 = conv(S_2)$都满足使用凸集分离定理的条件，因此对任意$S_1,S_2$都有：$\exists w, \ s.t. \ inf_{x\in C_1}\langle w , x \rangle \ &gt; \ sup_{x\in C_2}\langle w , x \rangle$，因此${ x_0,…,x_N }$在n维空间线性可分。</li>
 </ol>
+
+<p>（同理，我们也可以证明出：n+2个点在n维中线性不可分）</p>
 
 <p>我理解来说，这个理论就是使用kernel这种方法的理论支撑。</p>
 
 <h2 id="kernel--feature-map">Kernel &amp; Feature Map</h2>
 
-<p>这个地方仅提供我自己的理解，例如对于高斯核，$G(x_i, x_j)=\exp(-||x_i-x_j||^2)$，我们平时会直接使用这样的变换，但却不知道这样变换的原因所在，而其实从$(x_i,x_j)$到$G(x_i, x_j)$之间还有这样一个流程：
-<script type="math/tex">(x_i,x_j) \rightarrow K(x_i,x_j) = \langle \phi(x_i), \phi(x_j) \rangle_H\rightarrow G(x_i, x_j)\\</script></p>
+<p>这个地方仅提供我自己的理解，例如对于高斯核，$G(x_i, x_j)=\exp(-||x_i-x_j||^2)$，我们平时会直接使用这样的变换，但却不知道这样变换的原因所在，而其实从$(x_i,x_j)$到$G(x_i, x_j)$之间还有这样一个流程：</p>
+
+<script type="math/tex; mode=display">(x_i,x_j) \rightarrow K(x_i,x_j) = \langle \phi(x_i), \phi(x_j) \rangle_H\rightarrow G(x_i, x_j)\\</script>
 
 <p>因为$(x_i,x_j)$可以被一个映射函数$\phi(\cdot)$映射到一个高维空间，在这个希尔伯特空间有一种内积的操作，内积可以表示$\phi(x_i),\phi(x_j)$两者的相似性，且这个值刚好等于低维空间下$G(x_i, x_j)$的值，因此，这样去做一个kernel操作是合理的。其中，这一整套过程被称为kernel method，而映射的这个过程被称作Feature Map。（因为我之前一直有一个误区，以为kernel指的就是从低维空间映射到高维空间的这么一个操作，其实不然，这个过程只是kernel method的一部分而已）</p>
 
 <p>$\bf{Mercer’s \ theorem :}$
-Mercer’s theorem is a representation of a symmetric positive-definite function on a square as a sum of a convergent sequence of product functions.<br />
-<strong>对比老师在上课时给出的定义为：</strong><br />
-If $G = G^T$ and $G \geq 0$, $\exists \phi(\cdot), \ s.t. \ G_{ij} = K(x_i,x_j) = \langle \phi(x_i) , \phi(x_j) \rangle_H$</p>
+Mercer’s theorem is a representation of a symmetric positive-definite function on a square as a sum of a convergent sequence of product functions.</p>
+
+<p><strong>对比老师在上课时给出的定义为：</strong></p>
+
+<p>If $G = G^T$ and $G \geq 0$, $\exists \phi(\cdot), \ s.t. \ G_{ij} = K(x_i,x_j) = \langle \phi(x_i) , \phi(x_j) \rangle_H$</p>
 
 <p>其实老师上课讲到的这个定义就是mercer定理了，即只要G满足这两个条件，那么它就能找到这样的映射函数以及一种内积方式，那么就是合理的核了。</p>
 
-<p>参考：<br />
-https://www.zhihu.com/question/24627666
-https://mp.weixin.qq.com/s?__biz=MzIxNDIwMTk2OQ==&amp;mid=2649077019&amp;idx=1&amp;sn=e0c4a6c502e3668e1dc410f21e531cfd&amp;scene=0#wechat_redirect
-https://blog.csdn.net/wsj998689aa/article/details/47027365
-https://blog.csdn.net/wsj998689aa/article/details/40398777
-https://www.cnblogs.com/xingshansi/p/6767980.html
-https://blog.csdn.net/zhazhiqiang/article/details/19496633
-https://blog.csdn.net/cqy_chen/article/details/77932270</p>
+<h2 id="reference">Reference：</h2>
+
+<ul>
+  <li>https://www.zhihu.com/question/24627666</li>
+  <li>https://mp.weixin.qq.com/s?__biz=MzIxNDIwMTk2OQ==&amp;mid=2649077019&amp;idx=1&amp;sn=e0c4a6c502e3668e1dc410f21e531cfd&amp;scene=0#wechat_redirect</li>
+  <li>https://blog.csdn.net/wsj998689aa/article/details/47027365</li>
+  <li>https://blog.csdn.net/wsj998689aa/article/details/40398777</li>
+  <li>https://www.cnblogs.com/xingshansi/p/6767980.html</li>
+  <li>https://blog.csdn.net/zhazhiqiang/article/details/19496633</li>
+  <li>https://blog.csdn.net/cqy_chen/article/details/77932270</li>
+</ul>
 
 
 
@@ -374,15 +437,24 @@ https://blog.csdn.net/cqy_chen/article/details/77932270</p>
                     
                     
                     <li class="next">
-                        <a href="/2018/10/13/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson2/" data-toggle="tooltip" data-placement="top" title="Big Data Algorithm Lesson 2: Kernel K-means">
+                        <a href="/2019/08/18/MLAPP-2Probability/" data-toggle="tooltip" data-placement="top" title="[MLAPP] Chapter 2: Probability">
                         Next<br>
-                        <span>Big Data Algorithm Lesson 2: Kernel K-means</span>
+                        <span>[MLAPP] Chapter 2: Probability</span>
                         </a>
                     </li>
                     
                 </ul>
                 <hr style="visibility: hidden;">
-
+                
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+                
+                
             </div>  
 
     <!-- Side Catalog Container -->
@@ -425,14 +497,14 @@ https://blog.csdn.net/cqy_chen/article/details/77932270</p>
         
         
                 <a data-sort="0002" 
-                    href="/archive/?tag=Algirithms"
-                    title="Algirithms"
-                    rel="7">Algirithms</a>
+                    href="/archive/?tag=Machine+Learning"
+                    title="Machine Learning"
+                    rel="2">Machine Learning</a>
         
                 <a data-sort="0002" 
-                    href="/archive/?tag=Lecture+Notes"
-                    title="Lecture Notes"
-                    rel="7">Lecture Notes
+                    href="/archive/?tag=Learning+Notes"
+                    title="Learning Notes"
+                    rel="2">Learning Notes
     </div>
 </section>
 
@@ -444,6 +516,22 @@ https://blog.csdn.net/cqy_chen/article/details/77932270</p>
 
 <!-- add support for mathjax by voleking-->
 
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "yujizhao";
+    var disqus_identifier = "/2018/09/30/大数据算法-lesson1";
+    var disqus_url = "http://localhost:4000/2018/09/30/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson1/";
+    (function() {
+     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+    </script>
+<!-- disqus 公共JS代码 end -->
 
 
 

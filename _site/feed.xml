@@ -5,77 +5,583 @@
     <description></description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 18 Aug 2019 16:12:05 +0200</pubDate>
-    <lastBuildDate>Sun, 18 Aug 2019 16:12:05 +0200</lastBuildDate>
+    <pubDate>Thu, 07 Nov 2019 01:58:08 +0100</pubDate>
+    <lastBuildDate>Thu, 07 Nov 2019 01:58:08 +0100</lastBuildDate>
     <generator>Jekyll v3.8.6</generator>
     
       <item>
-        <title>MLAPP | Chapter 2: Probability</title>
-        <description>&lt;h1 id=&quot;21-introduction&quot;&gt;2.1 Introduction&lt;/h1&gt;
+        <title>[MLAPP] Chapter 3: Generative Models for Discrete Data</title>
+        <description>&lt;head&gt;
+    &lt;script src=&quot;https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/x-mathjax-config&quot;&gt;
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            displayMath: [ ['$$', '$$']],
+            inlineMath: [['$','$']],
+            processEscapes: true
+            }
+        });
+    &lt;/script&gt;
+&lt;/head&gt;
+
+&lt;h2 id=&quot;31-introduction&quot;&gt;3.1 Introduction&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Generative Models aim to model $P(X,y)$&lt;/li&gt;
+  &lt;li&gt;While discriminative Models aim to directly model $P(y|X)$&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Applying Bayes rule to a generative classifier of the form:
+&lt;script type=&quot;math/tex&quot;&gt;p(y = c|x, \theta) \propto p(x|y = c, \theta) \cdot p(y = c|\theta)&lt;/script&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;32-bayesian-concept-learning&quot;&gt;3.2 Bayesian concept learning&lt;/h2&gt;
+
+&lt;p&gt;In reality, it is considered that children learn from positive examples and obtain negative examples during an active learning process, such as&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Parents: Look at the cute dog! &lt;br /&gt;
+Children(Point out a cat): Cute Doggy!&lt;br /&gt;
+Parents: That’s a cat, dear, not a dog&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;But&lt;/strong&gt; psychological research has shown that people can learn concepts from positive examples alone (Xu and Tenenbaum 2007).&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Concept learning: We can think of learning the meaning of a word as equivalent to concept learning, which in turn is equivalent to binary classification.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;A example on number game to introduce: &lt;em&gt;posterior predictive distribution, induction, generalization gradient, hypothesis space, version space.&lt;/em&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;泛化梯度（generalization gradient）是指相似性程度不同的刺激引起的不同强度的反应的一种直观表征。它表明 了泛化的水平，是泛化反应强度变化的指标。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;321-likelihood&quot;&gt;3.2.1 Likelihood&lt;/h4&gt;
+
+&lt;p&gt;这个例子很有趣！当你看到$D={16}$的时候，你会觉得它属于哪个数据集（even or power of 2 ?），但当你看到$D={16, 2, 8, 64}$的时候呢？实验证明人们会倾向于选择认为他们是power of 2这个数据集。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The key intuition is that we want to avoid &lt;strong&gt;suspicious coincidences&lt;/strong&gt;. If the true concept was even numbers, how come we only saw numbers that happened to be powers of two?&lt;/li&gt;
+  &lt;li&gt;The &lt;strong&gt;extension&lt;/strong&gt; of a concept is just the set of numbers that belong to it.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Strong sampling assumption&lt;/strong&gt;: we assume that our data points are drawn uniformly and independently. Given this assumption, the probability of independently sampling N items (with replacement) from h is given by&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;p(D|h)=\Big[\frac{1}{size(h)}\Big]^N=\Big[\frac{1}{|h|}\Big]^N&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Size principle&lt;/strong&gt; the model favors the simplest (smallest) hypothesis consistent with the data. This is more commonly known as &lt;strong&gt;Occam’s razor&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;奥卡姆剃刀定律（Occam’s Razor, Ockham’s Razor）又称“奥康的剃刀”，它是由14世纪英格兰的逻辑学家、圣方济各会修士奥卡姆的威廉（William of Occam，约1285年至1349年）提出。这个原理称为“如无必要，勿增实体”，即“简单有效原理”。正如他在《箴言书注》2卷15题说“切勿浪费较多东西去做，用较少的东西，同样可以做好的事情。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;对于上面这个例子，比如，100以下的2的倍数的数字只有6个，但是是偶数的有50个，那么&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;p(D|h_{two})=1/6,p(D|h_{even})=1/50&lt;/script&gt;
+
+&lt;p&gt;由于出现了4个例子（{16, 2, 8, 64}），那么$h_{two}$的likelihood是$(1/6)^4$，$h_{even}$的likelihood是$(1/50)^4$， &lt;strong&gt;likelihood ratio&lt;/strong&gt;几乎是5000:1，所以说我们倾向于认为这组数据出自power of 2的数据集。&lt;/p&gt;
+
+&lt;h4 id=&quot;322-prior&quot;&gt;3.2.2 Prior&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;Bayesian reasoning is &lt;strong&gt;subjective&lt;/strong&gt;.&lt;/li&gt;
+  &lt;li&gt;Different People will have different priors, also different hypothesis spaces.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;323-posterior&quot;&gt;3.2.3 Posterior&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;The posterior is simply the likelihood times the prior, normalized.
+  &lt;script type=&quot;math/tex&quot;&gt;p(h|D)=\frac{p(D|h)p(h)}{\sum_{h'\in \mathcal{H}}p(D,h')}&lt;/script&gt;&lt;/li&gt;
+  &lt;li&gt;In the case of most of the concepts, the prior is uniform, so the posterior is proportional to the likelihood.&lt;/li&gt;
+  &lt;li&gt;“Unnatural” concepts of “powers of 2, plus 37” and “powers of 2, except 32” have low posterior support, despite having high likelihood, due to the low prior.&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;MAP estimate:&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;\widehat{h}^{MAP}=argmax_h \ p(D|h)p(h)=argmax_h \ \log p(D|h)+ \log p(h)&lt;/script&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;As we get more and more data, the MAP estimate converges towards the maximum likelihood estimate or MLE:&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;\widehat{h}^{mle}=argmax_h \ p(D|h)=argmax_h \ \log p(D|h)&lt;/script&gt;
+
+    &lt;p&gt;In other words, if we have enough data, we see that &lt;strong&gt;the data overwhelms the prior&lt;/strong&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;324-posterior-predictive-distribution&quot;&gt;3.2.4 Posterior predictive distribution&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;The posterior is our internal belief state about the world.&lt;/li&gt;
+  &lt;li&gt;We should justify them by predicting
+  &lt;script type=&quot;math/tex&quot;&gt;p(\tilde{x} \in C|D)=\sum_h p(y=1|\tilde{x},h)p(h|D)&lt;/script&gt;&lt;/li&gt;
+  &lt;li&gt;This is just a weighted average of the predictions of each individual hypothesis and is called &lt;strong&gt;Bayes model averaging&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;?need to be read?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;325-a-more-complex-prior&quot;&gt;3.2.5 A more complex prior&lt;/h4&gt;
+
+&lt;h2 id=&quot;33-the-beta-binomial-model&quot;&gt;3.3 The beta-binomial model&lt;/h2&gt;
+
+&lt;h4 id=&quot;331-likelihood&quot;&gt;3.3.1 Likelihood&lt;/h4&gt;
+&lt;p&gt;Suppose $X_i \sim Ber(\theta) $, and $X_i = 1$ represents heads while $X_i = 0$ represents tails. $\theta \in [0, 1]$ is the rate parameter of probability of heads. If the data are iid, the likelihood has the form&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;p(D|theta)=\theta^{N_1}(1-\theta)^{N_0}&lt;/script&gt;
+
+&lt;p&gt;Now suppose the data consists of the count of the number of heads $N_1$ observed in a fixed number $N$, then $N_1 \sim Bin(N,\theta)$&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;Bin(k|n,\theta) = \binom{n}{k}\theta^{n}(1-\theta)^{n-k}&lt;/script&gt;
+
+&lt;h4 id=&quot;332-prior&quot;&gt;3.3.2 Prior&lt;/h4&gt;
+&lt;p&gt;To make the math easier, it would convenient if the prior had the same form as the likelihood,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;p(\theta)\propto \theta^{\gamma_1}(1-\theta)^{\gamma_2}&lt;/script&gt;
+
+&lt;p&gt;for some prior parameters $\gamma_1$ and $\gamma_2$.&lt;/p&gt;
+
+&lt;p&gt;Then the posterior is&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;p(\theta) \propto p(D|\theta)p(\theta)= \theta^{N_1+\gamma_1}(1-\theta)^{N_0+\gamma_2}&lt;/script&gt;
+
+&lt;p&gt;When the prior and the posterior have the same form, we say that the prior is a &lt;strong&gt;conjugate prior&lt;/strong&gt; for the corresponding likelihood.&lt;/p&gt;
+
+&lt;p&gt;In the case of the Bernoulli, the conjugate prior is the beta distribution,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;Beta(\theta|a,b) \propto \theta^{a-1}(1-\theta)^{b-1}&lt;/script&gt;
+
+&lt;p&gt;The parameters of the prior are called &lt;strong&gt;hyper-parameters&lt;/strong&gt;. (we set them!)&lt;/p&gt;
+
+&lt;h4 id=&quot;333-posterior&quot;&gt;3.3.3 Posterior&lt;/h4&gt;
+&lt;p&gt;If we multiply the likelihood by the beta prior we get the following posterior&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;p(\theta|D) \propto p(D|\theta)p(\theta) = Bin(N_1|\theta, N_0+N_1)Beta(\theta|a,b)Beta(\theta|N_1+a,N_0+b)&lt;/script&gt;
+
+&lt;p&gt;batch mode v.s. sequential mode??&lt;/p&gt;
 
 </description>
-        <pubDate>Sun, 18 Aug 2019 00:00:00 +0200</pubDate>
-        <link>http://localhost:4000/2019/08/18/MLAPP-2Probability/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/08/18/MLAPP-2Probability/</guid>
-        
-        <category>Learning Notes</category>
+        <pubDate>Mon, 26 Aug 2019 00:00:00 +0200</pubDate>
+        <link>http://localhost:4000/2019/08/26/MLAPP-3Generativemodels/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/08/26/MLAPP-3Generativemodels/</guid>
         
         <category>Machine Learning</category>
+        
+        <category>Learning Notes</category>
         
         
       </item>
     
       <item>
-        <title>New at KTH</title>
-        <description>&lt;h3 id=&quot;前言&quot;&gt;前言&lt;/h3&gt;
-
-&lt;p&gt;距离抵达斯德哥尔摩才仅仅过去十天，但感觉就像是经过了一个很漫长的热闹夏季，应接不暇的各类迎新活动都在如火如荼的进行着，不过伴随着热闹而来的还有一堆需要处理的事情，为了帮助大家更好的handle各项生活琐事，本文提供了一些小tips供各位取阅！希望能够有所帮助～&lt;/p&gt;
-
-&lt;h3 id=&quot;关于超市&quot;&gt;关于超市&lt;/h3&gt;
-
-&lt;p&gt;瑞典有各式各样的的生活超市品牌，销售食品、饮品和日用品，可以参考此篇针对瑞典生活超市的详细解读，十分详细：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s/uZTi4ceG5fFtqxvYQ2W78w&quot;&gt;这可能是史上最真诚的瑞典生活超市大解读！（精华总结见文末）&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;在KTH附近有其中的几家超市，分别分布在下图上的几个位置，包括：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/in-post/2019-08-11-around-kth.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+        <title>Striking Moments</title>
+        <description>&lt;hr /&gt;
+&lt;hr /&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;ICA Supermarket: 瑞典本土超市，主打高性价比，但是价格偏贵一点点&lt;/li&gt;
-  &lt;li&gt;Hemköp: 瑞典本土超市，主打高品质，可以购买到新鲜的散装鱼、虾、贝和熟食，价格稍高&lt;/li&gt;
-  &lt;li&gt;COOP: 瑞士品牌，主打绿色、新鲜、健康和高品质，价格较高&lt;/li&gt;
-  &lt;li&gt;Lidl: 德国廉价超市，中小型，价格比较低（每次去都想要囤可乐！！对比于自动售卖机上一瓶500ml 25sek的价格，lidl的价格实在亲民了！&lt;/li&gt;
-  &lt;li&gt;大中华: 中国超市，距离KTH较远，走路半小时以内，能够买到很多中国食材、调料，可以极大程度上满足中国胃&lt;/li&gt;
+  &lt;li&gt;用以记下现在慢悠悠&lt;strong&gt;「生活」&lt;/strong&gt;中零零碎碎的片刻感受，&lt;strong&gt;跳跃&lt;/strong&gt;式流水账而已&lt;/li&gt;
+  &lt;li&gt;最开始取名叫做「My Moments」，觉得有些矫情，又改回了「&lt;strong&gt;Moments&lt;/strong&gt;」&lt;/li&gt;
+  &lt;li&gt;忽然&lt;strong&gt;striking&lt;/strong&gt;这个词就蹦出我的脑海，觉得十分契合，并且不由让我回想起打垒球的那几年，听到strike后心态逐渐变得不同却又在最后一场比赛被三振出局后崩坏的场景，也好像很适合现在的我。Calm Down My Teammate!&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;瑞典的超市大多可以网购，比如特别廉价的willy’s，由于比较远所以很适合网购，但是要注意他们都需要人口号，包括一些药妆网站，比如apotek，也是需要人口号的～&lt;/p&gt;
+&lt;hr /&gt;
+&lt;hr /&gt;
 
-&lt;h3 id=&quot;关于人口号&quot;&gt;关于人口号&lt;/h3&gt;
-&lt;p&gt;税务局离学校非常近，就在去lidl的路上，可以去逛超市的时候顺便就把人口号办了，带上护照和居留卡，4点前去就好，会有工作人员引导，办理过程非常快，但是需要等一个多月左右&lt;/p&gt;
+&lt;h3 id=&quot;10new-angle&quot;&gt;「10」New Angle&lt;/h3&gt;
 
-&lt;h3 id=&quot;办公交卡&quot;&gt;办公交卡&lt;/h3&gt;
-&lt;p&gt;鉴于刚来的时候没有学生卡，所以无法购买学生的SL卡（公交卡），但是直接单程购买地铁票或者公交票很贵，所以可以选择在地铁站、7-11或Pressbyrån买一张SL卡（卡本身售价20SEK），之后可以转成学生卡。购买之后单程票价32sek，在75分钟内可以免费换乘公交地铁。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2019-10-27&lt;/strong&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;关于流量套餐&quot;&gt;关于流量套餐&lt;/h3&gt;
-&lt;p&gt;学校提供的halebop电话卡初始只有8GB流量而不包含话费（拨号 -&amp;gt; *101# 可以查询话费余额和流量余额，刚拿到的时候没有显示话费余额，因为余额是0），所以无法拨出电话，可以去7-11或者Pressbyrån充值。&lt;/p&gt;
+&lt;p&gt;在结束整整两天的business challenge的时候即使最后的solution没有那么满意但还是有一种如释重负xue微自豪的感觉，大约就是妈妈看傻儿子怎么看都开心的意思哈哈哈哈。。从最开始的抵触这种头脑风暴式的竞赛到中间因为组里贼强迫症且偏执的小哥头疼甚至想过中途开溜到最后跌跌撞撞完成，结果如何好像也没有那么重要了，重要的是在途中想到了hin多相关或无关事情：&lt;/p&gt;
 
-&lt;p&gt;如果觉得流量不够用可以购买他们的夏日特惠extra surf流量包，349kr包含30GB，可以使用6个月，充完值以后发短信”30GB”到4433，就可以买好了！
-（记得发消息前要保证话费余额够哦～）&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;99%的这样的点子都不是那么有趣，但一定能有那么一两个让自己眼前一亮的idea或者是pitch。tell a story and sell your idea 而不是do presentations，能够在台上把pitch做的那么有趣的人实在太棒了！！为什么自己做不到啊555[泪]&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;以前一直因为抵触工作而去想读博士，我在在欧洲的这两个月里终于能够把这种逃避的思想锤进土里了。一个极为优秀的狭义上的entrepreneur（创业者）和一个好的研究者除去技术上的硬实力其实并无二致，他们都能被称为entrepreneur：发现问题，思考问题，提出解决方案，讲一个完整的故事最终呈现它。不得不承认那时候因为工作能力不够且厌恶工作的我幸亏没去读博士，不然也会因为没有发现这种能力重要性的自己感到深深的挫败感吧。。本质上我对自己的现状的改变的期望不应该是读博士或者工作，而是这种逻辑思考和表达能力的提高。。我这个一心偏执不愿意思考的蠢人啊[顶]以及这也是当年为什么自己研究做的不好的原因，因为关注点总不是reasonable 而是一些无意义的指标，忽然挺感谢崔老师的contribution连问的哈哈哈哈&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;很希望自己能够act as an entrepreneur，并且能有且贡献优质的高密度的讨论思考，但介于自己在vision上的巨大缺失以及格局之小总是无法实现[失望]希望大伙一起来鞭策我多读书别玩手机了[失望]垃圾ZYJ&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;以及好几个友人提醒过我的，又一次发现自己是一个“功利”的人，读书希望能记住很多东西，所以记不下来就不想看了；小组讨论希望能很有贡献且被采纳，虚荣心作祟的责任感（？奇怪的表述），无法实现的时候就变得消极；总是追求结果至上；在不该当“废物”的时候不当，该当“废物”的时候瞎当（短时间内可能无法获取东西觉得浪费时间但是在长时间内是有巨大收获的），总是浮躁又急功近利[感冒]&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;因为害怕做不到完美就干脆不做是因噎废食的表现，在开口说英语，pitch，做business idea等多个方面，总是在做心理建设但总是无法迈出很多第一步。到底要怎么convince myself呢[生病]和大脑皮层斗争克服自己的条件反射行为实在是太难了，快要两年了还是在一个圈子里，找到正反馈太难了[失望]可能我天生就是废柴吧555555&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;最后一个忽然想到的不重要的点，从圣马丁和帕森斯的设计风格也能以小见大看出来欧洲和美国的区别，就像是欧美研究氛围的很大不同，天马行空颠覆创新和商业实用结构技能。所以大多数圣马丁的毕业生都穷困潦倒，能出一个McQueen已经是很不容易惹。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
 
-&lt;h3 id=&quot;关于宜家&quot;&gt;关于宜家&lt;/h3&gt;
-&lt;p&gt;斯德哥尔摩有两家IKEA，南边的IKEA相对较大，可以约好几个住在一起的朋友一起去，宜家配送费是199sek，不限制人数，只要总购买值小于20000sek就可以一起配送，一般当天可以到达！&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2019-10-7&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;最后，希望这篇小blog能够有一点小帮助，也祝愿大家都能愉快轻松的渡过新生月～&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Scientific Writing课上又陷入写research proposal的困境，学到一句新的话（或许对大家来说不算哈哈哈哈）这里只是单纯觉得new angle这个词很适合哈哈哈&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/in-post/2019-08-11-kth-sky.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;We solve the problem from a new angle by hypothesizing that…..&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;10月的第一周赶了几个due&lt;/li&gt;
+  &lt;li&gt;很久没写日记，就有一种自己什么也没获得到的感觉（实际上好像也是）&lt;/li&gt;
+  &lt;li&gt;啊！对了！最近最开心的是看了电影《燕尾蝶》！太好看了吧！女主有些像李兰迪！很黑色幽默的一部电影，充斥着暴力美学，但电影的主题上本质还是及其小清新的（毕竟导演可是岩井俊二啊哈哈）隐藏在脏、乱、差的反乌托邦的外表下的内核依旧是乌托邦式的理想主义。对梦想和爱情执着追求生命的最后一夜依旧整晚唱着MAY WAY的肖飞鸿；深情温柔善良甚至可以说有点单纯的固力果；果敢义气、超然世外的职业杀手朗；以及一直仿佛置身事外局外人般的凤蝶，无时无刻不在散发着温情与爱，但所有情感的流动都含蓄且隐秘。&lt;/li&gt;
+  &lt;li&gt;以及今天因为之后有机会interview一个大人物而开心！！！！！！赞！！！&lt;/li&gt;
+&lt;/ol&gt;
 
-&lt;p&gt;Get a Life! :)&lt;/p&gt;
+&lt;hr /&gt;
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;9back-to-school&quot;&gt;「9」Back to School&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-9-2&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;也是一个没能起床晨跑的早上，不过修好了家里的窗户，终于可以透气了！像一条被海浪冲到了沙滩上的鱼又回到海洋里，疯狂的吸取冷空气。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-9-3&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;再融入&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-9-4&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;人就是这样啊，说着只做两件事但是不由的又想要给自己安排上满满的计划，然后又陷入一件事情都做不好的境地。在无所事事的闲散和忙碌焦虑之间不停游走，无法找到平衡。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-9-5&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;To my friend：如果能找到真正喜欢的事情那就放开手去做吧！毕竟这个前提都已经是大多数人不具备的了！&lt;/li&gt;
+  &lt;li&gt;Be positive!&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-9-6&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;今日份晨跑 + 拍小视频任务&lt;/p&gt;
+
+    &lt;p&gt;斯京的太阳一如既往的美！好好积蓄能量度过冬天吧！&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/in-post/2019-09-06-p1.jpeg&quot; alt=&quot;img&quot; /&gt;
+ &lt;img src=&quot;/img/in-post/2019-09-06-p2.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+    &lt;p&gt;（超级喜欢视频的这张截图嘻嘻&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/in-post/2019-09-06-p3.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-9-8&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;6号-7号和小伙伴们坐船去芬兰，看海看日落日出。原来iPhone自带的emoji的🌄🌅是真实的场景啊！深蓝色的天空逐渐被金色淹没，波光粼粼的海面。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;center&gt;
+&lt;video id=&quot;video&quot; controls=&quot;&quot; preload=&quot;none&quot;&gt;
+&lt;source id=&quot;mp4&quot; src=&quot;/img/in-post/2019-09-08-video.mp4&quot; type=&quot;video/mp4&quot; /&gt;
+&lt;/video&gt;
+&lt;/center&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-9-11&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;又开始陷入起不来的循环了！明明很早就睡但是还是会睡很久！😢（啪啪啪打脸&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;今天上商业课听到一个很有趣的案例，某个网上眼镜店的glasses的销量远小于lenses，他们花了很久找了很多原因，包括眼镜样式、不能试戴、商品排列、价格等等，并且一一解决，但是结果还是不尽人意。直到最后他们一群人在实体眼镜店蹲守了三天之后才发现一个很小的区别：&lt;/p&gt;
+
+    &lt;p&gt;&lt;strong&gt;Buying glasses is a “group decision”&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;于是他们在网站中设置了一个很小的功能，就是在模拟试戴之后可以一键转发到社交平台，果不其然，镜框的销量得到了增加。&lt;/p&gt;
+
+    &lt;p&gt;这让我想到许多非社交型功能APP都会慢慢的增加设置一个社交圈的功能，包括购物网站、照片/视频编辑器、音乐播放软件、甚至连一些支付(bao)软件曾经也一度想充分利用开发其社交功能，因为人大多数时候做的决策就是”group decision”，社交圈就是互联网公司的一大盈利模式。&lt;/p&gt;
+
+    &lt;p&gt;然后不经感慨一下微信的成功，从简单的聊天软件，到提出虚拟红包慢慢渗透支付功能，甚至赶超支付宝；然后到极简小程序的推出，以社交圈为载体融合所有功能型软件。这种跳出习惯性思维圈直击要害的产品发展路线，让微信真的做到了：&lt;strong&gt;不只是一个聊天工具，更是一种生活方式&lt;/strong&gt;。一向感觉流日记写手我只能暗自说一句“张小龙牛逼”。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-9-13 -&amp;gt; 2019-9-16&lt;/strong&gt; 🇮🇸&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;两天四季&lt;/p&gt;
+
+    &lt;p&gt;来冰岛前发现连续两天都是100%大雨天，于是做好了心理准备迎接一个暴风雨的冰岛，但是周六居然一路走一路放晴，一天看到了三四个大小不一的彩虹🌈，真的太幸运了，虽然周日如约下了雨。我们戏称真的是在两天经历了冰岛的四季。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;黑沙地和苔藓&lt;/p&gt;
+
+    &lt;p&gt;沿着南边海岸线的公路一路向东是大片的黑沙地，多火山的特性以及冷却的岩浆石和火山灰让这边土地很难长出绿色的植被来。每年似乎只能长3cm的苔藓成了这片土地唯一的拓荒者，在每一次火山爆发之后又重新开始生长，周而复始。&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/in-post/2019-09-17-blacksand.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/in-post/2019-09-17-moss.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Human habitat&lt;/p&gt;
+
+    &lt;p&gt;车上中途醒来后，Lin说到，这是她第一次从市民口中听到“Human habitat”这样的字眼，向导把她们居住在冰岛这片土地称之为“Human habitat”。生存在这片拥有火山、瀑布、远古冰川等诸多原始地貌的土地上，她们依旧对自然充满敬畏，比起dominate这片土地，只是或许也只能是habitate。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;有趣&lt;/p&gt;
+
+    &lt;p&gt;不知道这是不是冰岛人独有的特点：每个地方的指示标志都各不相同，并且画的十分有趣哈哈哈。好像设计不同的标志符号就是他们在漫长冬日里的消遣之一。让我忽然联想到高晓松在晓说里似乎提到的一个观点，大概是那些经历过比较多磨难地区的人民多半更有趣一些（当时举的例子是东北地区）。感觉有些应景哈哈&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/in-post/2019-09-17-signal.jpeg&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;想到再继续写吧！highly recommend！hahahahah&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-9-17&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;因为《GEB》到了我完全读不下去的环节（对位藏头诗与一致性、完全性与几何学），于是打开了一本新书《乌合之众：大众心理研究》，刚看的时候联想到脱欧公投和一系列社交媒体上的反智行为原本以为这是一本比较新的书，结果发现竟然是出版于1895年！不得不感慨于一百多年前就有人能够完美预测概括群体心理的特征，虽然到目前为止他还不够完全充分的向我justify一个群体的情绪化、无异议、低智商等特征的合理性，且感觉怎么明明简简单单的话却被翻来覆去的绕着说，阅读体验不是hin好，但是且看吧哈哈&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;好多天没有晨跑锻炼了！！！别忘了Flag！！！&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-9-18&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;最近看the story of us有感：比起一个国家，感觉美国更像是一个公司，一个典型的entreprenureship的成功案例。最早“头脑风暴”的“创始人”之一John Rolfe就是一个不折不扣的entrepreneur，发现烟草生意在美洲这块新大陆上的可实施性，随后进行扩张、逐渐发展。&lt;/li&gt;
+  &lt;li&gt;但是，一个拿“all men are created &lt;strong&gt;equal&lt;/strong&gt;, that they are endowed by their Creator with certain unalienable Rights, that among these are &lt;strong&gt;Life&lt;/strong&gt;, Liberty, and the pursuit of Happiness”作为宣言的国家却起家于叛逃自己的国家占领掠夺别人的土地甚至屠杀那块土地上的人民，这种极致的双标还能把人洗脑认为自己是fight for freedom真的是疑惑操作（观念不断更新中或许明天就打脸。。。求生欲很强）&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-9-21&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;嗯！&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-9-24&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;感觉自己连莽夫这个称呼都不配了&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-9-25&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;来欧洲之后我一直很疑惑的点在于是什么能够支撑一个如此高福利却”低”效率的国家一直稳速发展，或许很多人会提到说因为欧洲的发展模式是可持续的诸如此类的话，那中国如今这种被许多人诟病“不持续”的发展模式是必然的吗，是现有约束条件中的最优解吗？&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;又一次让我想到这个问题的起源是今天商业课上展示的workshop，任务是去周围的商场逛一圈然后提出一个商业idea 啊。。好久没写我忘惹！！&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;8hello-sweden&quot;&gt;「8」Hello, Sweden&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-8-22&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;昨天和前天看了今敏的《东京教父》和《红辣椒》，感慨于大师对于镜头的运用（或许对于漫画不应该这么说？外行外行）&lt;/p&gt;
+
+    &lt;p&gt;最喜欢的镜头之一或许就是《东京教父》里哈娜和小青妖这个背影的重叠了吧！&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/in-post/2019-08-22-p1.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+    &lt;p&gt;最喜欢的片段应该是《红辣椒》里的游行了吧，尤其有背景音乐的加持每一次看都会起鸡皮疙瘩！&lt;/p&gt;
+
+    &lt;p&gt;可能要感谢他，让近一年持续焦虑到最近甚至连一集综艺都难以认真看下去的我安安心心在家看完了两部电影，很多细小的片段都能让我联想到很多后来的电影，感觉每一个小点就能被拎出来拍成一部好电影，让我联想到了高晓松评论刘慈欣的《三体》，把一切好东西都统统摆出来给你看。或许就是这样高密度的脑洞输出才会让人看的畅快淋漓吧！（我可真是个感受派流水账记录者哈哈哈哈&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;以及最近在慢慢看《GEB》，我可太喜欢中间的怪圈理论了！以及其中提到的大多数矛盾的来源是“自指性”&lt;/p&gt;
+    &lt;blockquote&gt;
+      &lt;ul&gt;
+        &lt;li&gt;所谓“怪圈”现象，就是当我们向上（或向下）穿过某种层次系统中一些层次时，会意外的发现我们正好回到了我们开始的地方。&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/blockquote&gt;
+
+    &lt;blockquote&gt;
+      &lt;ul&gt;
+        &lt;li&gt;任何一个形式系统，只要包括了简单的初等数论描述，而且是自洽的，它必定包含某些系统内所允许的方法既不能证明真也不能证伪的命题。&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/blockquote&gt;
+
+    &lt;p&gt;想到高中物理老师每每讲到激情昂扬处都会提到爱因斯坦晚年想验证广义与狭义相对论是能够融合的，形成一套闭合完备的理论，所以说Ph.D = Doctor of Philosophy 不是没有原因的啊！&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-8-24&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;“没能继续的诗篇 ，不欢而散的告别”&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-8-25&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;今天终于把《千年女优》也看啦！
+    &lt;ul&gt;
+      &lt;li&gt;让我想到了《暗恋桃花源》的剧情（虽然我还没有看过暗恋只看过向往的生活里那一小段嘻嘻）&lt;/li&gt;
+      &lt;li&gt;再一次感慨一下今敏的剪辑和镜头，在现实和虚幻中随意穿梭；以及能把微小的情感拍出宏大的宇宙感&lt;/li&gt;
+      &lt;li&gt;最喜欢的《而我知道》的MV中的结尾“现在我知道，我爱上的是17岁的，我自己”&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;晚上去Stockholm City Hall参加开学典礼，就抽下午出门去了modern museum，想去看马蒂斯！毕竟他的《The Joy of Life》占据了我多年朋友圈的背景，还想过要纹舞蹈！可惜不出意外的没有看到&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/in-post/2019-08-25-p1.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+    &lt;p&gt;不过意外拍到了很爱的虚实相生的风景！👇 那我就取名《开着的窗户》吧 credit to Matisse&lt;/p&gt;
+
+    &lt;p&gt;毕竟当代艺术不就是追求“人人都是艺术家”吗！哈哈哈哈哈哈&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/in-post/2019-08-25-p2.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+    &lt;p&gt;从开学典礼回来的路上整个城市都被粉紫色的云朵笼罩，太美了（手机只能表达出来十分之一的美！华为勉强十分之二！！&lt;/p&gt;
+
+    &lt;p&gt;我和Lin一路奔跑，去追赶lidl关门前的，和她的”family”来见她路上的20分钟，我调侃，“咱们这是斯德哥尔摩跑啊”，于是越跑越起劲，两个人傻乎乎的在街上大笑&lt;/p&gt;
+
+    &lt;p&gt;一路跑过，却又一路念念不舍的拍照，Lin说，一定要把它留下呀&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/in-post/2019-08-25-p3.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+    &lt;p&gt;抵抗焦虑的良方，或许就是充实安心的过好每一天「生活」吧！Get a Life! （扣题满分&lt;/p&gt;
+
+    &lt;p&gt;腿真酸呀！晚安！&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-8-26&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;第一天上课啦，商科课程的老师是个有趣的先生，连连赞叹他的pitch技巧&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-8-27&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;赖了半小时床之后起床晨跑(走)&lt;/p&gt;
+
+    &lt;p&gt;听说沿着学校背后的小森林一路穿过去会遇到一片湖，很好奇，于是慢慢悠悠连跑带走，穿过了斯大的校园，结果走到了lappis。&lt;/p&gt;
+
+    &lt;p&gt;途中偶遇了秋千，想到上次11点多在滨江公园还玩不到的秋千，二话不说就冲了上去。我真的有看到金色的阳光哦&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/in-post/2019-08-27-p2.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+    &lt;p&gt;终于到达了所谓的某个湖边，随手拍的两张照片在相册里乍一看像是一张长图，what a coincidence!&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/in-post/2019-08-27-p1.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;甩锅这件事，在不知不觉中我也能完成✅的非常之好。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;“幸福当然是很美好的，但是瞬间怎么被放大和延伸，我没有学过，我怕我做不到。”&lt;/li&gt;
+  &lt;li&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-8-28&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;上课时忽然想到的今日主题词：&lt;strong&gt;应运而生&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;一个人的命运啊，当然要靠自我奋斗。但也要考虑历史的进程&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;最近看的书里提到，&lt;/p&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;Lean Startup is a new way of looking at the development of innovative new products that emphasizes &lt;strong&gt;fast iteration&lt;/strong&gt; and &lt;strong&gt;customer insight&lt;/strong&gt;, a huge vision, and great ambition, all at the same time.&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;上午看的论文是有关user-generated content对于Product Design的影响，在论文里也不谋而合的提到了一种two-stages手段：design-then-price。即先design product，然后根据user-generated content（例如评论反馈等）定价&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;下午的课上，Henrik反复提到，一是History的重要性，History is the best training set in order to predict future；二是logic，需要对事物追根溯源寻找其内在逻辑和发展规律（莫名正经）。他举到了marketing和advertising产生的原因，供需角色的倾斜导致由calling to buy到marketing的变化，也是push -pull的转换（大一学的MIS忽然蹦出脑海）。科技的迅速发展，互联网信息爆炸，产品更新换代速度的指数激增，导致传统的部分product design模式无法适用。Fast iteration is required.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;想到了早上看的Bayesian learning
+    &lt;blockquote&gt;
+      &lt;p&gt;In other words, if we have enough data, we see that the data overwhelms the prior.&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;p&gt;比起完美的刻画出先验知识，在data足够多的情况下（当下），不断的收集用户信息等进行迭代更加重要&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;毕加索的立体主义乃至当代艺术诞生于影像技术逐渐成熟的技术大进步时期，机械复制时代的到来弱化了艺术对于写实的需求，而表达与思考成了主要目的。&lt;/p&gt;
+
+    &lt;p&gt;在柏拉图的《理想国》一书中有一个非常经典的比喻——“床喻”，即关于三张床的比喻。他认为第一张床是一个由上帝创造的理念(idea/concept)，第二张床是工匠为了仿照上帝的概念而制造出的实物，第三张床是则艺术家为了摹仿工匠所制造的而创作的作品。
+柏氏的床喻表明，自然之床即神造之床，是原型观念，代表看不见摸不着的理念本体，属于理智世界的可知对象，是世界所有床的本源；木匠所造之床，是生活器具，属于现象世界的可视对象 ，是摹仿原型理念的产物，代表实用技艺；画家所画之床是木匠所造之床的摹本，相对于神所造之床而言，就成了摹本之摹本，属于虚化影像，是影子之影子，与床的物理实体相隔一层，没有实用价值；与床的本体相隔两层，没有认识价值，只能代表摹仿艺术。&lt;/p&gt;
+
+    &lt;p&gt;有趣的是，1965年约瑟夫·科苏斯的作品《one and three chairs》也很好的再现了柏拉图的这个理念。照片里的椅子，是实物的影像，真实的这把椅子出自工匠之手，是模仿理念本体的产物，而那些对椅子的解释不正好就是椅子的原型观念吗&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/in-post/2019-08-28-p1.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+    &lt;p&gt;当代艺术的发展很大一部分是由于科学技术发展的推动，机械复制时代让艺术的大量复制成为可能，艺术相对于人们来说不再是神秘的崇拜对象，而变为触手可及的审美对象，技巧性的描绘美的事物仅仅只能带给观众美的观感。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Coco Chanel（最喜欢的品牌之一啊啊啊）打破了“帽子上有一个花园”的传统，以简洁的无装饰草帽出名；摒弃了束腰拖地长裙，以男装为灵感采用直线剪裁，及膝直筒裙甚至长裤；讨厌女人们穿的“五彩缤纷”，于是设计了小黑裙（超自我呀！！），但这一切似乎也是因为她敏锐的抓住了（我们无从得知是她选择了还是被选择了）女性意识的觉醒这一时代特征。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;综上所述，要多看书多看报勤学习勤思考少吃零食多睡觉 :)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-8-29&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;《非暴力沟通》：&lt;/p&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;使用暴力的人的其实是因为他们内心的宁静遭到了破坏，所以他们才会有暴力的方式维护或寻求心灵的和平。这或许是暴力的蝴蝶效应吧。&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;观察（客观，非评价），感受（非看法），需求（明确细节，正面），请求（具体）&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-8-30&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;预测 vs 推断&lt;/p&gt;
+
+    &lt;p&gt;“同样是寻找y=f(X)中的f(·)，如果仅仅为了&lt;strong&gt;预测&lt;/strong&gt;Y，f(·)可以是一个黑箱子；但如果是为了&lt;strong&gt;推断&lt;/strong&gt;X, y之间的关系，f(·)就需要知道具体形式。根据分析的目标是预测、推断，还是两者兼具，估计f(·)所采用的方法可能是不同的。”&lt;/p&gt;
+
+    &lt;p&gt;所以传统的研究方法得以继续，且深度学习的可解释性一直被研究的原因就是在某些情况下，仅仅做到100%准确的预测是无法改变当下的，只有研究其中的logic才能够修正它、把控它。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;或许比起 &lt;strong&gt;__&lt;/strong&gt;_，我更希望 &lt;strong&gt;__&lt;/strong&gt;__&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;2019-8-31&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;太喜欢这部电影的表现手法了！！！（看来我目前还在那种觉得世界哪儿哪儿都好的阶段哈哈哈），超现实主义的表现手法很完美的配合了frida的画！（但是对于frida来说她并不愿意认为自己的画是超现实主义的，她是在真实的描述自己）异域风情的BGM也非常抓我，狂放且热烈，尤其是每次frida醉酒之后的狂欢。&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/in-post/2019-08-31-p1.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+    &lt;p&gt;以及觉得《燕尾蝶》这首歌很配她！&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;支点&lt;/strong&gt;：因为忽然想到《燕尾蝶》这首歌是阿信因为看了某一部叫《燕尾蝶》的电影之后就很想看这部电影，然后想到以前疯狂喜欢五月天的时候，会以他们为支点，利用仅有的一部智能手机却能够向外不断延伸，去看那些影响了阿信写词的小说、电影，去听他们喜欢的摇滚乐团，去敞开自己心扉在网路上主动认识新朋友甚至聊人生聊未来（虽然那个时候的人生经验比较浅薄哈哈哈哈），为了见他们去追寻一些不敢想的梦想虽然最后没能实现但也pay off，这是一个多么充满正能量的反馈啊！反而网速越快渠道资源越丰富我却成长的越慢了啊真是羞愧。内心世界一片贫瘠的人果然活的像是行尸走肉毫无对生活的respect和热情啊，所以说五月天当年是信仰真的不假呀！（说来有点矫情且害怕似乎会被大家认为是“低级”的信仰）还想到了老师提到过那个为了热爱的专业咬牙退学了又申请出国读了自己喜欢专业的女孩子，&lt;strong&gt;“人生终归还是要 one must be motivated by what she does”&lt;/strong&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
 
 </description>
-        <pubDate>Sun, 11 Aug 2019 00:00:00 +0200</pubDate>
-        <link>http://localhost:4000/2019/08/11/New-at-KTH/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/08/11/New-at-KTH/</guid>
+        <pubDate>Thu, 22 Aug 2019 00:00:00 +0200</pubDate>
+        <link>http://localhost:4000/2019/08/22/Moments/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/08/22/Moments/</guid>
         
         <category>Get A Life</category>
         
@@ -83,920 +589,485 @@
       </item>
     
       <item>
-        <title>Big Data Algorithm Lesson 7: Support Vector Machine (4)</title>
-        <description>&lt;h3 id=&quot;review-admmalm&quot;&gt;Review: ADMM/ALM&lt;/h3&gt;
-&lt;p&gt;针对一个有约束问题：
-&lt;script type=&quot;math/tex&quot;&gt;\min f(x)+g(y)\\
-s.t. \ Ax+By=C&lt;/script&gt;
-假设g,f是凸函数，A列满秩（保证朗格朗日函数的梯度函数是strongly convex的），其增广拉格朗日函数如下
-&lt;script type=&quot;math/tex&quot;&gt;L_\sigma(x,y;z)=f(x)+g(y)+\langle Ax+By-C,z\rangle +\frac{\sigma}{2}||Ax+By-C||^2&lt;/script&gt;&lt;/p&gt;
+        <title>[MLAPP] Chapter 2: Probability</title>
+        <description>&lt;head&gt;
+    &lt;script src=&quot;https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/x-mathjax-config&quot;&gt;
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            displayMath: [ ['$$', '$$']],
+            inlineMath: [['$','$']],
+            processEscapes: true
+            }
+        });
+    &lt;/script&gt;
+&lt;/head&gt;
+
+&lt;h2 id=&quot;21-introduction&quot;&gt;2.1 Introduction&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;What is probability?&lt;/strong&gt;&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;penalty method&lt;br /&gt;
-忽略掉其中包含拉格朗日乘子的那一项，就变为了我们之前讲的仅考虑将约束作为惩罚项进行求解的方法
-&lt;script type=&quot;math/tex&quot;&gt;(x^k,y^k)=argmin_{x,y} \ f(x)+g(y)+\frac{\sigma_k}{2}||Ax+By-C||^2&lt;/script&gt;
-这种想法合理，但是想要求得最优解需要令$\sigma_K\rightarrow\infty$，这时候会非常难计算&lt;/li&gt;
-  &lt;li&gt;Augmented Lagrangian Method (ALM)&lt;br /&gt;
-拉格朗日乘子增广法这种方法又被称为Method of Multipliers
-&lt;script type=&quot;math/tex&quot;&gt;(x^{k+1},y^{k+1})\in argmin L_\sigma(x,y;z^k) \\
-z^{k+1}=z^k+\rho\sigma_k(Ax^{k+1}+By^{k+1}-C),\rho\in(0,2)&lt;/script&gt;
-在这里，$\sigma$不用趋于正无穷算法就能收敛，且收敛率为线性（linear convergence）
-即假设解唯一，
-&lt;script type=&quot;math/tex&quot;&gt;\frac{||L(x^{k+1},y^{k+1})-L(x^*,y^*)||}{||L(x^{k},y^{k})-L(x^*,y^*)||}\leq O(\frac{1}{\sigma_k}) \\
-||L(x^{k},y^{k})-L(x^*,y^*)||\leq O(\sigma^{-k})&lt;/script&gt;
-（这里有点问题）
-ALM是非常特别的，收敛速度在我们的控制之下，当$\sigma_k$变大后（尤其当$\sigma_k$为正无穷时，可以一步收敛），condition number会很大，子问题很难解&lt;/li&gt;
-  &lt;li&gt;Alternating Direction Method of Multipliers (ADMM)
-&lt;script type=&quot;math/tex&quot;&gt;x^{k+1}\in argmin L_\sigma(x,y^k;z^k) \\
-y^{k+1}\in argmin L_\sigma(x^{k+1},y;z^k) \\
-z^{k+1}=z^k+\gamma\sigma(Ax^{k+1}+By^{k+1}-C), \gamma\in (0,\frac{1+\sqrt(5)}{2})&lt;/script&gt;
-在这里ADMM的子问题难度大大下降，但其收敛率变慢，为sublinear convergence
-&lt;script type=&quot;math/tex&quot;&gt;||L(x^{k},y^{k})-L(x^*,y^*)||\leq O(\frac{1}{k})&lt;/script&gt;
-VS：比如作为对比，对于一个问题想要达到$10^{-6}$的精度，可能对于ALM只需要跑10-20步迭代，但ADMM需要跑3000-5000步迭代&lt;/li&gt;
+  &lt;li&gt;The first interpretation is called the &lt;strong&gt;frequentist interpretation&lt;/strong&gt;. In this view, probabilities represent long run frequencies of events.&lt;/li&gt;
+  &lt;li&gt;The other interpretation is called the &lt;strong&gt;Bayesian interpretation&lt;/strong&gt; of probability. In this view, probability is used to quantify our &lt;strong&gt;uncertainty&lt;/strong&gt; about something; hence it is fundamentally related to &lt;strong&gt;information&lt;/strong&gt; rather than repeated trials (Jaynes 2003).&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;在我们使用ADMM去reformulate问题的时候需要注意一些tricky的东西，以便于减小子问题的求解难度，最好使得子问题存在显式解，比如在SVM里，
-&lt;script type=&quot;math/tex&quot;&gt;\min \frac{1}{2}||A\mu||^2-\langle\mu,1\rangle+\delta(s|s\geq0)=f(\mu)+g(s)\\
-s.t. [t^T;I]\mu-[0;I]s=[0;0]\rightarrow G\mu+Hs=0&lt;/script&gt;
-使用$\delta(s|s\geq0)$而非$\delta(v|v\geq0)$就是为了将s和v两个变量完全拆开，否则子问题的难度跟原问题是一样的，那就没有使用ADMM的必要了（且也可能解不出来）&lt;/p&gt;
+&lt;h2 id=&quot;22-a-brief-review-of-probability-theory&quot;&gt;2.2 A brief review of probability theory&lt;/h2&gt;
 
-&lt;h4 id=&quot;example-lasso-problem&quot;&gt;Example: Lasso Problem&lt;/h4&gt;
-&lt;p&gt;在机器学习中，LASSO (least absolute shrinkage and selection operator)使用了L1-Norm进行正则化，产生稀疏性，导致最优解中许多项变成零，这样方便了大规模的计算。&lt;/p&gt;
 &lt;ol&gt;
-  &lt;li&gt;为什么使用L1-norm：可以参考https://blog.csdn.net/xidianzhimeng/article/details/20856047的讲解&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;为什么不使用L0-norm：L0-norm表示一个向量中不为0的元素个数，理论上来说用L0-norm更符合稀疏化的条件，但是要注意是L0-norm很难优化求解（NP难问题），并且L1-norm是L0-norm的最优凸近似，它也比L0范数要容易优化求解，因此我们通常都会使用L1-norm，详细可以参考：https://blog.csdn.net/zouxy09/article/details/24971995&lt;br /&gt;
-Lasso问题的formulation如下：
-&lt;script type=&quot;math/tex&quot;&gt;\min \frac{1}{2}||Ax-b||^2+\rho||x||_1&lt;/script&gt;
-我们令$y=x$
-&lt;script type=&quot;math/tex&quot;&gt;\min \frac{1}{2}||Ax-b||^2+\rho||y||_1 \\
-s.t. \ y = x \\
-L_\sigma(x,y;\lambda)=\frac{1}{2}||Ax-b||^2+\rho||y|| _1-\lambda(y-x)+\frac{\sigma}{2}||y-x||^2&lt;/script&gt;&lt;/p&gt;
+  &lt;li&gt;Discrete random variables (probability mass function, abbreviated to pmf)&lt;/li&gt;
+  &lt;li&gt;Fundamental rules, including Probability of a union of two events, Joint probabilities, Conditional probability&lt;/li&gt;
+  &lt;li&gt;Bayes rule: Combining the definition of conditional probability with the product and sum rules yields Bayes rule, also called &lt;strong&gt;Bayes Theorem&lt;/strong&gt;:&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;p(X=x|Y=y) = \frac{p(X=x, Y=y)}{p(Y=y)} = \frac{p(X=x)p(Y=y|X=x)}{\sum_x' p(X=x')p(Y=y|X=x')}&lt;/script&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Independence and conditional independence
+    &lt;ul&gt;
+      &lt;li&gt;X and Y are unconditionally independent or marginally independent:&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;X \perp Y \Leftrightarrow p(X,Y) = p(X)p(Y)&lt;/script&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;X and Y are conditionally independent (CI) given Z iff the conditional joint can be written as a product of conditional marginals:&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;X \perp Y|Z \Leftrightarrow p(X,Y|Z) = p(X|Z)p(Y|Z)&lt;/script&gt;
+ &lt;strong&gt;Theorem 2.2.1.:&lt;/strong&gt; $X\bot Y |Z$ iff there exist function $g$ and $h$ such that $p(x, y|z) = g(x, z)h(y, z) $ for all $x,y,z$ such that $p(z) &amp;gt; 0$.&lt;/p&gt;
+
+    &lt;p&gt;(! Need to be proved)&lt;/p&gt;
   &lt;/li&gt;
-  &lt;li&gt;求解$x^{k+1}$:
-&lt;script type=&quot;math/tex&quot;&gt;x^{k+1}=argmin \ \frac{1}{2}||Ax-b||^2+\rho||y^k||_1-\lambda(x-y^k)+\frac{\sigma}{2}||x-y^k||^2 \\
-\nabla_x L_\sigma(x,y^k;\lambda^k)=A^T(Ax-b)-\lambda^k+\sigma(x-y^k)=0 \\
-x^{k+1}=(A^TA+\sigma I)^{-1}(A^Tb+\lambda^k+ty^k)&lt;/script&gt;
-不过一般在这里虽然存在显式解，可是因为求逆非常浪费时间，在实际中一般不用求逆，而是用梯度下降法$x^{k+1}=[x^{k}-\nabla_x L_\sigma(x,y^k;\lambda^k)]^+$&lt;/li&gt;
-  &lt;li&gt;求解$y^{k+1}$:
-&lt;script type=&quot;math/tex&quot;&gt;y^{k+1}=argmin \ \frac{1}{2}||Ax^{k+1}-b||^2+\rho||y||_1-\lambda(x^{k+1}-y)+\frac{\sigma}{2}||x^{k+1}-y||^2&lt;/script&gt;
-但此时因为L1-norm的存在，$\nabla_y L_\sigma(x^{k+1},y;\lambda^k)$无法求解，不过我们可以发现经过配方：
-&lt;script type=&quot;math/tex&quot;&gt;L_\sigma(x^{k+1},y;\lambda^k)=\rho||y||_1+\frac{\sigma}{2}||x^{k+1}-y-\frac{\lambda}{\sigma}||^2 \\
-=\sum_{i=1}^n \rho|y_i|+\sum_{i=1}^n \frac{\sigma}{2}(x_i-y_i-\frac{\lambda_i}{t})^2 \\
-= \sum_{i=1}^n \rho|y_i|+\frac{\sigma}{2}(x_i-y_i-\frac{\lambda_i}{t})^2&lt;/script&gt;
-因此，对于$i=1,…,n$
-&lt;script type=&quot;math/tex&quot;&gt;\min_{y_i} \ \rho|y_i|+\frac{\sigma}{2}(x_i-y_i-\frac{\lambda_i}{t})^2&lt;/script&gt;
-（要注意，加入对于通式$||Mx^{k+1}-Ny-\frac{\lambda}{\sigma}||^2$，若M和N都是对角矩阵是可以拆分的，比如这里的M=N=I，但是若不为就不可以拆分）
-至此我们可以把这个n维的子问题变为n个一维问题，对于$y_i$按正、0、负三种情况分类讨论再求梯度为0即可(这种方法称为soft threshold)
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-\partial (\rho|y_i|+\frac{\sigma}{2}(x_i-y_i-\frac{\lambda_i}{t})^2)  = \rho\partial |y_i|-t(x_i^{k+1}-y_i-\frac{\lambda_i^k}{t})=0\rightarrow \\
-y_i = \left\{
-\begin{aligned}
-&amp; x_i-\frac{\lambda_i}{\sigma}-\frac{\rho}{\sigma},\ if \ \ y_i&gt; 0 \rightarrow x_i-\frac{\lambda_i}{\sigma} &gt;\frac{\rho}{\sigma}\\
-&amp; x_i-\frac{\lambda_i}{\sigma}+\frac{\rho}{\sigma},\ if \ \ y_i&lt; 0 \rightarrow x_i-\frac{\lambda_i}{\sigma} &lt;-\frac{\rho}{\sigma}\\
-&amp; 0,\ if \ \ -\frac{\rho}{\sigma} \leq x_i-\frac{\lambda_i}{\sigma} \leq \frac{\rho}{\sigma}
-\end{aligned}
-\right. %]]&gt;&lt;/script&gt;
-我们令$S_{\frac{\rho}{\sigma}}(x_i-\frac{\lambda_i}{\sigma})=\left[ |x_i-\frac{\lambda_i}{\sigma}|-\frac{\rho}{\sigma} \right]&lt;em&gt;+ \cdot sig(x_i-\frac{\lambda_i}{\sigma})$
-（$\left[ |x_i-\frac{\lambda_i}{\sigma}|-\frac{\rho}{\sigma} \right]&lt;/em&gt;+$称为(soft) shrinkage operator，指$x_i-\frac{\lambda_i}{\sigma}$在$\frac{\rho}{\sigma}$处做shrinkage，符号与$x_i-\frac{\lambda_i}{\sigma}$保持一致）&lt;br /&gt;
-因此$y_{k+1}=S_{\frac{\rho}{\sigma}}(x^{k+1}_i-\frac{\lambda^k_i}{\sigma})$&lt;/li&gt;
-  &lt;li&gt;求解$\lambda^{k+1}=\lambda^k-\sigma(x^{k+1}-y^{k+1})$&lt;/li&gt;
+  &lt;li&gt;Continuous random variables(probability density function, abbreviated to pdf; cumulative distribution function, abbreviated to cdf)&lt;/li&gt;
+  &lt;li&gt;Quantiles: denoted by $F^−1(\alpha)$&lt;/li&gt;
+  &lt;li&gt;Mean(expected value), standard deviation and variance(a measure of the “spread” of a distribution)&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;使用ADMM时还需要注意的：&lt;/p&gt;
+&lt;h2 id=&quot;23-some-common-discrete-distributions&quot;&gt;2.3 Some common discrete distributions&lt;/h2&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;目标函数是convex的才能保证收敛性&lt;/li&gt;
-  &lt;li&gt;子问题要保证有解&lt;/li&gt;
-  &lt;li&gt;当扩展到$\min f(x)+g(y)+h(z)$时就无法证明ADMM在general的情况下work了，但是h(z)若有一些特别的性质是可以证明收敛性的&lt;/li&gt;
-&lt;/ol&gt;
+  &lt;li&gt;&lt;strong&gt;The binomial and Bernoulli distributions&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;binomial distribution $X \sim Bin(n,\theta)$:&lt;/p&gt;
 
-&lt;h3 id=&quot;other-examples&quot;&gt;Other Examples&lt;/h3&gt;
-&lt;p&gt;除了lasso之外，ADMM还有以下几个非常典型的使用场景&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;Basis Pursit:
-&lt;script type=&quot;math/tex&quot;&gt;\min ||x||_1\\
-s.t. \ Ax=b&lt;/script&gt;&lt;/li&gt;
-  &lt;li&gt;Robust PCA
-&lt;script type=&quot;math/tex&quot;&gt;\min ||X||_*+\rho||Y||_1\\
-s.t. \ X+Y=M&lt;/script&gt;
-其中$||X||_*$是指X的奇异值取L1-norm；目标函数中前者保证低秩，后者保证稀疏&lt;/li&gt;
-&lt;/ol&gt;
+        &lt;script type=&quot;math/tex; mode=display&quot;&gt;Bin(k|n,\theta) \triangleq  \binom{n}{k}\theta^k(1-\theta)^{n-k}&lt;/script&gt;
 
-&lt;h3 id=&quot;algorithm-of-svmproximal-gradient-method&quot;&gt;Algorithm of SVM：Proximal Gradient Method&lt;/h3&gt;
-&lt;p&gt;考虑SVM问题的对偶形式
-&lt;script type=&quot;math/tex&quot;&gt;\min \frac{1}{2}||Av||^2-v^T1\\
-s.t. v\geq0 \\
-v^Tt=0&lt;/script&gt;
-假设这个问题是个无约束问题，其实可以直接用gradient method求解，于是聪明的先人们便开始考虑，有没有可能先求出无约束下的最优解，再映射回那个约束构成的空间下呢？接下来就利用SVM作为例子讨论一下这种可能性！&lt;br /&gt;
-定义$\Omega={v|\langle v,t\rangle =0, v\geq 0}$，这里的$\Omega$性质很好，是一个多面体；原SVM问题变为
-&lt;script type=&quot;math/tex&quot;&gt;\min \frac{1}{2}||Av||^2-v^T1\\
-s.t. v \in \Omega&lt;/script&gt;
-假设我们会算$\Pi_{\Omega}(v)=argmin_{v} \ \frac{1}{2}||v-x||^2 s.t.x\in \Omega$，那我们就能使用这样的迭代方法求解
-&lt;script type=&quot;math/tex&quot;&gt;v^{k+1}=\Pi_{\Omega}(v^k-\alpha\nabla f(v^k)) \\
-\nabla f(v) = A^TAv-1&lt;/script&gt;
-这种方法被证明是可行的，证明如下：&lt;/p&gt;
+        &lt;p&gt;where $\binom{n}{k} \triangleq \frac{n!}{k!(n-k)!}$ is the number of ways to choose k items from n (this is known as the &lt;strong&gt;binomial coefficient&lt;/strong&gt;, and is pronounced “n choose k”).&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;Bernoulli distribution $X \sim Ber(\theta)$:&lt;/p&gt;
 
-&lt;p&gt;对于无约束问题$\min f(x)$，对于目标函数在local构建一个近似的quadratic objective function，使用梯度下降法求解
-&lt;script type=&quot;math/tex&quot;&gt;x^{k+1}=argmin \ f(x^k)+(x-x^k)^T\nabla f(x^k)+\frac{1}{2\alpha}||x-x^k||^2 \\
-\nabla = \nabla f(x^k)+\frac{1}{\alpha}(x-x^k) = 0 \\
-x^{k+1} = x^k-\alpha \nabla f(x^k)&lt;/script&gt;
-注意这里的$\alpha$不能太大，否则penalty太小，它的取法比较tricky，且必须满足$\alpha\in(0,\frac{2}{\sigma(A^TA)})$&lt;br /&gt;
-对于有约束问题$\min f(x) s.t. x\in \Omega$，同样可以构建为无约束问题$\min f(x)+\delta(x|x\in \Omega)$，但是在这里，目标函数由于不是smooth的，没有办法近似，可是我们会发现在这里，如果x不在空间$\Omega$里，是没办法做min的，因此这个约束必须满足，于是
-&lt;script type=&quot;math/tex&quot;&gt;x^{k+1}=argmin_{x} \ f(x)+ \delta_\Omega(x) \\
-x^{k+1}=argmin_{x\in \Omega} \ f(x^k)+(x-x^k)^T\nabla f(x^k)+\frac{1}{2\alpha}||x-x^k||^2  \\
-x^{k+1}=argmin_{x\in \Omega} \ \frac{1}{2\alpha}||x-(x^k-\alpha\nabla f(x^k))||^2+Constant \\
-x^{k+1}=\Pi_{\Omega}(x^k-\alpha\nabla f(x^k))&lt;/script&gt;&lt;/p&gt;
+        &lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+Ber(x|\theta) \triangleq  \theta^{\mathbb{I}(x=1)}(1-\theta)^{\mathbb{I}(x=0)} = \begin{cases}
+ \theta &amp; \text{if x=1}\\
+ 1-\theta &amp; \text{if x=0}
+ \end{cases} %]]&gt;&lt;/script&gt;
+  Bernoulli distribution is the special case of a binomial distribution with $n=1$&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
 
-&lt;p&gt;那么现在关键就在于对于问题
-&lt;script type=&quot;math/tex&quot;&gt;\min \frac{1}{2}||x-v||^2 \\
-s.t. x^Tt=0  \\
-x\geq 0&lt;/script&gt;
-如何证明上述问题的最优解$\Pi_{\Omega}(v)$存在且唯一
-这里的证明思路对我来说有点绕，并且有一些性质并不了解，所以若有错误欢迎指正。。&amp;gt;。&amp;lt;
-大概思路就是先证明在一个子空间内一定有最优解，然后证明这个子空间外的所有点的值都大于子空间内的某个点。&lt;br /&gt;
-&lt;strong&gt;Proof:&lt;/strong&gt;&lt;br /&gt;
-由于目标函数是strongly convex&amp;amp;continuous的，strongly convex的函数（不用可微）是一个coercive function，即存在性质${\frac  {f(x)\cdot x}{|x|}}\to +\infty {\mbox{ as }}|x|\to +\infty$
-（参考：https://en.m.wikipedia.org/wiki/Coercive_function）&lt;br /&gt;
-这个性质也可以表示为$\forall M&amp;gt;0,\exists R, s.t. for \ all \ ||x||&amp;gt;R,such \ that \ f(x)&amp;gt;M$&lt;/p&gt;
+    &lt;p&gt;binomial distribution: How many times(k) do the coin face up when it is thrown for n times?&lt;/p&gt;
 
-&lt;p&gt;我们首先取 $M=f(y_0)&amp;lt;\infty$，$y_0$是以下问题的一个可行解($||y_0||\leq R$)，且R满足这个性质$\forall M&amp;gt;0,s.t. for \ all \ ||x||&amp;gt;R,such \ that \ f(x)&amp;gt;M$
-&lt;script type=&quot;math/tex&quot;&gt;\min f(x)  \\
-s.t. ||x||\leq R&lt;/script&gt;
-因此$\forall ||x||&amp;gt;R, \ f(x)&amp;gt;M=f(y_0)\geq f(x^&lt;em&gt;)$&lt;br /&gt;
-并且根据xxxxxxxxxxxx定理，有限闭集内一定存在minimizer，因此$f(x^&lt;/em&gt;)$一定存在，因此这个问题一定有解，且因为strongly convex，是唯一最优解&lt;br /&gt;
-PS：可以看下面这个图，$A = {x|x^Tt=0,x\geq 0},\ B={x|||x||\leq R}$，我们的思路就是先利用coercive的性质，证明对于点$y_0$，一定会存在一个R，构成一个子空间B，使得B空间外的点（即所有R以外的点）的取值都大于$M=f(y_0)$，然后证明B这个set中存在最优解（xxxxx定理），即可证明我们这个问题的存在最优解
-&lt;img src=&quot;/img/in-post/post-Lesson-7.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+    &lt;p&gt;Bernoulli distribution: Do the coin face up when it is thrown for once?&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;The multinomial and multinoulli distributions&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;multinomial distributions:
+  &lt;script type=&quot;math/tex&quot;&gt;Mu(\pmb{x}|n, \pmb{\theta} ) \triangleq  \binom{n}{x_1\cdots x_K}\prod_{j=1}^{K}\theta_j^{x_j}&lt;/script&gt;&lt;/p&gt;
 
-&lt;p&gt;然后我们就来考虑如何解这个投影问题呢？将原问题稍微变化一下：
-&lt;script type=&quot;math/tex&quot;&gt;\min_x \frac{1}{2}||x-v||^2 + \delta(x|x\geq 0) \\
-s.t. x^Tt=0&lt;/script&gt;
-引入对偶变量$y\in R^1$
-&lt;script type=&quot;math/tex&quot;&gt;L(x;y)=\frac{1}{2}||x-v||^2 + \delta(x|x\geq 0)-y\langle x, t\rangle \\
-\inf_x L(x;y)=\inf_{x\geq 0}\frac{1}{2}||x-v||^2-\langle x, yt\rangle \\
-=\inf_{x\geq 0}\frac{1}{2}||x||^2-\langle x, v\rangle +\frac{1}{2}||v||^2-\langle x, yt\rangle \\
-= \inf_{x\geq 0}\frac{1}{2}||x||^2-\langle x, v+yt\rangle +\frac{1}{2}||v||^2 \\
-= \inf_{x\geq 0}\frac{1}{2}||x-(v+yt)||^2-\frac{1}{2}||v+yt||^2+\frac{1}{2}||v||^2 \\
-= \frac{1}{2}||\Pi_{x\geq 0}(v+yt)-(v+yt)||^2 -\frac{1}{2}||v+yt||^2+\frac{1}{2}||v||^2&lt;/script&gt;
-由于$v+yt=\Pi_{x\geq 0}(v+yt)+\Pi_{x\leq 0}(v+yt)$，且$\langle \Pi_{x\geq 0}(v+yt), \Pi_{x\leq 0}(v+yt)\rangle = 0$，则
-&lt;script type=&quot;math/tex&quot;&gt;\inf_x L(x;y) = \frac{1}{2}||\Pi_{x\leq 0}(v+yt)||^2 -\frac{1}{2}(||\Pi_{x\geq 0}(v+yt)||^2+||\Pi_{x\leq 0}(v+yt)||^2)+\frac{1}{2}||v||^2 \\
-\inf_x L(x;y) =-\frac{1}{2}||\Pi_{x\geq 0}(v+yt)||^2+\frac{1}{2}||v||^2  \\
-\sup_y\inf_x L(x;y) =\sup_y -\frac{1}{2}||\Pi_{x\geq 0}(v+yt)||^2+\frac{1}{2}||v||^2 \\&lt;/script&gt;
-因此原问题的对偶问题最终化简为以下形式
-&lt;script type=&quot;math/tex&quot;&gt;\min_y \phi(y)=\frac{1}{2}||\Pi_{x\geq 0}(v+yt)||^2-\frac{1}{2}||v||^2&lt;/script&gt;
-在这里很巧的是，虽然投影$\Pi_x(v+yt)$不可微，但是$||\Pi_x(v+yt)||^2$是可微的，且
-&lt;script type=&quot;math/tex&quot;&gt;\nabla \phi(y)=\langle t,\Pi_{x\geq 0}(v+yt)\rangle&lt;/script&gt;
-且$\Pi_{x\geq 0}(v+yt)$是一个piecewise linear function，基于这个性质，会存在一个比较好的O(N)的算法（N为y的维度)因此这个问题就可以比较容易的求最优解$y^*$了。&lt;/p&gt;
+        &lt;p&gt;where $\binom{n}{x_1\cdots x_K} \triangleq \frac{n!}{x_1!x_2!\cdots x_K!}$ is the &lt;strong&gt;multinomial coefficient&lt;/strong&gt; and $\sum x_i = n$&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;multinoulli distributions(x is  its dummy encoding or one-hot encoding):
+  &lt;script type=&quot;math/tex&quot;&gt;Cat(x|\pmb{\theta}) \triangleq Mu(\pmb{x}|1, \pmb{\theta} ) \triangleq \prod_{j=1}^{K}\theta_j^{\mathbb{I}(x_j=1)}&lt;/script&gt;
+  This very common special case is known as a &lt;strong&gt;categorical or discrete distribution&lt;/strong&gt;. And $p(x = j|\pmb{\theta}) = \theta_j$&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
 
-&lt;p&gt;得到$y^&lt;em&gt;$之后，原问题的最优解即$x^&lt;/em&gt;=\Pi_{x\geq0}(v+y^&lt;em&gt;t)$。因为$x^&lt;/em&gt;$满足$\langle x^&lt;em&gt;,t\rangle=0,x^&lt;/em&gt;\geq 0$，因此KKT holds，$x^*$就是最优解。&lt;/p&gt;
-</description>
-        <pubDate>Tue, 12 Mar 2019 00:00:00 +0100</pubDate>
-        <link>http://localhost:4000/2019/03/12/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson10/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/03/12/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson10/</guid>
-        
-        <category>Algirithms</category>
-        
-        <category>Lecture Notes</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Big Data Algorithm Lesson 6: Support Vector Machine (3)</title>
-        <description>&lt;h3 id=&quot;dualilty-theorem-of-svm&quot;&gt;Dualilty Theorem of SVM&lt;/h3&gt;
+    &lt;p&gt;multinomial distribution: How many times for each surface ( $[x_1\cdots x_6]$ ) do a dice show when it is thrown for n times?&lt;/p&gt;
 
-&lt;p&gt;上节课中，老师对于原SVM问题(P)
-&lt;script type=&quot;math/tex&quot;&gt;(P): \min \limits_{w,b} \frac{1}{2}||w||^2\\
-s.t. \ t_i\cdot(\langle w,x_i \rangle + b ) \geq 1&lt;/script&gt;
-写出了KKT条件，
-&lt;script type=&quot;math/tex&quot;&gt;\nabla_w L(w,b;\mu)=w-\sum_i\mu_it_ix_i=0 \\\nabla_b L(w,b;\mu)=-\sum_i\mu_it_i=0 \\
-\forall i,\mu_i[t_i(\langle w,x_i\rangle+b)-1]=0&lt;/script&gt;
-将原问题转化为了对偶问题(D)：
-&lt;script type=&quot;math/tex&quot;&gt;(D): \max -\frac{1}{2}||A\mu||^2+\mu^T1 \\
-s.t. \mu\geq0 \\
-\mu^Tt=0 \\
- A = [t_1x_1,\cdots,t_nx_n]&lt;/script&gt;
-但可以发现，这个对偶问题，好像并没有办法转化为原问题，对偶问题貌似只能加上一个拉格朗日乘子，但如果我们稍作变化：
-&lt;script type=&quot;math/tex&quot;&gt;(D): \max -\frac{1}{2}||s||^2+\mu^T1 \\
-s.t. s=A\mu \leftarrow w\\  
-\mu^Tt=0  \leftarrow b\\
-\mu\geq0&lt;/script&gt;
-这样就能成功通过对偶问题转化回原问题。而对偶问题的对偶问题是否一定是原问题呢？答案是不一定。凸问题的对偶问题的对偶是凸问题，因此大部分情况下是原问题；但非凸问题的对偶问题就会变为凸问题，凸问题的对偶还是凸，显然它就不是原本那个非凸问题了。（这里我有些疑惑，所有问题的对偶问题都是凸的吗？）&lt;/p&gt;
+    &lt;p&gt;multinoulli distribution: What surface do a dice show when it is thrown for once?&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Theorem 1:&lt;/strong&gt;&lt;br /&gt;
-Suppose that $(x^&lt;em&gt;;\lambda^&lt;/em&gt;,\mu^&lt;em&gt;)$ is the solution of KKT, then $x^&lt;/em&gt;$ is the optimal solution of primal problem (P) while $\lambda^&lt;em&gt;,\mu^&lt;/em&gt;$ is the optimal solution of dual problem (D).&lt;br /&gt;
-&lt;strong&gt;Proof:&lt;/strong&gt;&lt;br /&gt;
-考虑对于一个凸问题：
-&lt;script type=&quot;math/tex&quot;&gt;\min f(x) \\
-s.t. h(x)=0 \leftarrow \lambda\\  
-g(x) \leq 0 \leftarrow \mu&lt;/script&gt;
-其中，&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;$f:\mathbb{R}^n \rightarrow \mathbb{R}$ is smooth and convex function&lt;/li&gt;
-  &lt;li&gt;
     &lt;table&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;
+          &lt;th style=&quot;text-align: center&quot;&gt;Name&lt;/th&gt;
+          &lt;th style=&quot;text-align: center&quot;&gt;n&lt;/th&gt;
+          &lt;th style=&quot;text-align: center&quot;&gt;K&lt;/th&gt;
+          &lt;th style=&quot;text-align: center&quot;&gt;x&lt;/th&gt;
+          &lt;th style=&quot;text-align: center&quot;&gt;mean&lt;/th&gt;
+          &lt;th style=&quot;text-align: center&quot;&gt;variance&lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
       &lt;tbody&gt;
         &lt;tr&gt;
-          &lt;td&gt;$h:\mathbb{R}^n \rightarrow \mathbb{R}^p$, the set $F_1={x&lt;/td&gt;
-          &lt;td&gt;h(x)=0}$ is convex&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;Multinomial&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;-&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;-&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;$x\in {0,1,\cdots, n}^K, \sum_{k=1}^{K}x_k=n$&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;$E(X_j) = n\theta_j$&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;$Var(X_j) = n\theta_j(1-\theta_j)$, $Cov(X_i, X_j) = -n\theta_i\theta_j$&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;Multinoulli&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;-&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;$x\in {0,1}^K, \sum_{k=1}^{K}x_k=1$(1-of-K encoding)&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;$E(X_j) = n\theta_j$&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;$Var(X_j) = \theta_j(1-\theta_j)$, $Cov(X_i, X_j) = -\theta_i\theta_j$&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;Binomial&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;-&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;$x\in {0,1,\cdots, n}$&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;$\theta$&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;$n\theta(1-\theta)$&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;Bernoulli&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;$x\in {0,1}$&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;$\theta$&lt;/td&gt;
+          &lt;td style=&quot;text-align: center&quot;&gt;$\theta(1-\theta)$&lt;/td&gt;
         &lt;/tr&gt;
       &lt;/tbody&gt;
     &lt;/table&gt;
   &lt;/li&gt;
-  &lt;li&gt;$g:\mathbb{R}^n \rightarrow \mathbb{R}^s$, $g_i$ is smooth and convex function&lt;br /&gt;
-我们对于以上问题稍加改动
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-\min f(x)+\delta(\alpha|\alpha \geq 0) \\
-s.t. h(x)=0 \\  
-g(x) + \alpha = 0 \\
-\delta(\alpha|\alpha \geq 0) = \left\{
-\begin{aligned}
-&amp; 0,\ if \ \alpha\leq 0 \\
-&amp; +\infty,\ otherwise
-\end{aligned}
-\right. %]]&gt;&lt;/script&gt;
-重新写出拉格朗日函数，其中$\lambda,\mu$都没有限制
-&lt;script type=&quot;math/tex&quot;&gt;\widetilde{L}(x,\alpha;\lambda,\mu)=f(x)+\delta(\alpha|\alpha \geq 0)+\langle \lambda,h(x) \rangle + \langle \mu,g(x)+\alpha \rangle&lt;/script&gt;
-&lt;script type=&quot;math/tex&quot;&gt;\inf_{x,\alpha}\widetilde{L}(x,\alpha;\lambda,\mu)= \inf_x \inf_{\alpha}\widetilde{L}(x,\alpha;\lambda,\mu) \\
-= \inf_{x}\{f(x) + \langle \lambda,h(x) \rangle + \langle \mu,g(x)\rangle\} + \inf_\alpha\{\delta(\alpha|\alpha \geq 0)+\langle \mu,\alpha \rangle\} \\
-= \inf_{x}L(x,\alpha;\lambda,\mu) + \inf_\alpha \langle \mu,\alpha \rangle&lt;/script&gt;
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-\inf_\alpha \langle \mu,\alpha \rangle  = \left\{
-\begin{aligned}
-&amp; 0,\ if \ \mu\geq 0 \\
-&amp; -\infty,\ otherwise
-\end{aligned}
-\right. %]]&gt;&lt;/script&gt;
-若$\inf_\alpha\langle \mu,\alpha \rangle = -\infty$，其实对于之后的sup毫无意义，因此在这里取到最优的时候，$\mu\geq 0,\alpha\geq 0$，因此
-&lt;script type=&quot;math/tex&quot;&gt;\widetilde{L}(x,\alpha;\lambda,\mu)=L(x;\lambda,\mu)=f(x)+\langle \lambda,h(x) \rangle + \langle \mu,g(x)\rangle,\alpha\geq 0&lt;/script&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;首先证明充分性，即证明当$(x^&lt;em&gt;;\lambda^&lt;/em&gt;,\mu^&lt;em&gt;)$是KKT的解时，它们分别是原问题和对偶问题的最优解。&lt;br /&gt;
-若$(x^&lt;/em&gt;;\lambda^&lt;em&gt;,\mu^&lt;/em&gt;)$是KKT的解，则它们满足：
-&lt;script type=&quot;math/tex&quot;&gt;\nabla_x L(x^*;\lambda^*,\mu^*)=0 \\
-h(x^*)=0 \\
-0\leq \mu^* \perp -g(x^*) \geq 0 \\
-\mu_i^*g_i(x^*) = 0,\forall i&lt;/script&gt;
-因此$x^&lt;em&gt;$是原问题的可行解，$\lambda^&lt;/em&gt;,\mu^&lt;em&gt;$是对偶问题的可行解，另外由于$L(x;\lambda^&lt;/em&gt;,\mu^&lt;em&gt;)$分别关于$x$是凸的，因此
-&lt;script type=&quot;math/tex&quot;&gt;\min f(x)=\inf_{x}L(x;\lambda^*,\mu^*)=L(x^*;\lambda^*,\mu^*)=f(x^*) \\
-q(\lambda^*,\mu^*) = f(x^*)+0+0=f(x^*)&lt;/script&gt;
-因此可得$x^&lt;/em&gt;$是原问题最优解且$q(\lambda^&lt;em&gt;,\mu^&lt;/em&gt;)=f(x^&lt;em&gt;)=\min f(x)$，而通过对偶定理我们可以知道$q(\lambda,\mu)\leq \min f(x)=\max q(\lambda,\mu)\leq f(x)$，因此可以证明$\lambda^&lt;/em&gt;,\mu^*$是对偶问题的最优解。&lt;/li&gt;
-  &lt;li&gt;其次证明必要性，即证明当$(x^&lt;em&gt;;\lambda^&lt;/em&gt;,\mu^&lt;em&gt;)$分别是原问题和对偶问题的最优解且duality gap=0时，它们可以解出KKT。
-首先因为$(x^&lt;/em&gt;;\lambda^&lt;em&gt;,\mu^&lt;/em&gt;)$分别是原问题和对偶问题的最优解，因此它们一定满足两个问题的可行性条件，即
-&lt;script type=&quot;math/tex&quot;&gt;h(x^*)=0 \\
-g(x^*) \leq 0 \\&lt;/script&gt;
-又因为$x^&lt;em&gt;$是$\inf_x L(x;\lambda^&lt;/em&gt;,\mu^&lt;em&gt;)$的最优解，则一定满足$\nabla_x L(x^&lt;/em&gt;;\lambda^&lt;em&gt;,\mu^&lt;/em&gt;)=0$。此外可得，
-&lt;script type=&quot;math/tex&quot;&gt;f(x^*)=q(\lambda^*,\mu^*)\\
-=\inf_x f(x)+\langle \lambda^*,h(x)\rangle + \langle \mu^*,g(x)\rangle \\
-\leq f(x) + \langle \lambda^*,h(x)\rangle + \langle \mu^*,g(x)\rangle \\
-\leq f(x^*) + \langle \lambda^*,h(x^*)\rangle + \langle \mu^*,g(x^*)\rangle \\
-\leq f(x^*)+\langle \mu^*,g(x^*)\rangle&lt;/script&gt;
-由于$\langle \mu^&lt;em&gt;,g(x^&lt;/em&gt;)\rangle\leq 0$，因此$\leq f(x^&lt;em&gt;)+\langle \mu^&lt;/em&gt;,g(x^&lt;em&gt;)\rangle\leq f(x^&lt;/em&gt;)$，则综上
-&lt;script type=&quot;math/tex&quot;&gt;f(x^*)
-\leq f(x^*)+\langle \mu^*,g(x^*)\rangle \leq f(x^*)&lt;/script&gt;
-因此$\langle \mu^&lt;em&gt;,g(x^&lt;/em&gt;)\rangle=0$，至此可证明当$(x^&lt;em&gt;;\lambda^&lt;/em&gt;,\mu^*)$分别是原问题和对偶问题的最优解且duality gap=0时，它们也是KKT的解。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Theorem 1证毕。&lt;/p&gt;
-
-&lt;p&gt;因此，对于SVM的原问题与对偶问题，我们考虑假设已知$\mu^&lt;em&gt;$，那么如何解$w,b$?
-&lt;script type=&quot;math/tex&quot;&gt;w^*=\sum_it_i\mu_i^*x_i=\sum_{i\in S}t_i\mu_i^*x_i\\
-S=\{i|\mu_i^*\geq 0\} \\
-t_i(\langle w,x_i\rangle+b)-1=0,\forall i\in S\\
-t_i=\pm1 \rightarrow \langle w,x_i\rangle+b=t_i \\
-b^* = t_i-\langle w^*,x_i\rangle,\forall i \in S&lt;/script&gt;
-为了平衡扰动，一般取$b^&lt;/em&gt;=\frac{1}{|S|}\sum_{i\in S}(t_i-\langle w^*,x_i\rangle)$。&lt;br /&gt;
-从这里可以看出，所有计算其实只与那些$g(x)=0$的部分有关，在SVM中，这些部分其实就是support vector，即那些刚好处于分界线上的点。&lt;br /&gt;
-而怎么来解对偶问题呢？通常用到的方法则是ADMM&lt;/p&gt;
-
-&lt;p&gt;####Alternating Direction Method of Multipliers (ADMM)
-我们首先考虑ADMM最“喜欢”的通用形式：
-&lt;script type=&quot;math/tex&quot;&gt;\min f(x)+g(y)\\
-s.t. \ Ax+By=C&lt;/script&gt;
-考虑它的拉格朗日函数
-&lt;script type=&quot;math/tex&quot;&gt;L(x,y;z)=f(x)+g(y)+\langle z,Ax+By-C\rangle&lt;/script&gt;
-写出KKT条件（此时考虑函数f,g为凸但是非smooth的情况，无法求梯度，而使用此梯度代替）
-&lt;script type=&quot;math/tex&quot;&gt;0\in \partial_xL(x,y;z)\\
-0\in \partial_yL(x,y;z) \\
-Ax+By-C=0&lt;/script&gt;
-给定$\sigma&amp;gt;0$
-&lt;script type=&quot;math/tex&quot;&gt;L_\sigma(x,y;z)=L(x,y;z)+\frac{\sigma}{2}||Ax+By-C||^2&lt;/script&gt;
-回忆一下我们在lesson6/7里讲到的penalty factor的方法
-&lt;script type=&quot;math/tex&quot;&gt;\min \ F^k=f(x)+\frac{k}{2}||h(x)||^2&lt;/script&gt;
-其中的k必须要求极其大，因此计算时存在numerical difficulty。但研究发现，$L_\sigma(x,y;z)$中的$\sigma$是没有限制的，可以为随意的值。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;ADMM算法&lt;/strong&gt;&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;Input $x^0,y^0,z^0,\sigma&amp;gt;0,k=0,1,2,\cdots$&lt;/li&gt;
-  &lt;li&gt;Iteratively calculate 
-&lt;script type=&quot;math/tex&quot;&gt;x^{k+1}\in argmin L_\sigma(x,y^k;z^k) \\
-y^{k+1}\in argmin L_\sigma(x^{k+1},y;z^k) \\
-z^{k+1}=z^k+\gamma\sigma(Ax^{k+1}+By^{k+1}-C)&lt;/script&gt;
-其中，A是列满秩的，$\gamma\in (0,\frac{1+\sqrt(5)}{2})$会影响算法收敛性，一般为了方便推导分析取1。而 $\gamma=\frac{1+\sqrt(5)}{2}$时效果一般比1快40%~80%。（黄金比例很玄学了）&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;我们将ADMM试用在SVM上。首先将SVM的对偶问题转化为这种形式：
-&lt;script type=&quot;math/tex&quot;&gt;\min \frac{1}{2}||A\mu||^2-\langle\mu,1\rangle+\delta(s|s\geq0)=f(\mu)+g(s)\\
-s.t. [t^T;I]\mu-[0;I]s=[0;0]\rightarrow G\mu+Hs=0&lt;/script&gt;
-计算出每一步迭代需要的求解的问题：
-&lt;script type=&quot;math/tex&quot;&gt;\mu^{k+1}=argmin L(\mu,s^k;z^k)\{\frac{1}{2}||A\mu||^2-\langle \mu,1\rangle+\langle G\mu+Hs^k,z^k\rangle+\frac{\sigma}{2}||Gv+Hs^k||^2\} \\
-\nabla_{\mu}L(\mu,s^k;z^k)=A^TA\mu-1+G^Tz^k+\sigma G^T(G\mu+Hs^k) \\
-\rightarrow (A^TA+\sigma G^TG)\mu=Rs^k&lt;/script&gt;
-其中，为了简化，$R$都表示一个非特定的已知的linear operator
-&lt;script type=&quot;math/tex&quot;&gt;s^{k+1}=argmin_{s\geq0} \{ \langle G,\mu^{k+1}+Hs,z^k \rangle+\frac{\sigma}{2}||G\mu^{k+1}+Hs||^2 \}&lt;/script&gt;
-由于$H^TH=I$，经过简化，上式可以转化为一个关于$s$的完全平方形式
-&lt;script type=&quot;math/tex&quot;&gt;s^{k+1}=argmin_{s\geq0}\{\frac{\sigma}{2}||s-R^k||_F^2+constant\}&lt;/script&gt;
-虽然存在约束$s\geq0$会使这个问题变得棘手，但经过化简之后，可以发现这个约束就变得并没有那么难解了，这个子问题的最优解就是$R^k$在0上的投影。比如若$R^k=[-1,1;1,-1],s^*=[0,1;1,0]$。&lt;br /&gt;
-在实现这个算法的时候，$\sigma$可以试试取1，10，100等。&lt;/p&gt;
-
-&lt;p&gt;###Augmented Lagrangian Method (ALM)&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;Input $x^0,y^0,z^0,\sigma&amp;gt;0,k=0,1,2,\cdots$&lt;/li&gt;
-  &lt;li&gt;Iteratively calculate 
-&lt;script type=&quot;math/tex&quot;&gt;(x^{k+1},y^{k+1})\in argmin L_\sigma(x,y;z^k) \\
-z^{k+1}=z^k+\rho\sigma(Ax^{k+1}+By^{k+1}-C),\rho\in(0,2)&lt;/script&gt;
-ALM在解最优的$(x^{k+1},y^{k+1})$时比较复杂，原因在于$||Ax+By-C||^2$中存在xy的交叉项。而ADMM则没有这种困扰。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;ADMM的特点：一阶算法，解子问题很快，但收敛速度慢，$O(1/k)$&lt;/li&gt;
-  &lt;li&gt;ALM的特点：二阶算法(牛顿法)，解子问题很慢，且不一定能解出来（比如这里的SVM），会存在numericaldifficulty，但收敛速度快，$O(1/\sigma)$&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sat, 15 Dec 2018 00:00:00 +0100</pubDate>
-        <link>http://localhost:4000/2018/12/15/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson9/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/12/15/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson9/</guid>
-        
-        <category>Algirithms</category>
-        
-        <category>Lecture Notes</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Big Data Algorithm Lesson 5: Support Vector Machine (2)</title>
-        <description>&lt;h3 id=&quot;algorithm&quot;&gt;Algorithm&lt;/h3&gt;
-
-&lt;p&gt;上节课老师讲了等式约束的优化问题的一阶最优性条件，但可以发现，我们的原问题SVM的问题如下：
-&lt;script type=&quot;math/tex&quot;&gt;\min \limits_{w,b} \frac{1}{2}||w||^2\\
-s.t. \ t_i\cdot(\langle w,x_i \rangle + b ) \geq 1&lt;/script&gt;
-实际上是一个不等式约束，此时我们再来看看对于不等式约束的优化问题如何求解呢？
-先看一个简单的只有不等式约束的问题：
-&lt;script type=&quot;math/tex&quot;&gt;\min f(x)\\
-s.t.g(x) \leq 0, g:\mathbb{R}^n\rightarrow \mathbb{R}^s&lt;/script&gt;
-若$x^*$是local min，考虑两种情况下的最优解的必要条件：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;假设$g(x^&lt;em&gt;)&amp;lt;0$,constraint not active，其实相当于一个无约束问题，只要满足$\nabla f(x^&lt;/em&gt;)=0$即可（我理解的就是，当前的最优点$x^*$无约束，可以朝任意方向走一小步都不会走出约束之外，因此只需要梯度为0）&lt;/li&gt;
   &lt;li&gt;
-    &lt;table&gt;
-      &lt;tbody&gt;
-        &lt;tr&gt;
-          &lt;td&gt;假设$g_i(x^&lt;em&gt;)=0,\forall i \in I_{x^&lt;/em&gt;}$且$ g_i(x^&lt;em&gt;)&amp;lt;0,\forall i \notin I_{x^&lt;/em&gt;}$，其中$I_{x^*}={i&lt;/td&gt;
-          &lt;td&gt;g_i(x^*)=0,i=1,\cdots,s}$，这个集合里为那些所有active的点。&lt;/td&gt;
-        &lt;/tr&gt;
-      &lt;/tbody&gt;
-    &lt;/table&gt;
+    &lt;p&gt;&lt;strong&gt;The Poisson distribution&lt;/strong&gt;
+ &lt;script type=&quot;math/tex&quot;&gt;Poi(x|\lambda) = e^{-\lambda}\frac{\lambda^x}{x!}&lt;/script&gt;
+ The first term is just the normalization constant, required to ensure the distribution sums to 1.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;The empirical distribution&lt;/strong&gt;	
+ Given a set of data, $D = {x_1,\cdots,x_N}$, we define the &lt;strong&gt;empirical distribution&lt;/strong&gt;, also called the &lt;strong&gt;empirical measure&lt;/strong&gt;, as follows:&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;p_{emp}(A) \triangleq \frac{1}{N}\sum_{i=1}^N\delta_{x_i}(A)&lt;/script&gt;
+
+    &lt;p&gt;􏰁where $\delta_{x}(A)$ is the Dirac measure, defined by&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\delta_{x}(A) = \begin{cases}
+ 0 &amp; \text{if } x \notin A\\
+ 1 &amp; \text{if } x \in A
+ \end{cases} %]]&gt;&lt;/script&gt;
+
+    &lt;p&gt;PS: in my opinion,  indicator function $\mathbb{I}_A(x)$ and Dirac measure $\delta_x(A)$ mean the same thing but their parameters are inversed.&lt;/p&gt;
+
+    &lt;p&gt;In general, we can associate “weights” with each sample:&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;p(x) = \sum_{i=1}^Nw_i\delta_{x_i}(x)&lt;/script&gt;
+
+    &lt;p&gt;where it is required that $0\leq w_i\leq 1$ and $\sum w_i = 1$&lt;/p&gt;
+
+    &lt;p&gt;According to Wiki,&lt;/p&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;In statistics, an empirical distribution function is the distribution function associated with the empirical measure of a sample. This cumulative distribution function is a step function that jumps up by $1/n$ at each of the $n$ data points.&lt;/p&gt;
+    &lt;/blockquote&gt;
   &lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;对于第二种情况，其实我们也只用考虑那些active的点
-&lt;script type=&quot;math/tex&quot;&gt;\min f(x)\\
-s.t.g_i(x) = 0, i\in I_{x^*}&lt;/script&gt;
-那么对于这个问题的必要条件就是：&lt;br /&gt;
-If $x^&lt;em&gt;$ is local min + $\nabla g_{I_{x^&lt;/em&gt;}}(x^&lt;em&gt;)$ is linearly independent，then $\exists \mu^&lt;/em&gt;,\ s.t.\nabla f(x^&lt;em&gt;) + \nabla g_{I_{x^&lt;/em&gt;}}(x^&lt;em&gt;)\mu^&lt;/em&gt; = 0$&lt;br /&gt;
-此时，如何加上不属于$I^&lt;em&gt;$的那部分呢？&lt;br /&gt;
-我们令$\mu^&lt;/em&gt;&lt;em&gt;i=0,i\notin I&lt;/em&gt;{x^&lt;em&gt;}$就可以得到：$\nabla f(x^&lt;/em&gt;) + \sum_{i=1}^s \nabla g_i(x^&lt;em&gt;)\mu^&lt;/em&gt;&lt;em&gt;i = 0$&lt;br /&gt;
-因此可以发现，对于原不等式约束的那个问题的必要条件可以写为：&lt;br /&gt;
-If $x^*$ is local min + $\nabla g&lt;/em&gt;{I_{x^&lt;em&gt;}}(x^&lt;/em&gt;)$ is linearly independent，then $\exists \mu^&lt;em&gt;,\ s.t.\nabla f(x^&lt;/em&gt;) + \nabla g(x^&lt;em&gt;)\mu^&lt;/em&gt; = 0$, where $\mu_i^&lt;em&gt;=0$ if $g_i(x^&lt;/em&gt;)&amp;lt;0$; $\mu_i^&lt;em&gt;\geq0$ if $g_i(x^&lt;/em&gt;)=0$.&lt;/p&gt;
-
-&lt;p&gt;Note:可以发现，和等式约束中的乘子$\lambda$相比，$\mu$存在了一个大于等于0的约束，而为何这个$\mu$一定要大于等于0呢？&lt;br /&gt;
-&lt;strong&gt;Proof:（反证法）&lt;/strong&gt;&lt;br /&gt;
-假设$\mu&amp;lt;0$, $\nabla f(x^&lt;em&gt;)=-\mu g(x^&lt;/em&gt;)$, 因此$f(x^&lt;em&gt;)$与$g(x^&lt;/em&gt;)$一定同方向，且$g(x^&lt;em&gt;)=-\frac{1}{\mu}\nabla f(x^&lt;/em&gt;)$, 假设对于一个新的点$x^&lt;em&gt;-\alpha \nabla g(x^&lt;/em&gt;)$，因为沿梯度的反方向走一定能使值减小，&lt;br /&gt;
-（证明：$f(x-\alpha\nabla f(x))=f(x)+(x-\alpha\nabla f(x)-x)\nabla f(x)=f(x)- \alpha\nabla^2f(x)$，因此$f(x-\alpha\nabla f(x))\leq f(x)$）&lt;br /&gt;
-因此$g(x^&lt;em&gt;-\alpha \nabla g(x^&lt;/em&gt;))\leq g(x^&lt;em&gt;)\leq 0$，这个新的点是可行的，&lt;br /&gt;
-那么$f(x^&lt;/em&gt;-\alpha \nabla g(x^&lt;em&gt;))=f(x^&lt;/em&gt;+\frac{\alpha}{\mu} \nabla g(x^&lt;em&gt;))&amp;lt;f(x^&lt;/em&gt;)$，与$x^*$ is local min 矛盾。&lt;/p&gt;
-
-&lt;p&gt;最后，考虑最一般的问题(P),
-&lt;script type=&quot;math/tex&quot;&gt;\min f(x)\\
-s.t.h(x) = 0,h:\mathbb{R}^n\rightarrow \mathbb{R}^m \\
- \ \ \ \ \ g(x) \leq 0, g:\mathbb{R}^n\rightarrow \mathbb{R}^s&lt;/script&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Theorem 2: KKT condition&lt;/strong&gt;：Let $x^&lt;em&gt;$ be a local min of (P), assume $[\nabla h(x^&lt;/em&gt;), \nabla_{I_{x^&lt;em&gt;}} g(x^&lt;/em&gt;)$ is column linearly independent, then&lt;/p&gt;
+&lt;h2 id=&quot;24-some-common-continuous-distributions&quot;&gt;2.4 Some common continuous distributions&lt;/h2&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;$\exists \lambda^&lt;em&gt;, \mu^&lt;/em&gt;,\ s.t.\nabla f(x^&lt;em&gt;) + \langle \lambda, \nabla h(x^&lt;/em&gt;)\rangle + \langle \mu, \nabla g(x^*)\rangle = 0$&lt;/li&gt;
-  &lt;li&gt;$\mu \geq 0$&lt;/li&gt;
-  &lt;li&gt;$\mu_i=0$, for $i$ s.t. $g_i(x^*)&amp;lt;0$&lt;/li&gt;
-  &lt;li&gt;$h(x^&lt;em&gt;)=0,g(x^&lt;/em&gt;)\leq 0$&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Note:(1)gradient, (2)(3)共同被称为互补松弛，可表示为$0\leq\mu\perp -g(x^*)\geq 0$, (4)feasibility&lt;/p&gt;
-
-&lt;p&gt;对SVM，由于它实际上是一个凸问题，$x^*$就是global min，且它的约束条件实际上在空间中是一个多面体，几何性质十分好，因此SVM满足KKT的先决条件，我们写出SVM的KKT条件，得到以下一组等式：
-&lt;script type=&quot;math/tex&quot;&gt;L(w,b;\lambda)=\frac{1}{2}||w||^2-\sum_i\lambda_i[t_i(\langle w,x_i\rangle+b)-1]&lt;/script&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;$\nabla_w L(w,b;\lambda)=w-\sum_i\lambda_it_ix_i=0$&lt;/li&gt;
-  &lt;li&gt;$\nabla_b L(w,b;\lambda)=-\sum_i\lambda_it_i=0$&lt;/li&gt;
-  &lt;li&gt;$\forall i,\lambda_i[t_i(\langle w,x_i\rangle+b)-1]=0$&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;对于以上一组等式使用优化算法求解，比较笔记通用的算法是内点法。&lt;/p&gt;
-
-&lt;h3 id=&quot;dual-svm&quot;&gt;Dual SVM&lt;/h3&gt;
-&lt;p&gt;对于拉格朗日函数$L(x;\lambda,\mu)$，我们考虑以下两个问题&lt;br /&gt;
-(P) Primal Problem: $\inf_x\sup_{\lambda,\mu\geq 0}L(x;\lambda,\mu)$&lt;br /&gt;
-由于
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-\sup_{\lambda,\mu\geq 0} L(x;\lambda,\mu)=f(x)+\sup_{\lambda}\{\langle \lambda,h(x)\rangle\}+\sup_{\mu\geq 0}\{\langle \mu,g(x)\rangle\} \\
-= \left\{
-\begin{aligned}
-f(x) \ \ &amp; if \ h(x)=0,g(x)\leq 0\\
-+\infty \ \ &amp; otherwise
-\end{aligned}
-\right. %]]&gt;&lt;/script&gt;
-因此其实$\inf_x\sup_{\lambda,\mu\geq 0}L(x;\lambda,\mu)$就是等于原问题，因为如果不满足条件的话，最小化正无穷根本没意义：
-&lt;script type=&quot;math/tex&quot;&gt;\min f(x)\\
-s.t.h(x) = 0,h:\mathbb{R}^n\rightarrow \mathbb{R}^m \\
- \ \ \ \ \ g(x) \leq 0, g:\mathbb{R}^n\rightarrow \mathbb{R}^s&lt;/script&gt;
-同理，我们考虑一下另一个问题&lt;br /&gt;
-(D) Dual Problem: $\sup_{\lambda,\mu\geq 0}\inf_x L(x;\lambda,\mu)$&lt;br /&gt;
-记$g(\lambda,\mu)=\inf_x L(x;\lambda,\mu)$&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Theorem 3: Duality&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;strong&gt;Weak Duality:&lt;/strong&gt; $g(\lambda,\mu)=d^&lt;em&gt;\leq p^&lt;/em&gt;=f(x), \forall \mu\geq0,h(x)=0,g(x)\leq 0$&lt;br /&gt;
-Proof: $g(\lambda,\mu)=\inf_x L(x;\lambda,\mu)\leq L(x;\lambda,\mu)=f(x)+\langle \lambda,h(x)\rangle+\langle \mu,g(x)\rangle\leq f(x)$&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Strong Duality:&lt;/strong&gt; If $p^&lt;em&gt;-d^&lt;/em&gt;=0$, then strong duality holds.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;因此，我们写出SVM的对偶形式来看看：
-&lt;script type=&quot;math/tex&quot;&gt;L(w,b;\mu)=\frac{1}{2}||w||^2-\sum_i\mu_i[t_i(\langle w,x_i\rangle+b)-1] \\
-\nabla_w L(w,b;\mu)=w-\sum_i\mu_it_ix_i=0 \\
-\nabla_b L(w,b;\mu)=-\sum_i\mu_it_i=0 \\
-g(\mu) = \inf_{w,b}L(w,b;\mu) = \frac{1}{2}||\sum_i\mu_it_ix_i||^2-\sum_i\langle w,\mu_it_ix_i\rangle+\sum_i\mu_i \\
-= \frac{1}{2}||w||^2-||w||^2+\sum_i\mu_i = -\frac{1}{2}||\sum_i\mu_it_ix_i||^2+\sum_i\mu_i&lt;/script&gt;
-SVM的对偶问题即为：
-&lt;script type=&quot;math/tex&quot;&gt;\sup_{\mu\geq0} -\frac{1}{2}||\sum_i\mu_it_ix_i||^2+\sum_i\mu_i&lt;/script&gt;
-改写为我们熟悉的形式
-&lt;script type=&quot;math/tex&quot;&gt;\max \ -\frac{1}{2}||\sum_i\mu_it_ix_i||^2+\sum_i\mu_i = -\frac{1}{2}||A\mu||^2+\mu^T1 \\
-s.t. \mu\geq0 \\
-\mu^Tt=0 \\
- A = [t_1x_1,\cdots,t_nx_n]&lt;/script&gt;
-可以发现，Dual SVM的目标函数虽然看起来比原问题复杂，但是实质上也还是一个quadratic function，但约束却变得简单多了，因此把复杂的原问题转换为对偶问题求解也是优化中一种常用的思路。&lt;/p&gt;
-</description>
-        <pubDate>Tue, 11 Dec 2018 00:00:00 +0100</pubDate>
-        <link>http://localhost:4000/2018/12/11/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson8/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/12/11/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson8/</guid>
-        
-        <category>Algirithms</category>
-        
-        <category>Lecture Notes</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Big Data Algorithm Lesson 4: Support Vector Machine</title>
-        <description>&lt;p&gt;之前讲的Kmeans、PCA等都是典型的无监督学习算法，今天将转为学习有监督学习。假设我们给出一个数据集$D={(x_i,y_i)}$，$\ x_i\in \mathbb{R}^d, \ y_i\in {1,-1}$&lt;br /&gt;
-目标是找一个超平面（hyperplane）$H={x| \langle w, x \rangle + b=0 }, w \in \mathbb{R}^n,\ b\in \mathbb{R}$，使得：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;$\langle w, x_1-x_2 \rangle = 0,\ if \ x_1,x_2 \in H$：$w$为超平面$H$的法向量&lt;/li&gt;
   &lt;li&gt;
-    &lt;table&gt;
-      &lt;tbody&gt;
-        &lt;tr&gt;
-          &lt;td&gt;以二维空间为例，超平面将空间分为两部分：$H_1:{x&lt;/td&gt;
-          &lt;td&gt;\langle w, x \rangle + b &amp;gt; 0} $以及$ H_2:{x&lt;/td&gt;
-          &lt;td&gt;\langle w, x \rangle + b &amp;lt; 0} $&lt;/td&gt;
-        &lt;/tr&gt;
-      &lt;/tbody&gt;
-    &lt;/table&gt;
+    &lt;p&gt;&lt;strong&gt;Gaussian (normal) distribution&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathcal{N}(x|\mu, \theta) \triangleq \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}(x-\mu)^2}&lt;/script&gt;
+
+    &lt;p&gt;Here $\sqrt{2\pi\sigma^2}$ is the normalization constant needed to ensure the density integrates to 1.(!Need to be proved)&lt;/p&gt;
+
+    &lt;p&gt;Standard normal distribution is sometimes called the &lt;strong&gt;bell curve&lt;/strong&gt;.&lt;/p&gt;
+
+    &lt;p&gt;We will often talk about the &lt;strong&gt;precision&lt;/strong&gt; of a Gaussian, by which we mean the inverse variance: $\lambda = \frac{1}{σ^2}$.&lt;/p&gt;
+
+    &lt;p&gt;&lt;strong&gt;Question: What’s the meaning of this sentence?&lt;/strong&gt;&lt;/p&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;Note that, since this is a pdf, we can have $p(x) &amp;gt; 1$. To see this, consider evaluating the density at its center, $x = \mu$. We have $\mathcal{N}(\mu|\mu,\sigma^2) = (\sigma\sqrt{2\pi})^{−1}e^0$, so if $\sigma &amp;lt; 1/\sqrt{2\pi}$, we have $p(x) &amp;gt; 1$.
+ Why does the author mention this?&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;p&gt;The cumulative distribution function has no closed form expression but it can be calculated by &lt;strong&gt;error function(erf)&lt;/strong&gt;:&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;\Phi(x;\mu,\sigma)=\frac{1}{2}[1+erf(z/\sqrt{2})] \\ 
+ erf(x) \triangleq \frac{2}{\sqrt{\pi}}\int_0^xe^{-t^2}dt&lt;/script&gt;
+
+    &lt;p&gt;where $z=(x-\mu)/\sigma$.&lt;/p&gt;
+
+    &lt;p&gt;Gaussian distribution is widely used because:&lt;/p&gt;
+
+    &lt;ol&gt;
+      &lt;li&gt;it has two parameters which are easy to interpret&lt;/li&gt;
+      &lt;li&gt;the central limit theorem (Section 2.6.3) tells us that sums of independent random variables have an approximately Gaussian distribution (good for modeling errors or noise)&lt;/li&gt;
+      &lt;li&gt;Gaussian distribution makes the least number of assumptions &lt;strong&gt;(why?)&lt;/strong&gt;&lt;/li&gt;
+      &lt;li&gt;simple mathematical form&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Degenerate pdf&lt;/strong&gt;
+ In the limit that $\sigma^2 \rightarrow 0$, the Gaussian becomes an infinitely tall and infinitely thin “spike” centered at $\mu$&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;\lim_{\sigma^2 \rightarrow 0} \mathcal{N}(x|\mu,\sigma^2)=\delta(x-\mu)&lt;/script&gt;
+
+    &lt;p&gt;where $\delta$ is called a &lt;strong&gt;Dirac delta function&lt;/strong&gt;, defined as:&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\delta(x) = \begin{cases}
+ \infty &amp; \text{if } x=0\\
+ 0 &amp; \text{if }x\neq 0
+ \end{cases} %]]&gt;&lt;/script&gt;
+
+    &lt;p&gt;such that $\int_{-\infty}^{\infty}\delta(x)dx=1$&lt;/p&gt;
+
+    &lt;p&gt;A useful property of delta functions is the &lt;strong&gt;sifting property&lt;/strong&gt;, which selects out a single term from a sum or integral:
+ &lt;script type=&quot;math/tex&quot;&gt;\int_{-\infty}^{\infty}f(x)\delta(x-\mu)dx=f(\mu)&lt;/script&gt;&lt;/p&gt;
+
+    &lt;p&gt;One problem with the Gaussian distribution is that it is sensitive to outliers (big change on $x$ results in bigger change on $e^{(x-\mu)^2}$)&lt;/p&gt;
+
+    &lt;p&gt;Thus, A more robust distribution is the &lt;strong&gt;Student $t$ distribution&lt;/strong&gt;:&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathcal{T}(x|\mu,\sigma^2,\nu) \propto \Big[1+\frac{1}{\nu}(\frac{x-\mu}{\sigma})^2\Big]^{-\frac{\nu+1}{2}}&lt;/script&gt;
+
+    &lt;p&gt;where $\mu$ is the mean, $\sigma^2&amp;gt;0$ is the scale parameter and $\nu&amp;gt;0$ is the degrees of freedom. Its mean is $\mu$, mode is $\mu$,variance is $\frac{\nu\sigma^2}{(\nu-2)}$. The variance is only defined if $\nu &amp;gt; 2$. The mean is only defined if $\nu &amp;gt; 1$.&lt;/p&gt;
+
+    &lt;p&gt;Because the Student has heavier tails, it hardly changes when adding some outliers. It is common to use $\nu = 4$ because of some good performance. But For $\nu \geq 5$, the Student distribution rapidly approaches a Gaussian distribution and loses its robustness properties.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;The Laplace distribution&lt;/strong&gt; (a.k.a. double sided exponential distribution)&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;Lap(x|\mu,b) \triangleq \frac{1}{2b}exp(-\frac{|x-\mu|}{b})&lt;/script&gt;
+
+    &lt;p&gt;Here $\mu$ is a location parameter and $b &amp;gt; 0$ is a scale parameter.&lt;/p&gt;
+
+    &lt;p&gt;mean = $\mu$, mode = $\mu$, var = $2b^2$&lt;/p&gt;
+
+    &lt;p&gt;It is also robust to outliers. It also put mores probability density at 0 than the Gaussian. This property is a useful way to encourage sparsity in a model (L1-regulation)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;The gamma distribution&lt;/strong&gt;
+ The gamma distribution is a flexible distribution for positive real valued rv’s, $x &amp;gt; 0$. It is defined in terms of two parameters, called the shape $a &amp;gt; 0$ and the rate $b &amp;gt; 0$:&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;Ga(T|shape=a,rate=b) \triangleq \frac{b^a}{\Gamma(a)}T^{a-1}e^{-Tb}&lt;/script&gt;
+
+    &lt;p&gt;where $\Gamma(a)$ is the gamma function:&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;\Gamma(x) \triangleq \int_0^{\infty}u^{x-1}e^{-u}du&lt;/script&gt;
+
+    &lt;p&gt;mean = $a/b$, mode = $(a-1/b)$, var = $a/b^2$&lt;/p&gt;
+
+    &lt;p&gt;Gamma Distribution is also widely used, such as:&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Exponential distribution: $Expon(x|\lambda) 􏰗= Ga(x|1, \lambda)$&lt;/li&gt;
+      &lt;li&gt;Erlang distribution: a is an integer&lt;/li&gt;
+      &lt;li&gt;Chi-squared distribution: $\chi^2(x|\nu) 􏰗= Ga(x|\nu,1)$&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;Besides, if $X \sim Ga(a,b)$, then $1/X \sim IG(a,b)$, where IG is the inverse gamma distribution.&lt;/p&gt;
+
+    &lt;p&gt;mean = $b/(a-1)$, mode = $b/(a+1)$, var = $b^2/((a-1)^2(a-2))$&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;The beta distribution&lt;/strong&gt;
+ The beta distribution has support over the interval [0, 1] and is defined as follows:&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;Beta(x|a, b) = \frac{1}{B(a,b)} x^{a−1}(1 − x)^{b−1}&lt;/script&gt;
+
+    &lt;p&gt;where $B(a,b)$ is the beta function:&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;B(a,b) \triangleq \frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}&lt;/script&gt;
+
+    &lt;p&gt;If $a = b = 1$, we get the uniform distirbution.&lt;/p&gt;
+
+    &lt;p&gt;mean = $\frac{a}{b}$, mode = $\frac{a-1}{a+b-2}$, var = $\frac{ab}{(a+b)^2(a+b+1)}$&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Pareto distribution
+ The &lt;strong&gt;Pareto distribution&lt;/strong&gt; is used to model the distribution of quantities that exhibit long tails, also called &lt;strong&gt;heavy tails.&lt;/strong&gt; You may think of &lt;strong&gt;Pareto principle&lt;/strong&gt;, which is called “二八原则” in Chinese.&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;Pareto(x|k, m) = km^kx^{−(k+1)}\mathbb{I}(x \geq m)&lt;/script&gt;
+
+    &lt;p&gt;If we plot the distibution on a log-log scale, it form a straight line, of the form $\log p(x) = a\log x + c$ (a.k.a. power law)&lt;/p&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;You can know more &lt;strong&gt;power law&lt;/strong&gt; in &lt;a href=&quot;https://blog.csdn.net/jinruoyanxu/article/details/51627255&quot;&gt;浅谈网络世界中的Power Law现象（一） 什么是Power Law&lt;/a&gt;&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;p&gt;mean = $\frac{km}{k-1}$ if $k&amp;gt;1$, mode = $m$, var = $\frac{m^2k}{(k-1)^2(k-2)}$ if $k &amp;gt; 2$&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&quot;preview&quot;&gt;Preview&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;对于空间中的一个点，如何求它到一个超平面的距离？&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&quot;25-joint-probability-distributions&quot;&gt;2.5 Joint probability distributions&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Covariance and correlation&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Uncorrelated does not imply independent&lt;/li&gt;
+      &lt;li&gt;Independent does imply uncorrelated&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;The multivariate Gaussian&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;The &lt;strong&gt;multivariate Gaussian&lt;/strong&gt; or &lt;strong&gt;multivariate normal (MVN)&lt;/strong&gt; is the most widely used joint probability density function for continuous variables.&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathcal{N}(\pmb{x}|\pmb{\mu}, \pmb{\Sigma}) \triangleq \frac{1}{(2\pi)^{D/2}|\pmb{\Sigma}|^{1/2}}exp\Big[ -\frac{1}{2} (\pmb{x}-\pmb{\mu})^T\pmb{\Sigma}^{-1}(\pmb{x}-\pmb{\mu}) \Big]&lt;/script&gt;
+
+    &lt;p&gt;where $\mu = E[x] \in \mathbb{R}^D$ is the mean vector, and $\Sigma = cov[x]$ is the $D \times D$ covariance matrix. Sometimes we will work in terms of the &lt;strong&gt;precision matrix&lt;/strong&gt; or &lt;strong&gt;concentration matrix&lt;/strong&gt; instead. This is just the inverse covariance matrix, $\Lambda = \Sigma^{−1}$.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Multivariate Student $t$ distribution&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;A more robust alternative to the MVN is the multivariate Student t distribution. The smaller $\nu$ is, the fatter the tails.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Dirichlet distribution&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;A multivariate generalization of the beta distribution is the &lt;strong&gt;Dirichlet distribution&lt;/strong&gt;, which has support over the &lt;strong&gt;probability simplex&lt;/strong&gt;, defined by&lt;/p&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;For example, a 2-simplex (or 2-probability-simplex) is a triangle.&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;S_K=\{x:0\leq x_k\leq1, \sum_{k=1}^{K}x_k=1\}&lt;/script&gt;
+
+    &lt;p&gt;The pdf is defined by:&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;Dir(x|\alpha) \triangleq \frac{1}{B(\alpha)\prod_{k=1}^{K}x_k^{\alpha_k-1}}\mathbb{I}(x\in S_K)&lt;/script&gt;
+
+    &lt;p&gt;where $B(\alpha) = \frac{\prod_{k=1}^{K}\Gamma(\alpha_k)}{\Gamma(\alpha_0)}$&lt;/p&gt;
+
+    &lt;p&gt;We see that $\alpha_0 = \sum_k\alpha_k$ controls the strength of the distribution (how peaked it is), and the $\alpha_k$ control where the peak occurs. If $\alpha_k &amp;lt; 1$ for all k, we get “spikes” at the corner of the simplex.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/img/in-post/2019-08-18-dir-ex.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;26-transformations-of-random-variables&quot;&gt;2.6 Transformations of random variables&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Linear transformations&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;linearity of expectation&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;General transformations&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;If $X$ is a discrete rv, we can derive the pmf for $y$ by simply summing up the probability mass for all the $x$’s such that $f(x) = y$:&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;p_y(y)=\sum_{x:f(x)=y}p_x(x)&lt;/script&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;If $X$ is continuous, we cannot use the above Equation since $p_x(x)$ is a density, not a pmf, and we cannot sum up densities. Instead, we work with cdf’s, and write&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;P_y(y) \triangleq P(Y\leq y)=P(f(X) \leq y) = P(X\in {x|f(x)\leq y})&lt;/script&gt;
+
+    &lt;p&gt;We can derive the pdf of y by differentiating the cdf.&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;p_y(y)\triangleq\frac{d}{dy}P_y(y)=\frac{d}{dy}P_x(f^{-1}(y)) = \frac{dx}{dy}\frac{d}{dx}P_x(x)=\frac{dx}{dy}p_x(x)&lt;/script&gt;
+
+    &lt;p&gt;where $x=f^{-1}(y)$. Since the sign of this change is not important, we take the absolute value to get the general expression:&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;p_y(y)=\Big|\frac{dx}{dy}\Big|p_x(x)&lt;/script&gt;
+
+    &lt;p&gt;This is called change of variables formula.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Central limit theorem&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;27-monte-carlo-approximation&quot;&gt;2.7 Monte Carlo approximation&lt;/h2&gt;
+
+&lt;p&gt;In general, computing the distribution of a function of an rv using the change of variables formula can be difficult. One simple but powerful alternative is &lt;strong&gt;Monte Carlo approximation&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;First we generate $S$ samples from the distribution, call them $x_1,\cdots,x_S$. (There are many ways to generate such samples; one popular method, for high dimensional distributions, is called Markov chain Monte Carlo or MCMC; this will be explained later)&lt;/li&gt;
+  &lt;li&gt;Given the samples, we can approximate the distribution of $f(X)$ by using the empirical distribution&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;28-information-theory&quot;&gt;2.8 Information theory&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Information theory&lt;/strong&gt; is concerned with representing data in a compact fashion (a task known as &lt;strong&gt;data compression&lt;/strong&gt; or &lt;strong&gt;source coding&lt;/strong&gt;), as well as with transmitting and storing it in a way that is robust to errors (a task known as &lt;strong&gt;error correction&lt;/strong&gt; or &lt;strong&gt;channel coding&lt;/strong&gt;).&lt;/p&gt;
 
 &lt;ol&gt;
   &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Entropy&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;The entropy of a random variable $X$ with distribution p, denoted by $\mathbb{H}(X)$ or sometimes $\mathbb{H}(p)$, is a measure of its &lt;strong&gt;uncertainty&lt;/strong&gt;. In particular, for a discrete variable with $K$ states, it is defined by&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathbb{H}(X) \triangleq -\sum_{k=1}^{K}p(X=k)log_2p(X=k)&lt;/script&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;KL divergence&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;One way to measure the dissimilarity of two probability distributions, p and q, is known as the &lt;strong&gt;Kullback-Leibler divergence&lt;/strong&gt; (&lt;strong&gt;KL divergence&lt;/strong&gt;) or &lt;strong&gt;relative entropy&lt;/strong&gt;.&lt;/p&gt;
+
+    &lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathbb{KL}(p||q) \triangleq \sum_{k=1}^{K}p_k\log\frac{p_k}{q_k} \\
+ = \sum_k p_k \log p_k - \sum_k p_k \log q_k \\
+ = - \mathbb{H}(p) + \mathbb{H}(p,q)&lt;/script&gt;
+
+    &lt;p&gt;where $\mathbb{H}(p,q)$ is called the cross entropy, $\mathbb{H}(p,q) \triangleq -\sum_k p_k \log q_k$&lt;/p&gt;
+
     &lt;table&gt;
       &lt;tbody&gt;
         &lt;tr&gt;
-          &lt;td&gt;求一个点$x$到到一个超平面上的投影$\Pi_H(x)=argmin\frac{1}{2}&lt;/td&gt;
+          &lt;td&gt;$\bf{Theorem 2.8.1. :}$	(&lt;strong&gt;Information inequality&lt;/strong&gt;) $\mathbb{KL} (p&lt;/td&gt;
           &lt;td&gt; &lt;/td&gt;
-          &lt;td&gt;x-y&lt;/td&gt;
-          &lt;td&gt; &lt;/td&gt;
-          &lt;td&gt;^2 \ \ \ s.t. \ y \in H$  （投影可能不止一个，但是由于我们用的是线性SVM，超平面为凸，因此只有一个投影）&lt;/td&gt;
+          &lt;td&gt;q) \geq 0$ with equality iff $p = q$.&lt;/td&gt;
         &lt;/tr&gt;
       &lt;/tbody&gt;
     &lt;/table&gt;
   &lt;/li&gt;
-  &lt;li&gt;求点$x$到点$\Pi_H(x)$的距离即可&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;strong&gt;Proof&lt;/strong&gt;&lt;br /&gt;
-$min \ \frac{1}{2}||x-y||^2 \ \ \ s.t. \langle w,y \rangle  + b = 0$&lt;br /&gt;
-对于超平面外任意一点$x_0 = \Pi_H(x_0) + \gamma \frac{w}{||w||}$（向量分解，如图），其中$\frac{w}{||w||}$表示方向，$\gamma$为距离，则：&lt;br /&gt;
-&lt;script type=&quot;math/tex&quot;&gt;\langle x_0 - \gamma \frac{w}{||w||}, w \rangle  + b = 0 \\
-\langle x_0 , w \rangle + b = \gamma \frac{\langle  w,w \rangle}{||w||} = \gamma ||w|| \\
-|\gamma| = \frac{|\langle x_0 , w \rangle + b |}{||w||}&lt;/script&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;intuition&quot;&gt;Intuition&lt;/h4&gt;
-&lt;p&gt;&lt;strong&gt;Core Intuition&lt;/strong&gt;：给定一个数据集$D={(x_i,y_i)}_{i=1,\cdots,n}$，找到一组w，b使的两组点之间间隔最大，即
-&lt;script type=&quot;math/tex&quot;&gt;\max \limits_{w,b} \min \limits_{i=1,\cdots,n} \frac{|\langle w,x_i \rangle + b |}{||w||}&lt;/script&gt;
-(min：找点到超平面的最短距离；max：找最短距离最大的那个超平面)
-则原问题变为：
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-\max \limits_{w,b} \min \limits_{i=1,\cdots,n} \frac{(\langle w,x_i \rangle + b )}{||w||}\cdot y_i \\
-s.t. \ y_i= sign(\langle w,x_i \rangle + b ) = \left\{
-\begin{aligned}
-+1 \ \ \langle w,x_i \rangle + b &gt; 0 \\
--1 \ \ \langle w,x_i \rangle + b &lt; 0
-\end{aligned}
-\right. %]]&gt;&lt;/script&gt;
-假设对于某个点$x$，$\langle w,x_i \rangle + b = \pm 5$，它其实是可以被rescale为$\langle \frac{w}{5},x_i \rangle + \frac{b}{5} = \pm 1$，因此我们对于min刚好取到的点进行rescale，因此
-&lt;script type=&quot;math/tex&quot;&gt;\forall i, \ (\langle w,x_i \rangle + b )\cdot y_i \geq 1&lt;/script&gt;
-故min的最优值即1，原优化问题变为：
-&lt;script type=&quot;math/tex&quot;&gt;\max \limits_{w,b} \frac{1}{||w||}\\
-s.t. \ y_i\cdot(\langle w,x_i \rangle + b ) \geq 1&lt;/script&gt;
-稍微进行一下变换，
-&lt;script type=&quot;math/tex&quot;&gt;\min \limits_{w,b} \frac{1}{2}||w||^2\\
-s.t. \ y_i\cdot(\langle w,x_i \rangle + b ) \geq 1&lt;/script&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Why&lt;/strong&gt;：模型学习的主要目的是使模型的generalization ability强，但是为什么max这个最短距离的就达到了这个效果呢？这个部分涉及到稍微复杂的Vapnik-Chervonenkis Dimension理论，因此老师省略了这一部分的讲述，给出了一个在robust层面上的解释：max这个最短距离可以达到比较高的抗扰动能力。&lt;/p&gt;
-
-&lt;h3 id=&quot;algorithm&quot;&gt;Algorithm&lt;/h3&gt;
-&lt;p&gt;可以发现二次规划的标准形式为：
-&lt;script type=&quot;math/tex&quot;&gt;\min \frac{1}{2}\langle x, Qx\rangle + \langle c, x\rangle\\
-s.t. Ax=b,x\geq 0&lt;/script&gt;
-当Q为半正定矩阵时，该问题为二次凸规划问题。
-可以发现我们想解的这个优化问题实际上就是一个二次凸规划问题：
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-\min \limits_{w,b} \frac{1}{2}||w||^2 = \frac{1}{2} \langle \begin{bmatrix} w \\ b \end{bmatrix}, \begin{bmatrix} I &amp; 0 \\ 0 &amp; 0 \end{bmatrix} \begin{bmatrix} w \\ b \end{bmatrix} \rangle
-  \\
-s.t. \ y_i\cdot(\langle w,x_i \rangle + b ) \geq 1 %]]&gt;&lt;/script&gt;&lt;/p&gt;
-
-&lt;p&gt;首先我们看一下通用形式下的非线性优化问题$(p)$如何求解：
-&lt;script type=&quot;math/tex&quot;&gt;(p): \min f(x) \\
-s.t. h(x) = 0&lt;/script&gt;
-假设 $f:\mathbb{R}^n \rightarrow \mathbb{R}, h: \mathbb{R}^n \rightarrow \mathbb{R}^m \in C^1$ 都是smooth的, 构造拉格朗日乘子
-&lt;script type=&quot;math/tex&quot;&gt;L(x,\lambda) = f(x) + \langle \lambda, h(x)\rangle&lt;/script&gt;
-对于函数$L$求导，
-&lt;script type=&quot;math/tex&quot;&gt;\left\{
-             \begin{array}{lr}
-             \nabla_x L(x,\lambda)= \nabla f(x) + \lambda\nabla h(x)  \\
-             \nabla_{\lambda} L(x,\lambda) = h(x)        \end{array}
-\right.&lt;/script&gt;
-&lt;strong&gt;Defination 1&lt;/strong&gt;: Define a space $V={\Delta x|\nabla h(x)^T\Delta x = 0, \Delta x\in \mathbb{R}^n } $, such that $\nabla f(x) \perp V$&lt;/p&gt;
-
-&lt;p&gt;怎么理解Defination 1:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;其一，根据V自身的定义，表明对于任意的点$x_0$满足$h(x_0)=0$，则极可能存在$h(x_0+\Delta x) =0$，因为$h(x_0+\Delta x) \approx h(x_0) + \nabla h(x_0)^T\Delta x = 0$；&lt;/li&gt;
-  &lt;li&gt;其次，垂直的条件保证$\nabla f(x) + \Delta x\nabla h(x) = 0$&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;strong&gt;这个V其实就是认为是上面这组导函数等于0的解的空间？不是。。这个地方还得再看看&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Theorem 1: Lagrangian multiplier theorem&lt;/strong&gt;：Let $x^&lt;em&gt;$ be a local min of (p), assume $[\nabla h_1(x^&lt;/em&gt;), \cdots, \nabla h_m(x^&lt;em&gt;)]_{n\times m}=\nabla h(x^&lt;/em&gt;)$ is column linearly independent, then $\exists \lambda^&lt;em&gt;,\ s.t.\nabla f(x^&lt;/em&gt;) + \lambda\nabla h(x^&lt;em&gt;) = 0$&lt;br /&gt;
-&lt;strong&gt;Proof - Way 1 penalty factor&lt;/strong&gt;：  &lt;br /&gt;
-因为$x^&lt;/em&gt;$是local min，因此满足定义：$\exists \epsilon &amp;gt; 0, s.t. f(x^&lt;em&gt;)\leq f(x),\forall x\in B\bigcup F $, where $B(x^&lt;/em&gt;,\epsilon)={x|\epsilon \geq ||x-x^*||}$ and $F={x|h(x)=0}$ is the feasible set of problem (p).&lt;/p&gt;
-
-&lt;p&gt;构建一个新的优化目标：
-&lt;script type=&quot;math/tex&quot;&gt;\min \ F^k=k(x)=f(x)+\frac{k}{2}||h(x)||^2+\frac{\alpha}{2}||x-x^*||^2&lt;/script&gt;
-定义$x^k=argmin F^k(x) \  \ s.t. \ x\in B$&lt;br /&gt;
-（暂时不要求x是可行的，放大了问题的可行域，但将$||h(x)||^2=\sum_{i=1,\cdots,n}(h_i(x))^2$不等于0作为惩罚项会增加最小化的负担，k越大，会迫使其越往可行域靠拢）&lt;/p&gt;
-
-&lt;ol&gt;
   &lt;li&gt;
-    &lt;p&gt;Prove: when ${x_k}$ is bounded, $k \rightarrow \infty$, $x^k\rightarrow \widetilde{x} = x^&lt;em&gt;$&lt;br /&gt;
-（思路：证明聚点只有一个）&lt;br /&gt;
-因为$x^k\in B(x^&lt;/em&gt;,\epsilon)$，有界序列存在收敛子列，假设$x^{k_n} \xrightarrow{n \rightarrow \infty} \widetilde{x}$，即$\bar{x}$为任意一个聚点/极限点，$f(x^k)+\frac{\alpha}{2}||x^k-x^&lt;em&gt;||^2  \leq f(x^&lt;/em&gt;)$沿子列取极限，由于$\widetilde{x}$只是一个feasible solution而$x^&lt;em&gt;$是local min，则存在&lt;script type=&quot;math/tex&quot;&gt;f(x^*)\leq f(\widetilde{x})+\frac{\alpha}{2}||\widetilde{x}-x^*||^2 \leq f(x^*)&lt;/script&gt;因此$||\widetilde{x}-x^&lt;/em&gt;||=0 \rightarrow \widetilde{x}=x^*$&lt;br /&gt;
-  (不懂自己下面在写啥。。
-&lt;script type=&quot;math/tex&quot;&gt;F^k(x^k)=f(x^k)+\frac{k}{2}||h(x^k)||^2+\frac{\alpha}{2}||x^k-x^*||^2 \\
-\leq F^k(x^*)=f(x^*)+\frac{K}{2}||h(x^*)||^2+\frac{\alpha}{2}||x^*-x^*||^2 \\ \leq f(x^*) + 0 + 0 \leq f(x^*)&lt;/script&gt;
-因此：
-&lt;script type=&quot;math/tex&quot;&gt;f(x^K)+\frac{K}{2}||h(x^K)||^2\leq f(x^*) \\
-f(x^K)+\frac{\alpha}{2}||x^K-x^*||^2 \leq f(x^*)&lt;/script&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Prove: $\exists \lambda^&lt;em&gt;,\ s.t.\nabla f(x^&lt;/em&gt;) + \lambda\nabla h(x^&lt;em&gt;) = 0$ &lt;br /&gt;
-由于1的证明，因此$\exists K$, when $k &amp;gt; K$, $||x^K-x^&lt;/em&gt;||^2\leq \epsilon$，
-由于$\nabla f(x^&lt;em&gt;) + K\nabla h(x^&lt;/em&gt;)h(x^&lt;em&gt;)+\alpha(x^&lt;/em&gt;-x^&lt;em&gt;)=0$恒成立，当$k \rightarrow K$时，则满足：
-&lt;script type=&quot;math/tex&quot;&gt;\nabla f(x^K) + K\nabla h(x^K)h(x^K)+\alpha(x^K-x^*)=0 \\
-\nabla h(x^K) Kh(x^K) = -[\nabla f(x^K)+\alpha(x^K-x^*)] \\
-\nabla h(x^K)^T\nabla h(x^K) Kh(x^K) = -\nabla h(x^K)^T[\nabla f(x^K)+\alpha(x^K-x^*)]&lt;/script&gt;
-由于$\nabla h(x^K)$列满秩，因此$\nabla h(x^K)^T\nabla h(x^K)$可逆（证明简单？），则有：
-&lt;script type=&quot;math/tex&quot;&gt;Kh(x^K) = -[\nabla h(x^K)^T\nabla h(x^*)]^{-1}\nabla h(x^K)^T[\nabla f(x^K)+\alpha(x^K-x^*)]\\
-lim_{K\rightarrow \infty}Kh(x^K) = -[\nabla h(x^*)^T\nabla h(x^*)]^{-1}\nabla h(x^*)^T[\nabla f(x^*)+\alpha(x^*-x^*)] \\
-lim_{K\rightarrow \infty}Kh(x^K) = [\nabla h(x^*)^T\nabla h(x^*)]^{-1}\nabla h(x^*)^T(-\nabla f(x^*))&lt;/script&gt;
-这时候我们会惊奇的发现，令$\lambda^&lt;/em&gt;= lim_{K\rightarrow \infty}Kh(x^K)$，
-&lt;script type=&quot;math/tex&quot;&gt;\lambda^*= [\nabla h(x^*)^T\nabla h(x^*)]^{-1}\nabla h(x^*)^T(-\nabla f(x^*)) \\
-\lambda^* \nabla h(x^*) = (-\nabla f(x^*))[\nabla h(x^*)^T\nabla h(x^*)]^{-1}\nabla h(x^*)^T\nabla h(x^*)^T \\
-\lambda^* \nabla h(x^*) = -\nabla f(x^*) \\
-\nabla f(x^*)+\lambda^* \nabla h(x^*) = 0&lt;/script&gt;
-以上，即可证明完毕。&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Mutual information&lt;/strong&gt;&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;&lt;strong&gt;Proof - Way 2 消元法&lt;/strong&gt;：&lt;br /&gt;
-先考虑一个简单的优化问题的拉格朗日乘子定理用消元法的证明
-&lt;script type=&quot;math/tex&quot;&gt;\min \ f(x)  \  \ s.t. Ax=b  \ \ (1)&lt;/script&gt;
-where A is column full rank.&lt;br /&gt;
-我们令$A=[B,N],B\in R^{m\times m},N\in R^{m\times(n-m)}, B$ is invertable.&lt;br /&gt;
-则有$[B,N][x_B;x_N]=b \rightarrow x_B=B^{-1}(b-Nx_N)$&lt;br /&gt;
-&lt;script type=&quot;math/tex&quot;&gt;f(x)=f(x_B,x_N)=f(B^{-1}(b-Nx_N),x_N)&lt;/script&gt;
-如此，原有约束问题会变为一个无约束问题：
-&lt;script type=&quot;math/tex&quot;&gt;\min_{x_N} \ g(x_N)=f(x_B,x_N)=f(B^{-1}(b-Nx_N),x_N) \ \ (2)&lt;/script&gt;
-&lt;strong&gt;Defination 2&lt;/strong&gt;: &lt;br /&gt;
-a) If $x^&lt;em&gt;$ is local min of (1) then $x^&lt;/em&gt;_N$ is local min of (2)&lt;br /&gt;
-b) If $x^&lt;em&gt;_N$ is local min of (2) then $[B^{-1}(b-Nx^&lt;/em&gt;_N),x^&lt;em&gt;_N]$ is local min of (1)
-&lt;strong&gt;Proof of Def.2(a)&lt;/strong&gt; （反证法）&lt;br /&gt;
-由于$x^&lt;/em&gt;$是local min，因此$\exists B(x^&lt;em&gt;,\epsilon_1) \ s.t.f(x) \geq f(x^&lt;/em&gt;),x\in B$ &lt;br /&gt;
-假设$x^&lt;em&gt;_N$不是local min，则$\widetilde{x_N}\in B(x^&lt;/em&gt;_N,\epsilon_2) \ s.t.g(x_N^&lt;em&gt;) \geq f(\widetilde{x^&lt;/em&gt;_N})$，需要证明一下$\widetilde{x^&lt;em&gt;}$在$x^&lt;/em&gt;$的领域里。&lt;br /&gt;
-有$\widetilde{x}=[B^{-1}(b-N\widetilde{x_N}),\widetilde{x_N}]$，由于$\widetilde{x}$对问题(1)是feasible的，那么&lt;br /&gt;
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-f(\widetilde{x})=f(\widetilde{x_B},\widetilde{x_N})=g(\widetilde{x_N})&lt;x^*_N=f(x_B^*,x_N^*)=f(x^*) %]]&gt;&lt;/script&gt;
-与已知矛盾。因此可证Def.2(a)成立。同理可证明Def.2(b)&lt;/p&gt;
-
-&lt;p&gt;对问题(2)（无约束）目标函数求导，在local min处导数为0（可证明，见附1）
-&lt;script type=&quot;math/tex&quot;&gt;\nabla g(x_N) = 0 \\
-g'(x_N^*) = \frac{\partial f(x^*)}{\partial x_B}(-B^{-1}N) + \frac{\partial f(x^*)}{\partial x_N}\\
- -N^T(B^T)^{-1}\nabla_Bf(x^*)+\nabla_Nf(x^*) = 0&lt;/script&gt;
-令$\lambda^&lt;em&gt;=-(B^T)^{-1}\nabla_Bf(x^&lt;/em&gt;)$，则有：
-&lt;script type=&quot;math/tex&quot;&gt;\nabla_Nf(x^*)+N^T\lambda^*= 0   \ \ (3)&lt;/script&gt;
-由于$B^T\lambda^&lt;em&gt;=-B^T(B^T)^{-1}\nabla_Bf(x^&lt;/em&gt;)=-\nabla_Bf(x^*)$，所以
-&lt;script type=&quot;math/tex&quot;&gt;\nabla_Bf(x^*) + B^T\lambda^* = 0 \ \ (4)&lt;/script&gt;
-结合(3)(4)可得
-&lt;script type=&quot;math/tex&quot;&gt;\begin{bmatrix} \nabla_Bf(x^*)  \\ \nabla_Nf(x^*) \end{bmatrix} + \begin{bmatrix} B^T  \\ N^T \end{bmatrix}\lambda^* = 0 \\
-\nabla f(x^*) + A^T \lambda^* = 0&lt;/script&gt;
-即可证明。&lt;/p&gt;
-
-&lt;p&gt;在此基础上，考虑更为通用的限制条件，即原问题：
-&lt;script type=&quot;math/tex&quot;&gt;\min \ f(x) \\
-s.t. \ h(x) = 0&lt;/script&gt;
-且$\nabla h(x)$ is column linearly independent. &lt;br /&gt;
-依然把原问题转化为：
-&lt;script type=&quot;math/tex&quot;&gt;\min \ f(x_B,x_N) \\
-s.t. \ h(x_B,x_N) = 0&lt;/script&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Defination 3:&lt;/strong&gt;（隐函数定理）若$h(x_B,x_N)=0$, $\nabla h_B(x)$可逆，那么在$x_N$的某领域里满足$x_B=\phi(x_N)$，且$\phi(\cdot)$是光滑的且为1对1的映射&lt;br /&gt;
-(ps:指在local上，跟线性基本没区别)&lt;br /&gt;
-且存在：
-&lt;script type=&quot;math/tex&quot;&gt;\frac{\partial h(x)}{\partial x_B}\phi(x_N)' + \frac{\partial h(x)}{\partial x_N} = 0 \\
-\phi(x_N)' = - \nabla_B h(x)^{-1}\nabla_N h(x)&lt;/script&gt;
-&lt;strong&gt;为啥？？？？&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;则构建优化问题为
-&lt;script type=&quot;math/tex&quot;&gt;\min_{x_N} \ g(x_N)=f(x_B,x_N)=f(\phi(x_N),x_N)&lt;/script&gt;
-求导数为0有：
-&lt;script type=&quot;math/tex&quot;&gt;\frac{\partial f(x^*)}{\partial x_B}\phi(x_N)' + \frac{\partial f(x^*)}{\partial x_N} = 0 \\
-\frac{\partial f(x^*)}{\partial x_B}(- \nabla_B h(x^*)^{-1}\nabla_N h(x^*)) + \frac{\partial f(x^*)}{\partial x_N} = 0  \\
-\nabla_N f(x^*) + (-\nabla_B f(x^*) \nabla_B h(x^*)^{-1})\nabla_N h(x^*) = 0  \\
-\nabla_N f(x^*) + \lambda^*\nabla_N h(x^*) = 0&lt;/script&gt;
-令$\lambda^* =  (-\nabla_B f(x^&lt;em&gt;) \nabla_B h(x^&lt;/em&gt;)^{-1})$，且同理可得
-&lt;script type=&quot;math/tex&quot;&gt;\nabla_B f(x^*) + \lambda^*\nabla_B h(x^*) = 0&lt;/script&gt;
-因此可证$\nabla f(x^&lt;em&gt;) + \lambda^&lt;/em&gt;\nabla h(x^*) = 0 $&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Proof - Way 3 sperating hyperplane theorem&lt;/strong&gt;：&lt;/p&gt;
-
-&lt;p&gt;附：&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;If $x^&lt;em&gt;$ is local min of problem $\min f(x)$, then $\nabla f(x) = 0$&lt;br /&gt;
-Proof:&lt;br /&gt;
-Suppose that $x^&lt;/em&gt;$ is local min, and $\nabla f(x) \neq 0$, 
-&lt;script type=&quot;math/tex&quot;&gt;f(y) = f(x^*) + (y-x^*)^T\nabla f(x)+o(||y-x||) \\
-f(y) \geq f(x^*)&lt;/script&gt;
-Because there is no constrait on $y$, we can randomly choose $y$ which satisfies: $sign(y-x^* ) \neq sign(\nabla f(x^&lt;em&gt;))$
-then $f(y)-f(x^&lt;/em&gt;) = (y-x^&lt;em&gt;)^T\nabla f(x)+o(||y-x||) \leq 0 \rightarrow f(y)\leq f(x^&lt;/em&gt;)$
-矛盾，因此$\nabla f(x) = 0$&lt;/li&gt;
-&lt;/ol&gt;
-
 </description>
-        <pubDate>Mon, 10 Dec 2018 00:00:00 +0100</pubDate>
-        <link>http://localhost:4000/2018/12/10/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson6-7/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/12/10/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson6-7/</guid>
+        <pubDate>Sun, 18 Aug 2019 00:00:00 +0200</pubDate>
+        <link>http://localhost:4000/2019/08/18/MLAPP-2Probability/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/08/18/MLAPP-2Probability/</guid>
         
-        <category>Algirithms</category>
+        <category>Machine Learning</category>
         
-        <category>Lecture Notes</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Big Data Algorithm Lesson 3: Kernel K-means (2)</title>
-        <description>&lt;p&gt;假设顶点集合$V={x_1,\cdots,x_n}$，$w_{ij}=exp(-||x_i-x_j||)$用以衡量点i与点j之间的相似度，距离越远，越不相似，$w_{ij}=0$则代表i与j之间无连线。定义$d_l=\sum_{m=1}^n w_{lm}$&lt;br /&gt;
-于是任意一张图可以表示为：$G=(V,E,W),W\in R^{n\times n}$（无向图$W=W^T$），聚类的目的是达到：&lt;br /&gt;
-1.不同group之间有small weight；2.group组内有large weight&lt;br /&gt;
-假设在将顶点分两组的情况下：$A、B \subseteq V$(A和B是顶点子集)，$\Delta(A,B)$可表示为切断A、B两个集合所有连接边的代价
-&lt;script type=&quot;math/tex&quot;&gt;\Delta(A,B)=\sum_{x_l\in A}\sum_{x_m\in B}w_{lm} \\\Delta(A,V)=\sum_{x_l\in A}\sum_{x_m\in V}w_{lm}=\sum_{x_l\in A}d_l&lt;/script&gt;
-若将顶点分为K类，则$V={A_1,\cdots,A_K}$，优化的目标函数变为：
-&lt;script type=&quot;math/tex&quot;&gt;min \ cut(A_1,\cdots,A_K):=\frac{1}{2}\sum_{i=1}^K\Delta(A_i,\bar{A_i})&lt;/script&gt;
-（其中1/2是因为对称性，$\Delta(A_i,\bar{A_i}) = \Delta(\bar{A_i},A_i)$）
-由于：&lt;script type=&quot;math/tex&quot;&gt;\Delta(A_i,\bar{A_i})=\sum_{x_l\in A_i}\sum_{x_m\in \bar{A_i}}w_{lm}=\sum_{x_l\in A_i}\sum_{x_m\in (V-A
-_i)}w_{lm} = \Delta(A_i,V)-\Delta(A_i,A_i)&lt;/script&gt;
-因此可以推出：&lt;script type=&quot;math/tex&quot;&gt;\sum_{i=1}^K\Delta(A_i,\bar{A_i})=\sum_{i=1}^K\Delta(A_i,V)-\sum_{i=1}^K\Delta(A_i,A_i)=\Delta(V,V)-\sum_{i=1}^K\Delta(A_i,A_i)&lt;/script&gt;
-因此原问题：$min \ \sum_{i=1}^K\Delta(A_i,\bar{A_i})$（不同group之间有small weight） 可以转化为：$max \ \sum_{i=1}^K\Delta(A_i,A_i) $（group组内有large weight），可以见得，优化以上两个问题中的任意一个就能兼顾这两个条件。&lt;br /&gt;
-&lt;strong&gt;需要注意的是，这个cut往往容易output很不平衡的分割，可能一个group只有一个点&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;因此，重构问题为：&lt;br /&gt;
-&lt;script type=&quot;math/tex&quot;&gt;min \ RatioCut:=\frac{1}{2}\sum_{i=1}^K\frac{\Delta(A_i,\bar{A_i})}{|A_i|}&lt;/script&gt;
-（其中1/2是因为：假设分两类，$\Delta(A_1,A_2)$和$\Delta(A_2,A_1)$算了两遍）
-&lt;script type=&quot;math/tex&quot;&gt;\Delta(A_i,\bar{A_i})=\Delta(A_i,V)-\Delta(A_i,A_i) \\
-=\sum_{x_l\in A_i}d_l-\sum_{x_\alpha\in A_i}\sum_{x_\beta\in A_i} w_{\alpha \beta}&lt;/script&gt;
-定义一个n维列向量$u_i=[u_{1i}, \cdots, u_{ni}]^T$，&lt;/p&gt;
-
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;u_{li} = \left\{
-\begin{aligned}
-1 \ \ if \ x_l\in A_i\\
-0 \ \ otherwise
-\end{aligned}
-\right.&lt;/script&gt;
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-\Delta(A_i,\bar{A_i})=u_i^T \begin{bmatrix} d_1 &amp; 0 &amp; \cdots &amp; 0\\ 0 &amp; d_2 &amp; \cdots &amp; 0 \\ \cdots \\ 0 &amp; 0 &amp; \cdots &amp; d_n \end{bmatrix} u_i - u_i^TW u_i=u_i^TD u_i-u_i^TW u_i %]]&gt;&lt;/script&gt;
-若想分母处以$|A_i|$,则只需要改变$u_i$定义，使$ u_{li} =\frac{1}{|A_i|} \ if \ x_l\in A_i$，令$L=D-W$，那么原优化问题可变为：&lt;br /&gt;
-&lt;script type=&quot;math/tex&quot;&gt;\frac{1}{2}\sum_{i=1}^K\frac{\Delta(A_i,\bar{A_i})}{|A_i|} = \frac{1}{2}\sum_{i=1}^Ku_i^T(D-W)u_i 
-= \frac{1}{2}\sum_{i=1}^Ku_i^TLu_i \\
-= \frac{1}{2}\sum_{i=1}^Ktr(u_i^TLu_i) = \frac{1}{2}\sum_{i=1}^Ktr(Lu_iu_i^T) =\frac{1}{2}tr(L\sum_{i=1}^Ku_iu_i^T) \\
-let \ U=[u_1,\cdots,u_k][u_1^T,\cdots,u_k^T]^T=\sum u_iu_i^T \\
-then \ \frac{1}{2}\sum_{i=1}^K\frac{\Delta(A_i,\bar{A_i})}{|A_i|}  = \frac{1}{2}tr(LUU^T) = \frac{1}{2}tr(U^TLU)&lt;/script&gt;
-($\frac{1}{2}\sum_{i=1}^Ku_i^TLu_i = \frac{1}{2}\sum_{i=1}^Ktr(u_i^TLu_i)$的原因是一个数的迹就是它自己)&lt;br /&gt;
-故原优化问题$min \ \frac{1}{2}\sum_{i=1}^K\frac{\Delta(A_i,\bar{A_i})}{|A_i|}$ 可转化为 
-&lt;script type=&quot;math/tex&quot;&gt;min \ \frac{1}{2}tr(U^TLU)  \\
-s.t. \ U\geq 0,\ UU^T1=1,\ U^TU=I&lt;/script&gt;
-这个问题就变为了我们在lesson2里得到的优化问题。&lt;/p&gt;
-
-&lt;p&gt;总结拉普拉斯矩阵L的性质：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;$\forall y\in R^n$, 以及
-&lt;script type=&quot;math/tex&quot;&gt;y^TLy=y^TDy-y^TWy =\sum_{l=1}^nd_ly_l^2-\sum_{l=1}^n\sum_{m=1}^ny_ly_mw_{lm} \\
-=\frac{1}{2}\sum_{l=1}^nd_ly_l^2-\sum_{l=1}^n\sum_{m=1}^ny_ly_mw_{lm}+\frac{1}{2}\sum_{m=1}^nd_my_m^2 \\
-=\frac{1}{2}\sum_{m=1}^nw_{lm}(y_i-y_j)^2&lt;/script&gt;&lt;/li&gt;
-  &lt;li&gt;$L\geq 0$ 对称半正定矩阵&lt;/li&gt;
-  &lt;li&gt;$0=\lambda_1\leq \lambda_2\leq \cdots\leq \lambda_n$
-&lt;script type=&quot;math/tex&quot;&gt;L\cdot1=D\cdot1-W\cdot1=diag(W\cdot1)\cdot1-W\cdot1=0&lt;/script&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;最后，总结一下kernel kmeans算法的思路：&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;求出$L = D-W=diag(W\cdot1)-W$&lt;/li&gt;
-  &lt;li&gt;$eig(L)$，求K个最小特征值对应的特征向量，记为$U_k^*\in R^{n\times K}$&lt;/li&gt;
-  &lt;li&gt;用kmeans算法（假设k=2）聚类，对$U_k^*$进行聚类，即可完成（理论情况下U即可表示某个点是否属于某类k，实际情况下会存在一些扰动，使得求出来的U并非只含0或1的向量，因此无法直接判断某个点是否属于某类k，还需要再做一次聚类）
-$x_1,\cdots,x_n\in R^d \rightarrow$2维&lt;br /&gt;
-有取weight的很多其他方法： &lt;br /&gt;
-例如：k-nearest neighbor graph：只找k个最近的邻居连线，其他邻居认为无联系（问题：会出现很多0）&lt;/li&gt;
-&lt;/ol&gt;
-
-</description>
-        <pubDate>Fri, 02 Nov 2018 00:00:00 +0100</pubDate>
-        <link>http://localhost:4000/2018/11/02/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson3/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/11/02/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson3/</guid>
-        
-        <category>Algirithms</category>
-        
-        <category>Lecture Notes</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Big Data Algorithm Lesson 2: Kernel K-means</title>
-        <description>&lt;h2 id=&quot;kernel-k-means&quot;&gt;Kernel K-means&lt;/h2&gt;
-&lt;p&gt;目标函数：$min \ f(x) = \sum_{i=1}^K\sum_{l \in S_i}||\Phi(x_l) - \mu_i||^2$，其中$\mu_i = \frac{\sum_{l\in S_i}\phi(x_l)}{|S_i|}$&lt;br /&gt;
-目标函数non-convex时如何处理呢？&lt;br /&gt;
-举一个例子，$n=5$, $S_1 = {1,2,4},S_2 = {3},S_3 = {5}$,
-假设有一个$\phi:R^d\rightarrow R^m$,m可以是正无穷&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\mu_1=\frac{\phi(x_1)+\phi(x_3)+\phi(x_4)}{3}=
-\begin{bmatrix} \phi(x_1) &amp; \phi(x_2)&amp;\phi(x_3) &amp; \phi(x_4) &amp; \phi(x_5) \end{bmatrix} \cdot \begin{bmatrix} 1/3\\ 0 \\ 1/3 \\ 1/3 \\ 0\end{bmatrix}
- = \Phi \cdot \alpha_1 \\ %]]&gt;&lt;/script&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mu_2=\frac{\phi(x_2)}{1}=
-= \Phi \cdot \begin{bmatrix} 0\\ 1 \\ 0 \\ 0 \\ 0\end{bmatrix} =\Phi \cdot \alpha_2 \\&lt;/script&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mu_3=\frac{\phi(x_5)}{1}=
-= \Phi \cdot \begin{bmatrix} 0\\ 0 \\ 0 \\ 0 \\ 1\end{bmatrix} =\Phi \cdot \alpha_3 \\&lt;/script&gt;
-
-&lt;p&gt;可以发现，$\alpha_i^T\alpha_j=0,\ if \ i \neq j$，
-我们若按照每个x的顺序对应把其中心点重排列：&lt;br /&gt;
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-\begin{bmatrix} \mu_1 &amp; \mu_2 &amp;\mu_1 &amp;\mu_1 &amp;\mu_3   \end{bmatrix}  = \Phi
-\cdot \begin{bmatrix} 1/3 &amp; 0 &amp; 1/3 &amp; 1/3 &amp; 0\\ 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\1/3 &amp; 0 &amp; 1/3 &amp; 1/3 &amp; 0\\1/3 &amp; 0 &amp; 1/3 &amp; 1/3 &amp; 0\\  0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix} = \Phi \cdot \begin{bmatrix} \alpha_1 &amp; \alpha_2 &amp;\alpha_1 &amp;\alpha_1 &amp;\alpha_3  \end{bmatrix} =\Phi \cdot G %]]&gt;&lt;/script&gt; 
-可以发现G满足条件$G^T = G, \ G\cdot 1&lt;em&gt;5 = 1_5$，这样的G被我们称为Doubly Stochastic Matrix。（双随机矩阵）
-可以发现我们可以将G拆分开来：
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-G= Z\cdot Z^T = \begin{bmatrix} 1/\sqrt{3} &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0\\1/\sqrt{3} &amp; 0 &amp; 0 \\1/\sqrt{3} &amp; 0 &amp; 0 \\0 &amp; 0 &amp; 1 \end{bmatrix} \cdot \begin{bmatrix} 1/\sqrt{3} &amp; 0 &amp; 1/\sqrt{3} &amp; 1/\sqrt{3} &amp; 0\\ 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\  0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix} %]]&gt;&lt;/script&gt; &lt;br /&gt;
-其中，$Z\in R^{k\times N}, Z&lt;/em&gt;{li} = 1/\sqrt{|S_i|}, if \ l\in S_i, else \ 0$, ，这样的$Z$老师给它取了一个名字：clustering indicator matrix。$Z$有以下性质：$Z\cdot Z^T = G,\ Z^T \cdot Z = I_{k\times k}$。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;简化目标函数&lt;/strong&gt;&lt;br /&gt;
-目标函数由此变为：&lt;br /&gt;
-&lt;script type=&quot;math/tex&quot;&gt;f(s) =\sum_{i=1}^K\sum_{l\in S_i}||\phi(x_l)-\mu_i||^2=||\phi(x_1)-\mu_1||^2+\cdots+||\phi(x_5)-\mu_5||^2 = \sum_{l=1}^n||\Phi_{\cdot,l}-(\Phi G)_{\cdot,l}||^2=||\Phi-\Phi G||_F^2&lt;/script&gt;
-其中，F范数指的是，$||A||&lt;em&gt;F^2=\sum&lt;/em&gt;{i=1}^m\sum_{j=1}^n A_{ij}^2=\sum_{j=1}^n ||A_{\cdot,j}||^2$，可以发现一个矩阵的F范数可以进行如下变换：$||A||_F^2=\langle A, A \rangle=tr(A^A)$&lt;br /&gt;
-原优化的目标函数就变为了如下形式：&lt;br /&gt;
-&lt;script type=&quot;math/tex&quot;&gt;min \ ||\Phi - \Phi ZZ^T||^2_F \\
-s.t. \ Z \ is \ a \ clustering \ indicator \ matrix&lt;/script&gt;
-然而我们在实际应用中一般并不知道$\Phi$的具体形式，所以我们需要将其变为$K$，可以发现，
-$\Phi^T\Phi = [\phi_1^T;\phi_2^T;\cdots;\phi_5^T][\phi_1;\phi_2;\cdots;\phi_5]=K$&lt;br /&gt;
-那么上式可变化为：&lt;br /&gt;
-$ ||\Phi - \Phi ZZ^T||^2_F = \langle \Phi - \Phi ZZ^T, \Phi - \Phi ZZ^T \rangle \ = tr((\Phi - \Phi ZZ^T)^T(\Phi - \Phi ZZ^T)) &lt;br /&gt;
- =tr(\Phi^T\Phi-\Phi^T\Phi ZZ^T-ZZ^T\Phi^T\Phi+ZZ^T\Phi^T\Phi ZZ^T) &lt;br /&gt;
- =tr(K-KZZ^T-ZZ^TK+ZZ^TKZZ^T)&lt;br /&gt;
- =tr(K)-2tr(KZZ^T)+tr(ZZ^TKZZ^T) &lt;br /&gt;
- =tr(K)-2tr(KZZ^T)+tr(KZZ^TZZ^T) = tr(K)-tr(KZZ^T)$ &lt;br /&gt;
-原优化的目标函数就变为了如下形式：&lt;br /&gt;
-&lt;script type=&quot;math/tex&quot;&gt;min \ tr(K)-tr(KZZ^T) \\
-s.t. \ Z \ is \ a \ clustering \ indicator \ matrix&lt;/script&gt;
-上式中$K$是常数，只有$Z$是变量，因此这个最小化问题可以变为最大化问题：
-&lt;script type=&quot;math/tex&quot;&gt;max \ tr(KZZ^T) = \langle Z, KZ \rangle \\
-s.t. \ Z \ is \ a \ clustering \ indicator \ matrix&lt;/script&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;简化约束条件&lt;/strong&gt;&lt;br /&gt;
-当前的约束条件比较抽象，如何用数学公式将它描述出来呢？
-老师直接给出了条件：1) $Z\geq 0$； 2) $Z^TZ=I$； 3) $ZZ^T1_k=1_k$
-我们就来证明一下这三个条件构成的set就等于条件：Z is a clustering indicator matrix 构成的set。证明两个set相等的思路就是验证set A包含set B且set B 包含 set A即可。&lt;br /&gt;
-&lt;strong&gt;Proof:&lt;/strong&gt;&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;证明若Z是一个clustering indicator matrix，则其满足三条件  &lt;br /&gt;
-记$b=Z^T1&lt;em&gt;n,\ b \in R^k$,$b_i$为Z第i列的和，$b_i=|S_i|\cdot 1/\sqrt(|S_i|)=\sqrt(|S_i|)$, 因此$b=[\sqrt(|S_1|),\cdots,\sqrt(|S_k|)]^T$ &lt;br /&gt;
-$a=Z\cdot b \in R^n$, $a_l=\sum&lt;/em&gt;{i=1}^kZ_li\sqrt{|S_i|}=0+\cdots+0+1/\sqrt{|S_i|} \cdot \sqrt{|S_i|} = 1$&lt;/li&gt;
-  &lt;li&gt;证明若Z满足三条件，则它是一个clustering indicator matrix    &lt;br /&gt;
-1)假设Z满足条件1条件2，证明它每一行只有不多于一个元素。
-$Z=[Z_1,\cdots,Z_k],Z^TZ=I,Z\geq 0$，那么对于任意的$r\neq s$, $Z_r^TZ_s=0$,那么，若同一行有两个元素大于0的话，即$Z_{ls}&amp;gt;0,Z_{lr}&amp;gt;0$，则$Z_r^T Z_s \geq Z_{ls}Z_{lr}&amp;gt;0$，矛盾，因此同一行不可能有两个元素大于0 &lt;br /&gt;
-2)若同时满足条件3，证明每行有且只有一个元素，且其值为$1/\sqrt{|S_i|}$
-我们调整矩阵Z的排列，将同一列不为0的行放在一起，即：
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-Z = \begin{bmatrix} x &amp; 0 &amp;\cdots &amp; 0 \\ x &amp; 0 &amp;\cdots &amp; 0\\x &amp; 0 &amp;\cdots &amp; 0 \\0 &amp; x &amp;\cdots &amp; 0 \\0 &amp; x &amp;\cdots &amp; 0 \\ \cdots \\ 0 &amp; 0 &amp;\cdots &amp; x  \end{bmatrix} =\begin{bmatrix} u_1\in R^{\beta_1} &amp; 0 &amp;\cdots &amp; 0 \\0 &amp;  u_2\in R^{\beta_2}  &amp;\cdots &amp; 0 \\ \cdots \\ 0 &amp; 0 &amp;\cdots &amp; u_k\in R^{\beta_k}   \end{bmatrix}, \beta_i=len(u_i) %]]&gt;&lt;/script&gt;
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-ZZ^T1_n = \begin{bmatrix} u_1 &amp; 0 &amp;\cdots &amp; 0 \\0 &amp;  u_2  &amp;\cdots &amp; 0 \\ \cdots \\ 0 &amp; 0 &amp;\cdots &amp; u_k \end{bmatrix} \cdot \begin{bmatrix} u_1^T1_{\beta_1} \\u_2^T1_{\beta_2} \\ \cdots \\u_k^T1_{\beta_k} \end{bmatrix}= \begin{bmatrix} u_1^T1_{\beta_1}u_1 \\u_2^T1_{\beta_2}u_2 \\ \cdots \\u_k^T1_{\beta_k}u_k \end{bmatrix}=\begin{bmatrix} 1_{\beta_1} \\ 1_{\beta_2} \\ \cdots \\ 1_{\beta_k} \end{bmatrix} %]]&gt;&lt;/script&gt;
-因此：
-&lt;script type=&quot;math/tex&quot;&gt;u_i^T1_{\beta_i}u_i =1_{\beta_i}\\
- \langle 1_{\beta_i}, u_i^T1_{\beta_i}u_i \rangle =\langle 1_{\beta_i}, 1_{\beta_i} \rangle \\
- \langle u_i^T1_{\beta_i}, 1_{\beta_i}u_i \rangle=\langle 1_{\beta_i}, 1_{\beta_i} \rangle\\
- (u_i^T1_{\beta_i})^2 = \langle 1_{\beta_i}, 1_{\beta_i} \rangle=\beta_i \\
- u_i^T1_{\beta_i} = \sqrt(\beta_i) \\
- u_i = \frac{1_{\beta_i}}{\sqrt(\beta_i)}=[1/\sqrt{\beta_i},\cdots,1/\sqrt{\beta_i}]^T&lt;/script&gt;
-证毕。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;由此原约束条件可变为以上三条件：
-&lt;script type=&quot;math/tex&quot;&gt;max \ tr(KZZ^T) = \langle Z, KZ \rangle \\
-s.t.  Z\geq 0,Z^TZ=I,ZZ^T1_k=1_k&lt;/script&gt;
-这个问题是一个比较难解的问题，为什么呢？我也不知道，但是通过relaxation可以简化这个问题呀，即拿掉约束条件里比较弱的一些。那接下来要考虑保留哪个约束条件。
-可以发现，若保留$Z\geq 0$，那么Z可以取无穷大来max这个问题，明显不OK；若保留条件$ZZ^T1&lt;em&gt;k=1_k$，实质上这个问题可变为$max \ \langle Y,Z \rangle, \ s.t.\ Y1=1$，其限制是一条线（二维）or面（三维），也可能是一个无界的优化问题。反观条件$Z^TZ=I$，他其实是一个圆（二维）or球面（三维），因此是比较合理的。所以我们保留这个条件，对这个问题进行relaxation：
-&lt;script type=&quot;math/tex&quot;&gt;max \ tr(KZZ^T)  =  tr(Z^TKZ) = \langle Z, KZ \rangle\\
-s.t.  Z^TZ=I&lt;/script&gt;
-由于K是一个gram matrix(上节课里提到的那个G)，对称半正定矩阵，所以它可以进行特征值分解（对称矩阵就能进行特征值分解，如果它是半正定阵的话,那么它的对角元（特征值）一定是非负数）
-&lt;script type=&quot;math/tex&quot;&gt;K=U\Lambda U^T, UU^T=U^TU=I&lt;/script&gt;
-&lt;script type=&quot;math/tex&quot;&gt;\Lambda = diag(\lambda_1,\cdots,\lambda_n),\lambda_1\geq\lambda_2\geq \cdots \geq \lambda_n \geq 0&lt;/script&gt;
-老师直接给出了结论定理：&lt;br /&gt;
-Let $v^*=max{tr(Z^TKZ)|Z\in R^{n\times k},Z^TZ=I}$, then we have $v^*=\sum&lt;/em&gt;{i=1}^k\lambda_i$ and $Z^&lt;em&gt;=U_k$is the optimal solution.&lt;br /&gt;
-&lt;strong&gt;Proof&lt;/strong&gt;&lt;br /&gt;
-由于$tr(Z^TKZ)=tr(Z^TU\Lambda U^TZ)=\langle U^TZ,\Lambda U^TZ \rangle=tr(Y^T\Lambda Y)$, 其中
-$Y=U^TZ, Y^Y=Z^TUU^TZ=Z^TZ=I$。因此:
-&lt;script type=&quot;math/tex&quot;&gt;max\{tr(Y^T\Lambda Y)|Y\in R^{n\times k},Y^TY=I\}&lt;/script&gt;是原优化问题的等价命题。&lt;br /&gt;
-$tr(Y^T\Lambda Y) = tr(\Lambda YY^T)=\sum
-_{i=1}^n\lambda_i y
-_i y_i^T, y_i \in R^{1\times k}$
-因为$tr(Y^TY)=tr(YY^T)=\sum_{i=1}^ny_iy_i^T=k$&lt;br /&gt;
-其次我们可以分析出来，由于$YY^TYY^T= YIY^T=I$和$(YY^T)^T=YY^T$，则$YY^T$是正交投影矩阵。&lt;br /&gt;
-且$y_iy_i^T=e_i^TYY^Te_i=\langle e_i,YY^Te_i \rangle \leq ||e_i||||YY^Te_i||\leq ||e_i||^2=1$&lt;br /&gt;
-我们令$y_iy_i^T=\gamma_i$，原优化问题又变为：&lt;br /&gt;
-&lt;script type=&quot;math/tex&quot;&gt;\beta^* = max\{\sum_{i=1}^n\lambda_i \gamma_i| \sum_{i=1}^n\gamma =k,0\leq \gamma_i\leq 1,i=1,\cdots,n\}&lt;/script&gt; 
-(但这个问题比起原问题是放宽了条件的,因为原式的条件里$\gamma_i=y_iy_i^T\in{0,1}$)&lt;br /&gt;
-肉眼可见，由于$\lambda_1\geq\lambda_2\geq \cdots \geq \lambda_n \geq 0$，该问题的最优解为：$r_1=\cdots=r_k=1,r_{k+1}=\cdots=r_n=0$，最优值为$\sum_{i=1}^k\lambda_i$，接下来就是要证明这个猜测～&lt;br /&gt;
-我们假设任意一个$r$是一个$\beta$问题的一个可行解，则
-&lt;script type=&quot;math/tex&quot;&gt;\sum_{i=1}^n\lambda_i\gamma_i=\sum_{i=1}^k\lambda_i\gamma_i+\sum_{i=k+1}^n\lambda_i\gamma_i \\
-\leq \sum_{i=1}^k\lambda_i\gamma_i+\lambda_k\sum_{i=k+1}^n\gamma_i \\
-\leq \sum_{i=1}^k\lambda_i\gamma_i+\lambda_k(k-\sum_{i=1}\gamma_i) \\
-= \sum_{i=1}^k(\lambda_i-\lambda_k)\gamma_i+\lambda_k k = \sum_{i=1}^k\lambda_i\gamma_i - \lambda_k\sum_{i=1}^k(1-\gamma_i) \leq\sum_{i=1}^k\lambda_i&lt;/script&gt;
-因此该问题最优值为$\beta^&lt;/em&gt;=\sum_{i=1}^k\lambda_i$，$\alpha^&lt;em&gt;\leq \beta^&lt;/em&gt;=\sum_{i=1}^k\lambda_i$
-假设$Y^&lt;em&gt;=diag(1,\cdots,1,0,\cdots,0)$，它是最开始那个优化问题($\alpha$)的一个可行解（满足$Y^{&lt;/em&gt;T}Y^&lt;em&gt;=I_k$），$tr(Y^&lt;/em&gt;T\Lambda Y)=\sum_{i=1}^k \lambda_i$&lt;br /&gt;
-哎我们会惊奇的发现，$\alpha^&lt;em&gt;\leq \beta^&lt;/em&gt;$但是$\alpha(Y^&lt;em&gt;)=\sum_{i=1}^k \lambda_i=\beta^&lt;/em&gt;$,那么证明$Y^&lt;em&gt;$就是最优解！
-则回到将$Y$还原，$Y^&lt;/em&gt;=U^TZ^* \rightarrow Z^&lt;em&gt;=UY^&lt;/em&gt;=U_k$，那么就可以证明结论里的$v^&lt;em&gt;=\sum_{i=1}^k\lambda_i$ and $Z^&lt;/em&gt;=U_k$is the optimal solution啦～&lt;/p&gt;
-</description>
-        <pubDate>Sat, 13 Oct 2018 00:00:00 +0200</pubDate>
-        <link>http://localhost:4000/2018/10/13/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson2/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/10/13/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson2/</guid>
-        
-        <category>Algirithms</category>
-        
-        <category>Lecture Notes</category>
+        <category>Learning Notes</category>
         
         
       </item>
     
       <item>
         <title>Big Data Algorithm Lesson 1: About Kernel</title>
-        <description>&lt;h2 id=&quot;为什么使用kernel---为什么映射到高维空间可以解决线性不可分的情况&quot;&gt;为什么使用kernel -&amp;gt; 为什么映射到高维空间可以解决线性不可分的情况&lt;/h2&gt;
+        <description>&lt;head&gt;
+    &lt;script src=&quot;https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/x-mathjax-config&quot;&gt;
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            displayMath: [ ['$$', '$$']],
+            inlineMath: [['$','$']],
+            processEscapes: true
+            }
+        });
+    &lt;/script&gt;
+&lt;/head&gt;
+
+&lt;p&gt;最近在旁听复旦大学一门大数据算法课，老师比较侧重于底层优化算法，讲的很细致很有意思，于是在知乎上整理了笔记，由于公式太难重新打了，那么就把链接放在下面吧：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/45650399&quot;&gt;【大数据算法课程笔记】Lesson 1 - Why Kernel&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/45848975&quot;&gt;【大数据算法课程笔记】Lesson 2 - Kernel K-means&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/48353576&quot;&gt;【大数据算法课程笔记】Lesson 3 - Kernel K-means extension&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/50768642&quot;&gt;【大数据算法课程笔记】Lesson 6/7-SupportVectorMachine Theorem&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/51326678&quot;&gt;【大数据算法课程笔记】Lesson 8 - Optimal Condition &amp;amp; Dual SVM&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/52032287&quot;&gt;【大数据算法课程笔记】Lesson 9 - SVM &amp;amp; Algorithm (ADMM/ALM)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/53177142&quot;&gt;【大数据算法课程笔记】Lesson 10- SVM：Proximal Gradient Method&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;why-kernel&quot;&gt;Why Kernel&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;为什么映射到高维空间可以解决线性不可分的情况&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;如下图，这一组点在二维平面线性不可分，但是若将其映射到三维空间，就可以找到一个平面将其划分开来。 &lt;br /&gt;
 通俗来说，核函数的就是将这些点从低维空间映射到了高维空间，以达到线性可分的效果，但是其理论基础是什么呢？&lt;/p&gt;
@@ -1016,92 +1087,140 @@ For two sets $C_1,C_2 \in R^N$,$\exists w \in R^N$, $s.t.inf_{x\in C_1}(w,x) &am
 &lt;p&gt;为了证明这个理论，我们需要了解以下几个知识点：&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;convex set: (凸集)&lt;/strong&gt;
-For a set $C$, if $\lambda x+(1-\lambda)y \in C, \ for \ \forall x,y\in C, \lambda \in (0,1) $&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;convex combination: (凸组合)&lt;/strong&gt;
-$\lambda_1x_1+\cdots+\lambda_nx_n$ is called a convex combination if $\lambda_i \ge 0$ and $\sum \lambda_i = 1$&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;convex hull: (凸包)&lt;/strong&gt;&lt;br /&gt;
-conv(C): the convex hull of a set C is the intersection of all convex sets containing C.&lt;br /&gt;
-一个集合的凸包指的就是找到的那个最小的集合使得它成为凸集，或者说是包含这个集合的最小的凸集。&lt;br /&gt;
-conv(C) = {$x$|$x$ can be represented as the convex combination of points in $C$}&lt;br /&gt;
-即，假设$C={x_0,…,x_m}$, 则其凸包$conv(C)={x|x=\sum \lambda_ix_i$, $\sum \lambda_i = 1$, $\lambda_i \ge 0} $&lt;br /&gt;
-注：有限的点组成的convex hull一定是个多面体，不会有弧形的部分（因为要保证最小），这个多面体也能被称之为一个simplex-单纯形。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Seperation Theorem: (凸集分离定理)&lt;/strong&gt;&lt;br /&gt;
-&lt;strong&gt;可以说是线性规划最经典的理论了&lt;/strong&gt; &lt;br /&gt;
-假设有两个convex set $C_1,C_2$,$C_1\ne \emptyset $,$C_2\ne \emptyset$, 且两者闭包（closure）的交集等于空，表示为$cl \ C_1 \cap cl \ C_2 = \emptyset$,若$C_1$$C_2$中任意一个集合有界(bounded)，则$\exists w\in R^N, \ s.t. \ inf_{x\in C_1}\langle w , x \rangle \ &amp;gt; \ sup_{x\in C_2}\langle w , x \rangle$&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;convex set: (凸集)&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;For a set $C$, if $\lambda x+(1-\lambda)y \in C, \ for \ \forall x,y\in C, \lambda \in (0,1) $&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;convex combination: (凸组合)&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;$\lambda_1x_1+\cdots+\lambda_nx_n$ is called a convex combination if $\lambda_i \ge 0$ and $\sum \lambda_i = 1$&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;convex hull: (凸包)&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;conv(C): the convex hull of a set C is the intersection of all convex sets containing C.&lt;/p&gt;
+
+&lt;p&gt;一个集合的凸包指的就是找到的那个最小的集合使得它成为凸集，或者说是包含这个集合的最小的凸集。&lt;br /&gt;
+conv(C) = {$x$|$x$ can be represented as the convex combination of points in $C$}&lt;/p&gt;
+
+&lt;p&gt;即，假设$C={x_0,…,x_m}$, 则其凸包$conv(C)={x|x=\sum \lambda_ix_i$, $\sum \lambda_i = 1$, $\lambda_i \ge 0} $&lt;/p&gt;
+
+&lt;p&gt;注：有限的点组成的convex hull一定是个多面体，不会有弧形的部分（因为要保证最小），这个多面体也能被称之为一个simplex-单纯形。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Seperation Theorem: (凸集分离定理)&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;可以说是线性规划最经典的理论了&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;假设有两个convex set $C_1,C_2$,$C_1\ne \emptyset $,$C_2\ne \emptyset$, 且两者闭包（closure）的交集等于空，表示为$cl \ C_1 \cap cl \ C_2 = \emptyset$,若$C_1$$C_2$中任意一个集合有界(bounded)，则$\exists w\in R^N, \ s.t. \ inf_{x\in C_1}\langle w , x \rangle \ &amp;gt; \ sup_{x\in C_2}\langle w , x \rangle$&lt;/p&gt;
 
 &lt;p&gt;了解了这些之后，我们就能开始着手证明Definition1。&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Proof Of Definition 1：&lt;/strong&gt;&lt;br /&gt;
-假设有两个集合$S_1$和$S_2$，$S_1 \cup S_2\in {x_0,\cdots x_N}$, $S_1 \cap S_2 = \emptyset$，基本思路是证明这两个集合的凸包满足凸集分离定理的使用条件，然后就可以使用凸集分离定理。&lt;br /&gt;
-取$C_1\doteq conv(S_1)$, $C_2\doteq conv(S_2)$&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Proof Of Definition 1：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;假设有两个集合$S_1$和$S_2$，$S_1 \cup S_2\in {x_0,\cdots x_N}$, $S_1 \cap S_2 = \emptyset$，基本思路是证明这两个集合的凸包满足凸集分离定理的使用条件，然后就可以使用凸集分离定理。&lt;/p&gt;
+
+&lt;p&gt;取$C_1\doteq conv(S_1)$, $C_2\doteq conv(S_2)$&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;证明$C_1$, $C_2$是convex set&lt;br /&gt;
-凸包一定都是凸集，所以这个本质上等同于证明凸包为什么是凸集，凸包是指多个多个凸集的交集，那么这个证明就转化为了证明多个凸集的交集还是凸集。&lt;br /&gt;
-&lt;strong&gt;Proof:&lt;/strong&gt;&lt;br /&gt;
+  &lt;li&gt;证明$C_1$, $C_2$是convex set&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;凸包一定都是凸集，所以这个本质上等同于证明凸包为什么是凸集，凸包是指多个多个凸集的交集，那么这个证明就转化为了证明多个凸集的交集还是凸集。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Proof:&lt;/strong&gt;&lt;br /&gt;
 假设有n个凸集${C_1,\cdots,C_n}$，对于任意两个点$x_1$, $x_2$，若它们在这n个凸集的交集中，则对于任意一个凸集$C_i$,都满足$x_1,x_2\in C_i$，则对于某点$x_3$，$x_3=\lambda_ix_1+(1-\lambda_i)x_2\in C_i, \forall \ \lambda_i\in(0,1), \forall i$，对任意的$i$和$x_1$, $x_2$都满足$x_3\in C_i$，那么$x_3$自然在
-${C_1,\cdots,C_n}$的交集中，那么能证明${C_1,\cdots,C_n}$的交集是凸集。&lt;/li&gt;
-  &lt;li&gt;证明$cl \ C_1 \cap cl \ C_2 = \emptyset$ &lt;br /&gt;
-其思路就是证明$C_1 \cap C_2 = \emptyset$且 $cl \ C_1=C_1$&lt;br /&gt;
-&lt;strong&gt;Proof:&lt;/strong&gt;
-    &lt;ul&gt;
-      &lt;li&gt;$cl \ C_1=C_1$  ？&lt;/li&gt;
-      &lt;li&gt;假设$\exists y \in C_1 \cap C_2$, 则可得出&lt;br /&gt;
-$y=\sum_{i\in S_1}\alpha_ix_i=\sum_{j\in S_2}\beta_jx_j$, 且$\sum_i\alpha_i=1, \sum_j\beta_j=1$,联立方程得：&lt;br /&gt;
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+${C_1,\cdots,C_n}$的交集中，那么能证明${C_1,\cdots,C_n}$的交集是凸集。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;证明$cl \ C_1 \cap cl \ C_2 = \emptyset$&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;其思路就是证明$C_1 \cap C_2 = \emptyset$且 $cl \ C_1=C_1$&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Proof:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;$cl \ C_1=C_1$  ？&lt;/li&gt;
+  &lt;li&gt;假设$\exists y \in C_1 \cap C_2$, 则可得出&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;$y=\sum_{i\in S_1}\alpha_ix_i=\sum_{j\in S_2}\beta_jx_j$, 且$\sum_i\alpha_i=1, \sum_j\beta_j=1$,联立方程得：&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
 \left\{
 \begin{aligned}
 \sum_{i\in S_1}\alpha_ix_i - \sum_{j\in S_2}\beta_jx_j &amp; =  0 \\
 \sum_i\alpha_i - \sum_j\beta_j &amp; =  0 \\
 \end{aligned}
 \right. %]]&gt;&lt;/script&gt;
-此方程可简化写为：
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+
+&lt;p&gt;此方程可简化写为：&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
 \left\{
 \begin{aligned}
 \sum_{i\in S_1\cup S_2}a_ix_i &amp; =  0 \\
 \sum_{i\in S_1\cup S_2}a_i &amp; =  0 \\
 \end{aligned}
 \right. %]]&gt;&lt;/script&gt;
-因此，对任意一组${a_i}$,都要能有一组${x_i}$解，使得以上等式成立，接下来我们将以上等式改写以下形式：
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-\begin{bmatrix} x_0 &amp; \cdots &amp; x_N \\ 1 &amp; \cdots &amp; 1 \end{bmatrix} \cdot \begin{bmatrix} a_0\\ a_1 \\ \cdots \\ a_N\end{bmatrix}=0 %]]&gt;&lt;/script&gt;&lt;br /&gt;
-可以发现，$\begin{vmatrix} x_0 &amp;amp; \cdots &amp;amp; x_N \ 1 &amp;amp; \cdots &amp;amp; 1 \end{vmatrix}=\begin{vmatrix} x_0 &amp;amp; x_1-x_0 &amp;amp; \cdots &amp;amp; x_N-x_0 \ 1 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 0 \end{vmatrix}$，而存在条件${ x_0,…,x_N }, x_i \in R^{N+1}$近似独立，因此$\begin{bmatrix} x_1-x_0 &amp;amp; \cdots &amp;amp; x_N-x_0 \end{bmatrix}$的行列式不为零，可逆。&lt;br /&gt;
-因此当且仅当$\begin{bmatrix} a_0 &amp;amp; a_1 &amp;amp; \cdots &amp;amp; a_N\end{bmatrix}=0$时原式满足，所以不存在这样的点$y$，与最初假设矛盾。&lt;br /&gt;
-则$C_1 \cap C_2=\emptyset$证毕&lt;/li&gt;
-      &lt;li&gt;综上两点，可证明$cl \ C_1 \cap cl \ C_2 = \emptyset$&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;因此对于任意的两个set $S_1$和$S_2$，$S_1 \cup S_2\in {x_0,\cdots x_N}$, $S_1 \cap S_2 = \emptyset$，$C_1 = conv(S_1)$和$C_2 = conv(S_2)$都满足使用凸集分离定理的条件，因此对任意$S_1,S_2$都有：$\exists w, \ s.t. \ inf_{x\in C_1}\langle w , x \rangle \ &amp;gt; \ sup_{x\in C_2}\langle w , x \rangle$，因此${ x_0,…,x_N }$在n维空间线性可分。&lt;br /&gt;
-（同理，我们也可以证明出：n+2个点在n维中线性不可分）&lt;/li&gt;
+
+&lt;p&gt;因此，对任意一组${a_i}$,都要能有一组${x_i}$解，使得以上等式成立，接下来我们将以上等式改写以下形式：&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{bmatrix} x_0 &amp; \cdots &amp; x_N \\ 1 &amp; \cdots &amp; 1 \end{bmatrix} \cdot \begin{bmatrix} a_0\\ a_1 \\ \cdots \\ a_N\end{bmatrix}=0 %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;可以发现，$\begin{vmatrix} x_0 &amp;amp; \cdots &amp;amp; x_N \ 1 &amp;amp; \cdots &amp;amp; 1 \end{vmatrix}=\begin{vmatrix} x_0 &amp;amp; x_1-x_0 &amp;amp; \cdots &amp;amp; x_N-x_0 \ 1 &amp;amp; 0 &amp;amp; \cdots &amp;amp; 0 \end{vmatrix}$，而存在条件${ x_0,…,x_N }, x_i \in R^{N+1}$近似独立，因此$\begin{bmatrix} x_1-x_0 &amp;amp; \cdots &amp;amp; x_N-x_0 \end{bmatrix}$的行列式不为零，可逆。&lt;/p&gt;
+
+&lt;p&gt;因此当且仅当$\begin{bmatrix} a_0 &amp;amp; a_1 &amp;amp; \cdots &amp;amp; a_N\end{bmatrix}=0$时原式满足，所以不存在这样的点$y$，与最初假设矛盾。&lt;/p&gt;
+
+&lt;p&gt;则$C_1 \cap C_2=\emptyset$证毕&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;综上两点，可证明$cl \ C_1 \cap cl \ C_2 = \emptyset$&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;因此对于任意的两个set $S_1$和$S_2$，$S_1 \cup S_2\in {x_0,\cdots x_N}$, $S_1 \cap S_2 = \emptyset$，$C_1 = conv(S_1)$和$C_2 = conv(S_2)$都满足使用凸集分离定理的条件，因此对任意$S_1,S_2$都有：$\exists w, \ s.t. \ inf_{x\in C_1}\langle w , x \rangle \ &amp;gt; \ sup_{x\in C_2}\langle w , x \rangle$，因此${ x_0,…,x_N }$在n维空间线性可分。&lt;/li&gt;
 &lt;/ol&gt;
+
+&lt;p&gt;（同理，我们也可以证明出：n+2个点在n维中线性不可分）&lt;/p&gt;
 
 &lt;p&gt;我理解来说，这个理论就是使用kernel这种方法的理论支撑。&lt;/p&gt;
 
 &lt;h2 id=&quot;kernel--feature-map&quot;&gt;Kernel &amp;amp; Feature Map&lt;/h2&gt;
 
-&lt;p&gt;这个地方仅提供我自己的理解，例如对于高斯核，$G(x_i, x_j)=\exp(-||x_i-x_j||^2)$，我们平时会直接使用这样的变换，但却不知道这样变换的原因所在，而其实从$(x_i,x_j)$到$G(x_i, x_j)$之间还有这样一个流程：
-&lt;script type=&quot;math/tex&quot;&gt;(x_i,x_j) \rightarrow K(x_i,x_j) = \langle \phi(x_i), \phi(x_j) \rangle_H\rightarrow G(x_i, x_j)\\&lt;/script&gt;&lt;/p&gt;
+&lt;p&gt;这个地方仅提供我自己的理解，例如对于高斯核，$G(x_i, x_j)=\exp(-||x_i-x_j||^2)$，我们平时会直接使用这样的变换，但却不知道这样变换的原因所在，而其实从$(x_i,x_j)$到$G(x_i, x_j)$之间还有这样一个流程：&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;(x_i,x_j) \rightarrow K(x_i,x_j) = \langle \phi(x_i), \phi(x_j) \rangle_H\rightarrow G(x_i, x_j)\\&lt;/script&gt;
 
 &lt;p&gt;因为$(x_i,x_j)$可以被一个映射函数$\phi(\cdot)$映射到一个高维空间，在这个希尔伯特空间有一种内积的操作，内积可以表示$\phi(x_i),\phi(x_j)$两者的相似性，且这个值刚好等于低维空间下$G(x_i, x_j)$的值，因此，这样去做一个kernel操作是合理的。其中，这一整套过程被称为kernel method，而映射的这个过程被称作Feature Map。（因为我之前一直有一个误区，以为kernel指的就是从低维空间映射到高维空间的这么一个操作，其实不然，这个过程只是kernel method的一部分而已）&lt;/p&gt;
 
 &lt;p&gt;$\bf{Mercer’s \ theorem :}$
-Mercer’s theorem is a representation of a symmetric positive-definite function on a square as a sum of a convergent sequence of product functions.&lt;br /&gt;
-&lt;strong&gt;对比老师在上课时给出的定义为：&lt;/strong&gt;&lt;br /&gt;
-If $G = G^T$ and $G \geq 0$, $\exists \phi(\cdot), \ s.t. \ G_{ij} = K(x_i,x_j) = \langle \phi(x_i) , \phi(x_j) \rangle_H$&lt;/p&gt;
+Mercer’s theorem is a representation of a symmetric positive-definite function on a square as a sum of a convergent sequence of product functions.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;对比老师在上课时给出的定义为：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;If $G = G^T$ and $G \geq 0$, $\exists \phi(\cdot), \ s.t. \ G_{ij} = K(x_i,x_j) = \langle \phi(x_i) , \phi(x_j) \rangle_H$&lt;/p&gt;
 
 &lt;p&gt;其实老师上课讲到的这个定义就是mercer定理了，即只要G满足这两个条件，那么它就能找到这样的映射函数以及一种内积方式，那么就是合理的核了。&lt;/p&gt;
 
-&lt;p&gt;参考：&lt;br /&gt;
-https://www.zhihu.com/question/24627666
-https://mp.weixin.qq.com/s?__biz=MzIxNDIwMTk2OQ==&amp;amp;mid=2649077019&amp;amp;idx=1&amp;amp;sn=e0c4a6c502e3668e1dc410f21e531cfd&amp;amp;scene=0#wechat_redirect
-https://blog.csdn.net/wsj998689aa/article/details/47027365
-https://blog.csdn.net/wsj998689aa/article/details/40398777
-https://www.cnblogs.com/xingshansi/p/6767980.html
-https://blog.csdn.net/zhazhiqiang/article/details/19496633
-https://blog.csdn.net/cqy_chen/article/details/77932270&lt;/p&gt;
+&lt;h2 id=&quot;reference&quot;&gt;Reference：&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;https://www.zhihu.com/question/24627666&lt;/li&gt;
+  &lt;li&gt;https://mp.weixin.qq.com/s?__biz=MzIxNDIwMTk2OQ==&amp;amp;mid=2649077019&amp;amp;idx=1&amp;amp;sn=e0c4a6c502e3668e1dc410f21e531cfd&amp;amp;scene=0#wechat_redirect&lt;/li&gt;
+  &lt;li&gt;https://blog.csdn.net/wsj998689aa/article/details/47027365&lt;/li&gt;
+  &lt;li&gt;https://blog.csdn.net/wsj998689aa/article/details/40398777&lt;/li&gt;
+  &lt;li&gt;https://www.cnblogs.com/xingshansi/p/6767980.html&lt;/li&gt;
+  &lt;li&gt;https://blog.csdn.net/zhazhiqiang/article/details/19496633&lt;/li&gt;
+  &lt;li&gt;https://blog.csdn.net/cqy_chen/article/details/77932270&lt;/li&gt;
+&lt;/ul&gt;
 
 </description>
         <pubDate>Sun, 30 Sep 2018 00:00:00 +0200</pubDate>

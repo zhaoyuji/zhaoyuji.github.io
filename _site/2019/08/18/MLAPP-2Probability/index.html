@@ -11,10 +11,14 @@
     <meta name="theme-color" content="#000000">
     
     <!-- Open Graph -->
-    <meta property="og:title" content="MLAPP | Chapter 2: Probability - ZHAO Yuji's Homepage">
+    <meta property="og:title" content="[MLAPP] Chapter 2: Probability - ZHAO Yuji's Homepage">
     
     <meta property="og:type" content="article">
-    <meta property="og:description" content="2.1 Introduction
+    <meta property="og:description" content="
+    
+    
+
+
 ">
     
     <meta property="article:published_time" content="2019-08-18T00:00:00Z">
@@ -23,16 +27,16 @@
     <meta property="article:author" content="Z">
     
     
-    <meta property="article:tag" content="Learning Notes">
-    
     <meta property="article:tag" content="Machine Learning">
+    
+    <meta property="article:tag" content="Learning Notes">
     
     
     <meta property="og:image" content="http://localhost:4000/img/zyjphoto.jpg">
     <meta property="og:url" content="http://localhost:4000/2019/08/18/MLAPP-2Probability/">
     <meta property="og:site_name" content="ZHAO Yuji's Homepage">
     
-    <title>MLAPP | Chapter 2: Probability - ZHAO Yuji's Homepage</title>
+    <title>[MLAPP] Chapter 2: Probability - ZHAO Yuji's Homepage</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -67,6 +71,9 @@
 </head>
 
 
+<script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
 
 <!-- hack iOS CSS :active style -->
 <body ontouchstart="">
@@ -206,14 +213,14 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/archive/?tag=Learning+Notes" title="Learning Notes">Learning Notes</a>
-                        
                         <a class="tag" href="/archive/?tag=Machine+Learning" title="Machine Learning">Machine Learning</a>
                         
+                        <a class="tag" href="/archive/?tag=Learning+Notes" title="Learning Notes">Learning Notes</a>
+                        
                     </div>
-                    <h1>MLAPP | Chapter 2: Probability</h1>
+                    <h1>[MLAPP] Chapter 2: Probability</h1>
                     
-                    <h2 class="subheading">Learning Notes on the book Machine Learning: A Probabilistic Perspective for chapter 2: some basic knowledge on probability</h2>
+                    <h2 class="subheading">Learning Notes on the book Machine Learning: A Probabilistic Perspective</h2>
                     <span class="meta">Posted by Z on August 18, 2019</span>
                 </div>
             </div>
@@ -226,24 +233,6 @@
 
 
 
-
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
-
-<!-- mathjax config similar to math.stackexchange -->
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-                       jax: ["input/TeX", "output/HTML-CSS"],
-                       tex2jax: {
-                       inlineMath: [ ['$', '$'] ],
-                       displayMath: [ ['$$', '$$']],
-                       processEscapes: true,
-                       skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] },
-                       messageStyle: "none",
-                       "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
-                       });
-    </script>
 
 <!-- Post Content -->
 <article>
@@ -259,7 +248,441 @@
                 <!-- Multi-Lingual -->
                 
 
-				<h1 id="21-introduction">2.1 Introduction</h1>
+				<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            displayMath: [ ['$$', '$$']],
+            inlineMath: [['$','$']],
+            processEscapes: true
+            }
+        });
+    </script>
+</head>
+
+<h2 id="21-introduction">2.1 Introduction</h2>
+
+<p><strong>What is probability?</strong></p>
+
+<ol>
+  <li>The first interpretation is called the <strong>frequentist interpretation</strong>. In this view, probabilities represent long run frequencies of events.</li>
+  <li>The other interpretation is called the <strong>Bayesian interpretation</strong> of probability. In this view, probability is used to quantify our <strong>uncertainty</strong> about something; hence it is fundamentally related to <strong>information</strong> rather than repeated trials (Jaynes 2003).</li>
+</ol>
+
+<h2 id="22-a-brief-review-of-probability-theory">2.2 A brief review of probability theory</h2>
+
+<ol>
+  <li>Discrete random variables (probability mass function, abbreviated to pmf)</li>
+  <li>Fundamental rules, including Probability of a union of two events, Joint probabilities, Conditional probability</li>
+  <li>Bayes rule: Combining the definition of conditional probability with the product and sum rules yields Bayes rule, also called <strong>Bayes Theorem</strong>:</li>
+</ol>
+
+<script type="math/tex; mode=display">p(X=x|Y=y) = \frac{p(X=x, Y=y)}{p(Y=y)} = \frac{p(X=x)p(Y=y|X=x)}{\sum_x' p(X=x')p(Y=y|X=x')}</script>
+
+<ol>
+  <li>Independence and conditional independence
+    <ul>
+      <li>X and Y are unconditionally independent or marginally independent:</li>
+    </ul>
+
+    <script type="math/tex; mode=display">X \perp Y \Leftrightarrow p(X,Y) = p(X)p(Y)</script>
+
+    <ul>
+      <li>X and Y are conditionally independent (CI) given Z iff the conditional joint can be written as a product of conditional marginals:</li>
+    </ul>
+
+    <p><script type="math/tex">X \perp Y|Z \Leftrightarrow p(X,Y|Z) = p(X|Z)p(Y|Z)</script>
+ <strong>Theorem 2.2.1.:</strong> $X\bot Y |Z$ iff there exist function $g$ and $h$ such that $p(x, y|z) = g(x, z)h(y, z) $ for all $x,y,z$ such that $p(z) &gt; 0$.</p>
+
+    <p>(! Need to be proved)</p>
+  </li>
+  <li>Continuous random variables(probability density function, abbreviated to pdf; cumulative distribution function, abbreviated to cdf)</li>
+  <li>Quantiles: denoted by $F^−1(\alpha)$</li>
+  <li>Mean(expected value), standard deviation and variance(a measure of the “spread” of a distribution)</li>
+</ol>
+
+<h2 id="23-some-common-discrete-distributions">2.3 Some common discrete distributions</h2>
+
+<ol>
+  <li><strong>The binomial and Bernoulli distributions</strong>
+    <ul>
+      <li>
+        <p>binomial distribution $X \sim Bin(n,\theta)$:</p>
+
+        <script type="math/tex; mode=display">Bin(k|n,\theta) \triangleq  \binom{n}{k}\theta^k(1-\theta)^{n-k}</script>
+
+        <p>where $\binom{n}{k} \triangleq \frac{n!}{k!(n-k)!}$ is the number of ways to choose k items from n (this is known as the <strong>binomial coefficient</strong>, and is pronounced “n choose k”).</p>
+      </li>
+      <li>
+        <p>Bernoulli distribution $X \sim Ber(\theta)$:</p>
+
+        <p><script type="math/tex">% <![CDATA[
+Ber(x|\theta) \triangleq  \theta^{\mathbb{I}(x=1)}(1-\theta)^{\mathbb{I}(x=0)} = \begin{cases}
+ \theta & \text{if x=1}\\
+ 1-\theta & \text{if x=0}
+ \end{cases} %]]></script>
+  Bernoulli distribution is the special case of a binomial distribution with $n=1$</p>
+      </li>
+    </ul>
+
+    <p>binomial distribution: How many times(k) do the coin face up when it is thrown for n times?</p>
+
+    <p>Bernoulli distribution: Do the coin face up when it is thrown for once?</p>
+  </li>
+  <li><strong>The multinomial and multinoulli distributions</strong>
+    <ul>
+      <li>
+        <p>multinomial distributions:
+  <script type="math/tex">Mu(\pmb{x}|n, \pmb{\theta} ) \triangleq  \binom{n}{x_1\cdots x_K}\prod_{j=1}^{K}\theta_j^{x_j}</script></p>
+
+        <p>where $\binom{n}{x_1\cdots x_K} \triangleq \frac{n!}{x_1!x_2!\cdots x_K!}$ is the <strong>multinomial coefficient</strong> and $\sum x_i = n$</p>
+      </li>
+      <li>
+        <p>multinoulli distributions(x is  its dummy encoding or one-hot encoding):
+  <script type="math/tex">Cat(x|\pmb{\theta}) \triangleq Mu(\pmb{x}|1, \pmb{\theta} ) \triangleq \prod_{j=1}^{K}\theta_j^{\mathbb{I}(x_j=1)}</script>
+  This very common special case is known as a <strong>categorical or discrete distribution</strong>. And $p(x = j|\pmb{\theta}) = \theta_j$</p>
+      </li>
+    </ul>
+
+    <p>multinomial distribution: How many times for each surface ( $[x_1\cdots x_6]$ ) do a dice show when it is thrown for n times?</p>
+
+    <p>multinoulli distribution: What surface do a dice show when it is thrown for once?</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align: center">Name</th>
+          <th style="text-align: center">n</th>
+          <th style="text-align: center">K</th>
+          <th style="text-align: center">x</th>
+          <th style="text-align: center">mean</th>
+          <th style="text-align: center">variance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align: center">Multinomial</td>
+          <td style="text-align: center">-</td>
+          <td style="text-align: center">-</td>
+          <td style="text-align: center">$x\in {0,1,\cdots, n}^K, \sum_{k=1}^{K}x_k=n$</td>
+          <td style="text-align: center">$E(X_j) = n\theta_j$</td>
+          <td style="text-align: center">$Var(X_j) = n\theta_j(1-\theta_j)$, $Cov(X_i, X_j) = -n\theta_i\theta_j$</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">Multinoulli</td>
+          <td style="text-align: center">1</td>
+          <td style="text-align: center">-</td>
+          <td style="text-align: center">$x\in {0,1}^K, \sum_{k=1}^{K}x_k=1$(1-of-K encoding)</td>
+          <td style="text-align: center">$E(X_j) = n\theta_j$</td>
+          <td style="text-align: center">$Var(X_j) = \theta_j(1-\theta_j)$, $Cov(X_i, X_j) = -\theta_i\theta_j$</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">Binomial</td>
+          <td style="text-align: center">-</td>
+          <td style="text-align: center">1</td>
+          <td style="text-align: center">$x\in {0,1,\cdots, n}$</td>
+          <td style="text-align: center">$\theta$</td>
+          <td style="text-align: center">$n\theta(1-\theta)$</td>
+        </tr>
+        <tr>
+          <td style="text-align: center">Bernoulli</td>
+          <td style="text-align: center">1</td>
+          <td style="text-align: center">1</td>
+          <td style="text-align: center">$x\in {0,1}$</td>
+          <td style="text-align: center">$\theta$</td>
+          <td style="text-align: center">$\theta(1-\theta)$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <p><strong>The Poisson distribution</strong>
+ <script type="math/tex">Poi(x|\lambda) = e^{-\lambda}\frac{\lambda^x}{x!}</script>
+ The first term is just the normalization constant, required to ensure the distribution sums to 1.</p>
+  </li>
+  <li>
+    <p><strong>The empirical distribution</strong>	
+ Given a set of data, $D = {x_1,\cdots,x_N}$, we define the <strong>empirical distribution</strong>, also called the <strong>empirical measure</strong>, as follows:</p>
+
+    <script type="math/tex; mode=display">p_{emp}(A) \triangleq \frac{1}{N}\sum_{i=1}^N\delta_{x_i}(A)</script>
+
+    <p>􏰁where $\delta_{x}(A)$ is the Dirac measure, defined by</p>
+
+    <script type="math/tex; mode=display">% <![CDATA[
+\delta_{x}(A) = \begin{cases}
+ 0 & \text{if } x \notin A\\
+ 1 & \text{if } x \in A
+ \end{cases} %]]></script>
+
+    <p>PS: in my opinion,  indicator function $\mathbb{I}_A(x)$ and Dirac measure $\delta_x(A)$ mean the same thing but their parameters are inversed.</p>
+
+    <p>In general, we can associate “weights” with each sample:</p>
+
+    <script type="math/tex; mode=display">p(x) = \sum_{i=1}^Nw_i\delta_{x_i}(x)</script>
+
+    <p>where it is required that $0\leq w_i\leq 1$ and $\sum w_i = 1$</p>
+
+    <p>According to Wiki,</p>
+    <blockquote>
+      <p>In statistics, an empirical distribution function is the distribution function associated with the empirical measure of a sample. This cumulative distribution function is a step function that jumps up by $1/n$ at each of the $n$ data points.</p>
+    </blockquote>
+  </li>
+</ol>
+
+<h2 id="24-some-common-continuous-distributions">2.4 Some common continuous distributions</h2>
+
+<ol>
+  <li>
+    <p><strong>Gaussian (normal) distribution</strong></p>
+
+    <script type="math/tex; mode=display">\mathcal{N}(x|\mu, \theta) \triangleq \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}(x-\mu)^2}</script>
+
+    <p>Here $\sqrt{2\pi\sigma^2}$ is the normalization constant needed to ensure the density integrates to 1.(!Need to be proved)</p>
+
+    <p>Standard normal distribution is sometimes called the <strong>bell curve</strong>.</p>
+
+    <p>We will often talk about the <strong>precision</strong> of a Gaussian, by which we mean the inverse variance: $\lambda = \frac{1}{σ^2}$.</p>
+
+    <p><strong>Question: What’s the meaning of this sentence?</strong></p>
+    <blockquote>
+      <p>Note that, since this is a pdf, we can have $p(x) &gt; 1$. To see this, consider evaluating the density at its center, $x = \mu$. We have $\mathcal{N}(\mu|\mu,\sigma^2) = (\sigma\sqrt{2\pi})^{−1}e^0$, so if $\sigma &lt; 1/\sqrt{2\pi}$, we have $p(x) &gt; 1$.
+ Why does the author mention this?</p>
+    </blockquote>
+
+    <p>The cumulative distribution function has no closed form expression but it can be calculated by <strong>error function(erf)</strong>:</p>
+
+    <script type="math/tex; mode=display">\Phi(x;\mu,\sigma)=\frac{1}{2}[1+erf(z/\sqrt{2})] \\ 
+ erf(x) \triangleq \frac{2}{\sqrt{\pi}}\int_0^xe^{-t^2}dt</script>
+
+    <p>where $z=(x-\mu)/\sigma$.</p>
+
+    <p>Gaussian distribution is widely used because:</p>
+
+    <ol>
+      <li>it has two parameters which are easy to interpret</li>
+      <li>the central limit theorem (Section 2.6.3) tells us that sums of independent random variables have an approximately Gaussian distribution (good for modeling errors or noise)</li>
+      <li>Gaussian distribution makes the least number of assumptions <strong>(why?)</strong></li>
+      <li>simple mathematical form</li>
+    </ol>
+  </li>
+  <li>
+    <p><strong>Degenerate pdf</strong>
+ In the limit that $\sigma^2 \rightarrow 0$, the Gaussian becomes an infinitely tall and infinitely thin “spike” centered at $\mu$</p>
+
+    <script type="math/tex; mode=display">\lim_{\sigma^2 \rightarrow 0} \mathcal{N}(x|\mu,\sigma^2)=\delta(x-\mu)</script>
+
+    <p>where $\delta$ is called a <strong>Dirac delta function</strong>, defined as:</p>
+
+    <script type="math/tex; mode=display">% <![CDATA[
+\delta(x) = \begin{cases}
+ \infty & \text{if } x=0\\
+ 0 & \text{if }x\neq 0
+ \end{cases} %]]></script>
+
+    <p>such that $\int_{-\infty}^{\infty}\delta(x)dx=1$</p>
+
+    <p>A useful property of delta functions is the <strong>sifting property</strong>, which selects out a single term from a sum or integral:
+ <script type="math/tex">\int_{-\infty}^{\infty}f(x)\delta(x-\mu)dx=f(\mu)</script></p>
+
+    <p>One problem with the Gaussian distribution is that it is sensitive to outliers (big change on $x$ results in bigger change on $e^{(x-\mu)^2}$)</p>
+
+    <p>Thus, A more robust distribution is the <strong>Student $t$ distribution</strong>:</p>
+
+    <script type="math/tex; mode=display">\mathcal{T}(x|\mu,\sigma^2,\nu) \propto \Big[1+\frac{1}{\nu}(\frac{x-\mu}{\sigma})^2\Big]^{-\frac{\nu+1}{2}}</script>
+
+    <p>where $\mu$ is the mean, $\sigma^2&gt;0$ is the scale parameter and $\nu&gt;0$ is the degrees of freedom. Its mean is $\mu$, mode is $\mu$,variance is $\frac{\nu\sigma^2}{(\nu-2)}$. The variance is only defined if $\nu &gt; 2$. The mean is only defined if $\nu &gt; 1$.</p>
+
+    <p>Because the Student has heavier tails, it hardly changes when adding some outliers. It is common to use $\nu = 4$ because of some good performance. But For $\nu \geq 5$, the Student distribution rapidly approaches a Gaussian distribution and loses its robustness properties.</p>
+  </li>
+  <li>
+    <p><strong>The Laplace distribution</strong> (a.k.a. double sided exponential distribution)</p>
+
+    <script type="math/tex; mode=display">Lap(x|\mu,b) \triangleq \frac{1}{2b}exp(-\frac{|x-\mu|}{b})</script>
+
+    <p>Here $\mu$ is a location parameter and $b &gt; 0$ is a scale parameter.</p>
+
+    <p>mean = $\mu$, mode = $\mu$, var = $2b^2$</p>
+
+    <p>It is also robust to outliers. It also put mores probability density at 0 than the Gaussian. This property is a useful way to encourage sparsity in a model (L1-regulation)</p>
+  </li>
+  <li>
+    <p><strong>The gamma distribution</strong>
+ The gamma distribution is a flexible distribution for positive real valued rv’s, $x &gt; 0$. It is defined in terms of two parameters, called the shape $a &gt; 0$ and the rate $b &gt; 0$:</p>
+
+    <script type="math/tex; mode=display">Ga(T|shape=a,rate=b) \triangleq \frac{b^a}{\Gamma(a)}T^{a-1}e^{-Tb}</script>
+
+    <p>where $\Gamma(a)$ is the gamma function:</p>
+
+    <script type="math/tex; mode=display">\Gamma(x) \triangleq \int_0^{\infty}u^{x-1}e^{-u}du</script>
+
+    <p>mean = $a/b$, mode = $(a-1/b)$, var = $a/b^2$</p>
+
+    <p>Gamma Distribution is also widely used, such as:</p>
+    <ul>
+      <li>Exponential distribution: $Expon(x|\lambda) 􏰗= Ga(x|1, \lambda)$</li>
+      <li>Erlang distribution: a is an integer</li>
+      <li>Chi-squared distribution: $\chi^2(x|\nu) 􏰗= Ga(x|\nu,1)$</li>
+    </ul>
+
+    <p>Besides, if $X \sim Ga(a,b)$, then $1/X \sim IG(a,b)$, where IG is the inverse gamma distribution.</p>
+
+    <p>mean = $b/(a-1)$, mode = $b/(a+1)$, var = $b^2/((a-1)^2(a-2))$</p>
+  </li>
+  <li>
+    <p><strong>The beta distribution</strong>
+ The beta distribution has support over the interval [0, 1] and is defined as follows:</p>
+
+    <script type="math/tex; mode=display">Beta(x|a, b) = \frac{1}{B(a,b)} x^{a−1}(1 − x)^{b−1}</script>
+
+    <p>where $B(a,b)$ is the beta function:</p>
+
+    <script type="math/tex; mode=display">B(a,b) \triangleq \frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}</script>
+
+    <p>If $a = b = 1$, we get the uniform distirbution.</p>
+
+    <p>mean = $\frac{a}{b}$, mode = $\frac{a-1}{a+b-2}$, var = $\frac{ab}{(a+b)^2(a+b+1)}$</p>
+  </li>
+  <li>
+    <p>Pareto distribution
+ The <strong>Pareto distribution</strong> is used to model the distribution of quantities that exhibit long tails, also called <strong>heavy tails.</strong> You may think of <strong>Pareto principle</strong>, which is called “二八原则” in Chinese.</p>
+
+    <script type="math/tex; mode=display">Pareto(x|k, m) = km^kx^{−(k+1)}\mathbb{I}(x \geq m)</script>
+
+    <p>If we plot the distibution on a log-log scale, it form a straight line, of the form $\log p(x) = a\log x + c$ (a.k.a. power law)</p>
+
+    <blockquote>
+      <p>You can know more <strong>power law</strong> in <a href="https://blog.csdn.net/jinruoyanxu/article/details/51627255">浅谈网络世界中的Power Law现象（一） 什么是Power Law</a></p>
+    </blockquote>
+
+    <p>mean = $\frac{km}{k-1}$ if $k&gt;1$, mode = $m$, var = $\frac{m^2k}{(k-1)^2(k-2)}$ if $k &gt; 2$</p>
+  </li>
+</ol>
+
+<h2 id="25-joint-probability-distributions">2.5 Joint probability distributions</h2>
+<ol>
+  <li><strong>Covariance and correlation</strong>
+    <ul>
+      <li>Uncorrelated does not imply independent</li>
+      <li>Independent does imply uncorrelated</li>
+    </ul>
+  </li>
+  <li><strong>The multivariate Gaussian</strong></li>
+  <li>
+    <p>The <strong>multivariate Gaussian</strong> or <strong>multivariate normal (MVN)</strong> is the most widely used joint probability density function for continuous variables.</p>
+
+    <script type="math/tex; mode=display">\mathcal{N}(\pmb{x}|\pmb{\mu}, \pmb{\Sigma}) \triangleq \frac{1}{(2\pi)^{D/2}|\pmb{\Sigma}|^{1/2}}exp\Big[ -\frac{1}{2} (\pmb{x}-\pmb{\mu})^T\pmb{\Sigma}^{-1}(\pmb{x}-\pmb{\mu}) \Big]</script>
+
+    <p>where $\mu = E[x] \in \mathbb{R}^D$ is the mean vector, and $\Sigma = cov[x]$ is the $D \times D$ covariance matrix. Sometimes we will work in terms of the <strong>precision matrix</strong> or <strong>concentration matrix</strong> instead. This is just the inverse covariance matrix, $\Lambda = \Sigma^{−1}$.</p>
+  </li>
+  <li>
+    <p><strong>Multivariate Student $t$ distribution</strong></p>
+
+    <p>A more robust alternative to the MVN is the multivariate Student t distribution. The smaller $\nu$ is, the fatter the tails.</p>
+  </li>
+  <li>
+    <p><strong>Dirichlet distribution</strong></p>
+
+    <p>A multivariate generalization of the beta distribution is the <strong>Dirichlet distribution</strong>, which has support over the <strong>probability simplex</strong>, defined by</p>
+    <blockquote>
+      <p>For example, a 2-simplex (or 2-probability-simplex) is a triangle.</p>
+    </blockquote>
+
+    <script type="math/tex; mode=display">S_K=\{x:0\leq x_k\leq1, \sum_{k=1}^{K}x_k=1\}</script>
+
+    <p>The pdf is defined by:</p>
+
+    <script type="math/tex; mode=display">Dir(x|\alpha) \triangleq \frac{1}{B(\alpha)\prod_{k=1}^{K}x_k^{\alpha_k-1}}\mathbb{I}(x\in S_K)</script>
+
+    <p>where $B(\alpha) = \frac{\prod_{k=1}^{K}\Gamma(\alpha_k)}{\Gamma(\alpha_0)}$</p>
+
+    <p>We see that $\alpha_0 = \sum_k\alpha_k$ controls the strength of the distribution (how peaked it is), and the $\alpha_k$ control where the peak occurs. If $\alpha_k &lt; 1$ for all k, we get “spikes” at the corner of the simplex.</p>
+
+    <p><img src="/img/in-post/2019-08-18-dir-ex.png" alt="img" /></p>
+  </li>
+</ol>
+
+<h2 id="26-transformations-of-random-variables">2.6 Transformations of random variables</h2>
+
+<ol>
+  <li><strong>Linear transformations</strong>
+    <ul>
+      <li>linearity of expectation</li>
+    </ul>
+  </li>
+  <li><strong>General transformations</strong>
+    <ul>
+      <li>If $X$ is a discrete rv, we can derive the pmf for $y$ by simply summing up the probability mass for all the $x$’s such that $f(x) = y$:</li>
+    </ul>
+
+    <script type="math/tex; mode=display">p_y(y)=\sum_{x:f(x)=y}p_x(x)</script>
+
+    <ul>
+      <li>If $X$ is continuous, we cannot use the above Equation since $p_x(x)$ is a density, not a pmf, and we cannot sum up densities. Instead, we work with cdf’s, and write</li>
+    </ul>
+
+    <script type="math/tex; mode=display">P_y(y) \triangleq P(Y\leq y)=P(f(X) \leq y) = P(X\in {x|f(x)\leq y})</script>
+
+    <p>We can derive the pdf of y by differentiating the cdf.</p>
+
+    <script type="math/tex; mode=display">p_y(y)\triangleq\frac{d}{dy}P_y(y)=\frac{d}{dy}P_x(f^{-1}(y)) = \frac{dx}{dy}\frac{d}{dx}P_x(x)=\frac{dx}{dy}p_x(x)</script>
+
+    <p>where $x=f^{-1}(y)$. Since the sign of this change is not important, we take the absolute value to get the general expression:</p>
+
+    <script type="math/tex; mode=display">p_y(y)=\Big|\frac{dx}{dy}\Big|p_x(x)</script>
+
+    <p>This is called change of variables formula.</p>
+  </li>
+  <li><strong>Central limit theorem</strong></li>
+</ol>
+
+<h2 id="27-monte-carlo-approximation">2.7 Monte Carlo approximation</h2>
+
+<p>In general, computing the distribution of a function of an rv using the change of variables formula can be difficult. One simple but powerful alternative is <strong>Monte Carlo approximation</strong>.</p>
+
+<ol>
+  <li>First we generate $S$ samples from the distribution, call them $x_1,\cdots,x_S$. (There are many ways to generate such samples; one popular method, for high dimensional distributions, is called Markov chain Monte Carlo or MCMC; this will be explained later)</li>
+  <li>Given the samples, we can approximate the distribution of $f(X)$ by using the empirical distribution</li>
+</ol>
+
+<h2 id="28-information-theory">2.8 Information theory</h2>
+
+<p><strong>Information theory</strong> is concerned with representing data in a compact fashion (a task known as <strong>data compression</strong> or <strong>source coding</strong>), as well as with transmitting and storing it in a way that is robust to errors (a task known as <strong>error correction</strong> or <strong>channel coding</strong>).</p>
+
+<ol>
+  <li>
+    <p><strong>Entropy</strong></p>
+
+    <p>The entropy of a random variable $X$ with distribution p, denoted by $\mathbb{H}(X)$ or sometimes $\mathbb{H}(p)$, is a measure of its <strong>uncertainty</strong>. In particular, for a discrete variable with $K$ states, it is defined by</p>
+
+    <script type="math/tex; mode=display">\mathbb{H}(X) \triangleq -\sum_{k=1}^{K}p(X=k)log_2p(X=k)</script>
+  </li>
+  <li>
+    <p><strong>KL divergence</strong></p>
+
+    <p>One way to measure the dissimilarity of two probability distributions, p and q, is known as the <strong>Kullback-Leibler divergence</strong> (<strong>KL divergence</strong>) or <strong>relative entropy</strong>.</p>
+
+    <script type="math/tex; mode=display">\mathbb{KL}(p||q) \triangleq \sum_{k=1}^{K}p_k\log\frac{p_k}{q_k} \\
+ = \sum_k p_k \log p_k - \sum_k p_k \log q_k \\
+ = - \mathbb{H}(p) + \mathbb{H}(p,q)</script>
+
+    <p>where $\mathbb{H}(p,q)$ is called the cross entropy, $\mathbb{H}(p,q) \triangleq -\sum_k p_k \log q_k$</p>
+
+    <table>
+      <tbody>
+        <tr>
+          <td>$\bf{Theorem 2.8.1. :}$	(<strong>Information inequality</strong>) $\mathbb{KL} (p</td>
+          <td> </td>
+          <td>q) \geq 0$ with equality iff $p = q$.</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <p><strong>Mutual information</strong></p>
+  </li>
+</ol>
 
 
 
@@ -267,16 +690,32 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2019/08/11/New-at-KTH/" data-toggle="tooltip" data-placement="top" title="New at KTH">
+                        <a href="/2018/09/30/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%97%E6%B3%95-lesson1/" data-toggle="tooltip" data-placement="top" title="Big Data Algorithm Lesson 1: About Kernel">
                         Previous<br>
-                        <span>New at KTH</span>
+                        <span>Big Data Algorithm Lesson 1: About Kernel</span>
                         </a>
                     </li>
                     
                     
+                    <li class="next">
+                        <a href="/2019/08/22/Moments/" data-toggle="tooltip" data-placement="top" title="Striking Moments">
+                        Next<br>
+                        <span>Striking Moments</span>
+                        </a>
+                    </li>
+                    
                 </ul>
                 <hr style="visibility: hidden;">
-
+                
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+                
+                
             </div>  
 
     <!-- Side Catalog Container -->
@@ -319,14 +758,14 @@
         
         
                 <a data-sort="0002" 
-                    href="/archive/?tag=Algirithms"
-                    title="Algirithms"
-                    rel="7">Algirithms</a>
+                    href="/archive/?tag=Machine+Learning"
+                    title="Machine Learning"
+                    rel="2">Machine Learning</a>
         
                 <a data-sort="0002" 
-                    href="/archive/?tag=Lecture+Notes"
-                    title="Lecture Notes"
-                    rel="7">Lecture Notes
+                    href="/archive/?tag=Learning+Notes"
+                    title="Learning Notes"
+                    rel="2">Learning Notes
     </div>
 </section>
 
@@ -338,6 +777,22 @@
 
 <!-- add support for mathjax by voleking-->
 
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "yujizhao";
+    var disqus_identifier = "/2019/08/18/MLAPP-2Probability";
+    var disqus_url = "http://localhost:4000/2019/08/18/MLAPP-2Probability/";
+    (function() {
+     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+    </script>
+<!-- disqus 公共JS代码 end -->
 
 
 
